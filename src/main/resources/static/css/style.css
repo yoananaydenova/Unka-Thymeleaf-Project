@@ -1,0 +1,198 @@
+/* Jumbotron image */
+.jumbotron{
+    background-image: url(https://knowledgeone.ca/wp-content/uploads/2020/04/transition-online.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+/* Navbar */
+nav{
+    background-color: #666666;
+}
+
+.link-n{
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+    padding: 8px 16px;
+}
+
+
+
+.link-n:hover {
+    background-color: #ffffff;
+    color: #EF4E7C;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.link-register{
+    font-size: 14px;
+    font-weight: bolder;
+    color: #ffffff;
+}
+
+.link-register:hover{
+    color: #ffffff;
+}
+
+.msg-custom{
+    padding: 0;
+    margin: 0;
+}
+
+
+/* Buttons */
+
+.btn-learn{
+    margin-left: 150px;
+}
+
+.btn-primary {
+    color: #fff;
+    font-weight: bold;
+    font-size: 22px;
+    background-color: #EF4E7C;
+    border-color: #EF4E7C;
+    border-radius: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.btn-primary:hover {
+    background-color: #ffffff;
+    font-weight: bold;
+    color: #EF4E7C;
+    border-color: #ffffff;
+
+}
+
+.body {
+    color: #364444;
+}
+
+.course-block {
+    padding-top: 20px;
+}
+
+footer{
+    bottom: 0;
+    width: 100%;
+    background-color: #666666;
+    color: #ffffff;
+    padding: 39px 0 42px;
+}
+
+.course-lable {
+    display: flex;
+    justify-content: center;
+    letter-spacing: 8px;
+    color: #EF4E7C;
+}
+.course-lable h2{
+    font-weight: bold;
+    font-size: 38px;
+}
+
+.course-box-link {
+    color: inherit;
+}
+.course-box-link:hover {
+    text-decoration: none;
+    color: #212529;
+}
+
+.card-title{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.card-price{
+    color: #EF4E7C;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.course-box-link:hover .card-title{
+    color: #EF4E7C;
+}
+.course-box{
+    width: 20rem;
+    border-width: 3px;
+    border-color: #ffffff;
+    border-radius: 15px;
+}
+.course-img{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.course-box:hover{
+    width: 20rem;
+    border-color: #EF4E7C;
+    border-radius: 15px;
+    border-width: 3px;
+}
+
+
+.custom-courses{
+    justify-content: center;
+    display: flex;
+}
+
+
+.content-wrap {
+    padding-bottom: 3rem;
+    background-color:#ffffff;
+}
+
+.text-center {
+    padding-top: 2rem;
+}
+
+.lable-intrance{
+    font-family: 'Marck Script', cursive;
+    font-weight: bold;
+    color:  #728181;
+    font-size: 40px;
+    text-shadow: -2px 3px #343a40
+}
+
+.intrance{
+    font-size: 18px;
+    font-weight: 100;
+    margin-bottom: inherit;
+}
+
+.bg-blur {
+    background-color: #728181;
+    color: oldlace;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 12px;
+    text-align: center;
+}
+
+.card {
+    box-shadow: 0 0 18px 5px rgba(100, 100, 100, 0.26);
+}
+
+
+.content-about{
+    padding: 2.4rem 4.8rem;
+    margin-bottom: 2.4rem;
+    background-color: #fff7f0;
+}
+
+
+.img-about{
+    width:auto;
+    height: 230px;
+}
+
+.border-err {
+    border-width:4px;
+    border-color:#EF4E7C;
+}
+

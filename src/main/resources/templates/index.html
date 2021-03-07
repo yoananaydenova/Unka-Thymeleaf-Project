@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <title>Унка</title>
+</head>
+
+<body>
+<header>
+    <th:block th:include="~{fragments/navbar}"></th:block>
+</header>
+
+
+
+<main class="content-wrap">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-white">
+
+            <h1 class="display-4 ">Hello, world!</h1>
+            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra
+                attention to featured content or information.</p>
+            <hr class="my-4">
+            <p>It uses utility classes for typography and spacing to space content out within the larger container.
+            </p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg btn-learn" href="#" role="button">Научи повече</a>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- end section -->
+
+    <!-- section -->
+    <div class="container course-block">
+
+        <div class="course-lable">
+            <h2>Курсове</h2>
+        </div>
+        <div class="row custom-courses">
+            <div class="card-group">
+                <a href="/" class="course-box-link">
+                    <div class="card m-3 course-box">
+                        <img src="https://i2.wp.com/hechingerreport.org/wp-content/uploads/2019/12/Tara-Garcia-Mathewson-Vertus3.jpg?resize=960%2C540&ssl=1"
+                             class="card-img-top course-img" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Счетоводство и контрол</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of the card's content.</p>
+
+
+                            <div class="d-flex justify-content-between">
+                                <!-- Author  Name -->
+                                <span>
+                                        Снежана Найденова
+                                    </span>
+                                <!-- Price  -->
+                                <span class="card-price">
+                                        $29.99
+                                    </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/" class="course-box-link">
+                    <div class="card m-3 course-box">
+                        <img src="https://i2.wp.com/hechingerreport.org/wp-content/uploads/2019/12/Tara-Garcia-Mathewson-Vertus3.jpg?resize=960%2C540&ssl=1"
+                             class="card-img-top course-img" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Счетоводство и контрол</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of the card's content.</p>
+
+
+                            <div class="d-flex justify-content-between">
+                                <!-- Author  Name -->
+                                <span>
+                                        Снежана Найденова
+                                    </span>
+                                <!-- Price  -->
+                                <span class="card-price">
+                                        $29.99
+                                    </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="/" class="course-box-link">
+                    <div class="card m-3 course-box">
+                        <img src="https://i2.wp.com/hechingerreport.org/wp-content/uploads/2019/12/Tara-Garcia-Mathewson-Vertus3.jpg?resize=960%2C540&ssl=1"
+                             class="card-img-top course-img" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Счетоводство и контрол</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of the card's content.</p>
+
+
+                            <div class="d-flex justify-content-between">
+                                <!-- Author  Name -->
+                                <span>
+                                        Снежана Найденова
+                                    </span>
+                                <!-- Price  -->
+                                <span class="card-price">
+                                        $29.99
+                                    </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+        <div class="text-center">
+            <a class="btn btn-md btn-primary btn-all-courses" href="#">Всички курсове</a>
+        </div>
+
+    </div>
+
+</main>
+
+<th:block th:include="~{fragments/footer}"></th:block>
+
+
+</body>
+
+</html>

@@ -1,9 +1,9 @@
-package com.yoanan.unka.security;
+package com.yoanan.unka.service.impl;
 
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.repository.UserRepository;
-import com.yoanan.unka.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,18 +15,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CustomUserDetailsService implements UserDetailsService {
+public class UnkaUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public UnkaUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
 
         UserEntity userEntity = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with name "
@@ -37,14 +38,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private UserDetails mapToUserDetails(UserEntity userEntity) {
 
-        List<SimpleGrantedAuthority> authorities = userEntity
-                .getRoles()
-                .stream()
-                .map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRole().name()))
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = userEntity.
+                getRoles().
+                stream().
+                map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRole().name())).
+                collect(Collectors.toList());
 
-
-        User result = new User(
+        UserDetails result = new User(
                 userEntity.getName(),
                 userEntity.getPassword(),
                 authorities

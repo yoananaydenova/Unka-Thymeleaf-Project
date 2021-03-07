@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <title>Унка</title>
+</head>
+
+<body>
+<header>
+    <th:block th:include="~{fragments/navbar}"></th:block>
+</header>
+
+
+<main class="content-wrap">
+    <h3 class="text-center"><span class="lable-intrance">Вход</span></h3>
+
+    <form th:action="@{/users/login}" method="POST" class="mx-auto w-25 bg-blur">
+
+        <small th:if="${bad_credentials}" class="text-danger new-line">Incorrect email or password!</small>
+
+        <div class="form-group">
+            <div class="d-flex">
+                <label for="inputUsername" class="intrance">Username</label>
+            </div>
+            <input type="text" th:value="${username}" class="form-control" id="inputUsername" name="username"/>
+        </div>
+
+        <div class="form-group">
+            <div class="d-flex">
+                <label for="inputPassword" class="intrance">Password</label>
+            </div>
+            <input type="password" class="form-control" id="inputPassword" name="password"/>
+
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Вход</button>
+        </div>
+        <div style="padding-top: inherit">
+            <small class="new-line">Нямаш профил?
+                <a class="link-register" th:href="@{/users/register}">Регистрирай се!</a>
+            </small>
+        </div>
+    </form>
+
+</main>
+
+<th:block th:include="~{fragments/footer}"></th:block>
+
+
+</body>
+
+</html>

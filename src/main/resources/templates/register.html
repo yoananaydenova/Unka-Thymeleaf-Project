@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <title>Регистрация</title>
+</head>
+
+<body>
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+
+    </header>
+
+    <main class="content-wrap">
+        <h3 class="text-center"><span class="lable-intrance">Регистрация</span></h3>
+        <form class="mx-auto w-25 bg-blur" method="POST" th:action="@{/users/register}">
+
+            <h5 class="bg-danger rounded" >Потребителя вече съществува!</h5>
+
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="username" class="intrance">Потребителско име</label>
+                </div>
+                <input  type="text" class="form-control" id="username"
+                    name="username" />
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="fullName" class="intrance">Име и фамилия</label>
+                </div>
+                <input  type="text" class="form-control" id="fullName"
+                        name="fullName" />
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="email" class="intrance">Имейл</label>
+                </div>
+                <input  type="text" class="form-control" id="email"
+                    name="email" />
+            </div>
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="password" class="intrance">Парола</label>
+                </div>
+                <input  type="password" class="form-control"
+                    id="password" name="password" />
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="repeatPassword" class="intrance">Повторете паролата</label>
+                </div>
+                <input  type="password" class="form-control"
+                       id="repeatPassword" name="repeatPassword" />
+            </div>
+
+            <div class="button-holder d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Създай профил</button>
+            </div>
+            <div style="padding-top: inherit">
+                <small class="new-line">Имате ли вече регистрация?
+                    <a class="link-register" th:href="@{/users/login}">Вход</a>
+                </small>
+            </div>
+        </form>
+    </main>
+
+    <th:block th:include="~{fragments/footer}"></th:block>
+
+
+</body>
+
+</html>

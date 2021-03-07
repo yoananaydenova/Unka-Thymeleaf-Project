@@ -1,0 +1,75 @@
+<th:block xmlns:th="http://www.thymeleaf.org"
+          xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <nav class="navbar navbar-expand-lg bg-nav">
+
+        <a class="navbar-brand" href="/">
+            <img src="/img/logo.png" alt="Unka logo" width="100" height="50" class="d-inline-block align-top"/>
+        </a>
+
+        <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavAltMarkup">
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButtonCourse"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Курсове
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCourse">
+                    <a class="dropdown-item" href="/">Счетоводство и контрол</a>
+                    <a class="dropdown-item" href="/">Икономически дисциплини</a>
+                    <a class="dropdown-item" href="/">Право</a>
+                </div>
+            </div>
+
+            <th:block sec:authorize="!isAuthenticated()">
+                <a class="nav-link link-n" href="/about">За нас</a>
+                <a class="nav-link link-n" href="#">Преподавай</a>
+                <a class="nav-link link-n" th:href="@{/users/login}">Вход</a>
+            </th:block>
+
+            <div sec:authorize="hasRole('ADMIN')" class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButtonAdmin"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Администратор
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonAdmin">
+                    <a class="dropdown-item" href="/statistics">Статистика</a>
+                    <a class="dropdown-item" href="/roles/add">Акаунти</a>
+                </div>
+            </div>
+
+
+            <div sec:authorize="hasRole('TEACHER')" class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButtonTeacher"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Табло
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonTeacher">
+                    <a class="dropdown-item" href="/">Създай курс</a>
+                    <a class="dropdown-item" href="/">Създай урок</a>
+                    <a class="dropdown-item" href="/">Създай теория</a>
+                    <a class="dropdown-item" href="/">Създай упражнение</a>
+                </div>
+            </div>
+
+            <th:block sec:authorize="hasRole('STUDENT')">
+                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" href="/roles/teach">Преподавай</a>
+                <a class="nav-link link-n" href="/">Моите курсове</a>
+                <a class="nav-link link-n" href="#">Профил</a>
+                <th:block>
+
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                        <button type="submit"
+                                class="btn btn-link nav-link link-n">
+                            Изход
+                        </button>
+                    </form>
+
+
+        </div>
+
+    </nav>
+</th:block>
