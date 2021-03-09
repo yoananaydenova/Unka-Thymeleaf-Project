@@ -8,7 +8,8 @@ import java.util.List;
 @Table(name="users")
 public class UserEntity extends BaseEntity{
 
-    private String name;
+    private String username;
+    private String fullName;
     private String password;
     private List<UserRoleEntity> roles = new ArrayList<>();
 
@@ -16,15 +17,23 @@ public class UserEntity extends BaseEntity{
     }
 
     @Column(nullable = false)
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public UserEntity setName(String name) {
-        this.name = name;
+    public UserEntity setUsername(String name) {
+        this.username = name;
         return this;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public UserEntity setFullName(String fullName) {
+        this.fullName = fullName;
+        return this;
+    }
 
     @Column(nullable = false)
     public String getPassword() {
@@ -43,6 +52,11 @@ public class UserEntity extends BaseEntity{
 
     public UserEntity setRoles(List<UserRoleEntity> roles) {
         this.roles = roles;
+        return this;
+    }
+
+    public UserEntity addRole(UserRoleEntity userRoleEntity){
+        this.roles.add(userRoleEntity);
         return this;
     }
 }

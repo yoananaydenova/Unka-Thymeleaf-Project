@@ -1,10 +1,15 @@
 package com.yoanan.unka.model.binding;
 
+import com.yoanan.unka.validators.FieldMatch;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
+@FieldMatch(
+        first = "password",
+        second = "repeatPassword"
+)
 public class UserRegisterBindingModel {
 
     private String username;
@@ -16,7 +21,7 @@ public class UserRegisterBindingModel {
     public UserRegisterBindingModel() {
     }
 
-    @NotNull
+    @NotEmpty
     @Length(min = 3, message = "Username length must be minimum 3 characters!")
     public String getUsername() {
         return username;
@@ -27,7 +32,7 @@ public class UserRegisterBindingModel {
         return this;
     }
 
-    @NotNull
+    @NotEmpty
     @Length(min = 3, message = "Full name length must be minimum 3 characters!")
     public String getFullName() {
         return fullName;
@@ -38,7 +43,7 @@ public class UserRegisterBindingModel {
         return this;
     }
 
-    @NotNull
+    @NotEmpty
     @Email(message = "Enter valid email address!")
     public String getEmail() {
         return email;
@@ -49,8 +54,8 @@ public class UserRegisterBindingModel {
         return this;
     }
 
-    @NotNull
-    @Length(min = 6, message = "Password length must be minimum 6 characters!")
+    @NotEmpty
+    @Length(min = 6, max = 20, message = "Password length must be minimum 6 and maximum 20 characters!")
     public String getPassword() {
         return password;
     }
@@ -60,8 +65,7 @@ public class UserRegisterBindingModel {
         return this;
     }
 
-    @NotNull
-    @Length(min = 6, message = "Repeated password length must be minimum 6 characters!")
+    @NotEmpty
     public String getRepeatPassword() {
         return repeatPassword;
     }

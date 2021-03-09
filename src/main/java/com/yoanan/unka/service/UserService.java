@@ -9,4 +9,5 @@ public interface UserService {
     void registerAndLoginUser(UserRegisterServiceModel userRegisterServiceModel);
 
 
+    boolean usernameExists(String username);
 }

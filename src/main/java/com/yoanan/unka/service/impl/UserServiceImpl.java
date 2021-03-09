@@ -7,6 +7,11 @@ import com.yoanan.unka.model.service.UserRegisterServiceModel;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
 import com.yoanan.unka.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +23,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
+    private final UnkaUserDetailsService unkaUserDetailsService;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+        this.unkaUserDetailsService = unkaUserDetailsService;
     }
 
 
@@ -37,18 +46,21 @@ public class UserServiceImpl implements UserService {
 
             // Student
             UserEntity student = new UserEntity()
-                    .setName("student")
+                    .setUsername("student")
+                    .setFullName("First Student")
                     .setPassword(passwordEncoder.encode("123"))
                     .setRoles(List.of(studentRole));
 
             UserEntity teacher = new UserEntity()
-                    .setName("teacher")
+                    .setUsername("teacher")
+                    .setFullName("First Teacher")
                     .setPassword(passwordEncoder.encode("123"));
             // Teacher has 2 roles
             teacher.setRoles(List.of(teacherRole, studentRole));
 
             UserEntity admin = new UserEntity()
-                    .setName("admin")
+                    .setUsername("admin")
+                    .setFullName("Admin Adminov")
                     .setPassword(passwordEncoder.encode("123"));
 
             // Admin has 3 roles
@@ -60,8 +72,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerAndLoginUser(UserRegisterServiceModel userRegisterServiceModel) {
-        // TODO
-        throw new UnsupportedOperationException("NOT YET!");
+        UserEntity newUser = modelMapper.map(userRegisterServiceModel, UserEntity.class);
+
+        // Save user in DB
+        newUser.setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()));
+
+        UserRoleEntity userRoleEntity = userRoleRepository
+                .findByRole(UserRole.STUDENT)
+                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+
+        newUser.addRole(userRoleEntity);
+
+        newUser = userRepository.save(newUser);
+
+        // Login user
+
+        UserDetails principal = unkaUserDetailsService.loadUserByUsername(newUser.getUsername());
+
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(
+                        principal,
+                        newUser.getPassword(),
+                        principal.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    @Override
+    public boolean usernameExists(String username) {
+      return userRepository.findByUsername(username).isPresent();
     }
 
 
