@@ -26,6 +26,16 @@ nav {
     border-radius: 20px;
 }
 
+.link-n:hover .fas {
+    color: #EF4E7C;
+    background-color: inherit;
+}
+
+.fas {
+    color: #ffffff;
+    background-color: #666666;
+}
+
 .link-register {
     font-size: 16px;
     font-weight: bolder;
@@ -221,3 +231,7 @@ footer {
     pointer-events: none;
     color: #aaa;
 }
+
+
+
+

@@ -2,7 +2,9 @@ package com.yoanan.unka.model.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -12,6 +14,8 @@ public class UserEntity extends BaseEntity{
     private String fullName;
     private String password;
     private List<UserRoleEntity> roles = new ArrayList<>();
+    private Set<CourseEntity> enrolledCourses = new HashSet<>();
+    private Set<CourseEntity> teachCourses = new HashSet<>();
 
     public UserEntity() {
     }
@@ -45,6 +49,7 @@ public class UserEntity extends BaseEntity{
         return this;
     }
 
+
     @ManyToMany(fetch = FetchType.EAGER)
     public List<UserRoleEntity> getRoles() {
         return roles;
@@ -57,6 +62,26 @@ public class UserEntity extends BaseEntity{
 
     public UserEntity addRole(UserRoleEntity userRoleEntity){
         this.roles.add(userRoleEntity);
+        return this;
+    }
+
+    @ManyToMany
+    public Set<CourseEntity> getEnrolledCourses() {
+        return enrolledCourses;
+    }
+
+    public UserEntity setEnrolledCourses(Set<CourseEntity> courses) {
+        this.enrolledCourses = courses;
+        return this;
+    }
+
+    @OneToMany(mappedBy="teacher")
+    public Set<CourseEntity> getTeachCourses() {
+        return teachCourses;
+    }
+
+    public UserEntity setTeachCourses(Set<CourseEntity> teachCourses) {
+        this.teachCourses = teachCourses;
         return this;
     }
 }

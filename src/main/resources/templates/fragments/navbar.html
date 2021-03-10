@@ -21,21 +21,13 @@
                 </div>
             </div>
 
-<!--            <div class="input-group input-group-search">-->
-<!--                <input type="text" class="form-control" placeholder="Search this blog">-->
-<!--                <div class="input-group-append">-->
-<!--                    <button class="btn btn-secondary" type="button">-->
-<!--                        <i class="fa fa-search"></i>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            </div>-->
             <div class="form-group has-search">
                 <span class="fa fa-search form-control-feedback"></span>
                 <input type="text" class="form-control" placeholder="Търси в курсове...">
             </div>
             <a class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
             <th:block sec:authorize="!isAuthenticated()">
-                <a class="nav-link link-n" href="/about">За нас</a>
+                <a class="nav-link link-n" th:href="@{/about}">За нас</a>
 
                 <a class="nav-link link-n" th:href="@{/users/login}">Вход</a>
             </th:block>
@@ -61,7 +53,7 @@
                 </button>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonTeacher">
-                    <a class="dropdown-item" href="/">Създай курс</a>
+                    <a class="dropdown-item" th:href="@{/courses/add}">Създай курс</a>
                     <a class="dropdown-item" href="/">Създай урок</a>
                     <a class="dropdown-item" href="/">Създай теория</a>
                     <a class="dropdown-item" href="/">Създай упражнение</a>
@@ -73,6 +65,9 @@
                 <a class="nav-link link-n" href="/">Моите курсове</a>
                 <a class="nav-link link-n" href="#">Профил</a>
                 <th:block>
+
+<!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->
+                    <a sec:authorize="isAuthenticated()" class="nav-link link-n" ><i class="fas fa-shopping-cart"></i></a>
 
                     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
                         <button type="submit"

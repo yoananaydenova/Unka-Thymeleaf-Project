@@ -128,5 +128,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserEntity findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with that username not found!"));
+    }
+
 
 }

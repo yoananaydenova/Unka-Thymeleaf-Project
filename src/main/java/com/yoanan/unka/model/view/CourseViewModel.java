@@ -1,22 +1,19 @@
-package com.yoanan.unka.model.service;
+package com.yoanan.unka.model.view;
 
-import org.springframework.web.multipart.MultipartFile;
-
-public class CourseServiceModel extends BaseServiceModel {
-
+public class CourseViewModel extends BaseViewModel {
 
     private String name;
     private String imgUrl;
     private String description;
 
-    public CourseServiceModel() {
+    public CourseViewModel() {
     }
 
     public String getName() {
         return name;
     }
 
-    public CourseServiceModel setName(String name) {
+    public CourseViewModel setName(String name) {
         this.name = name;
         return this;
     }
@@ -25,7 +22,7 @@ public class CourseServiceModel extends BaseServiceModel {
         return imgUrl;
     }
 
-    public CourseServiceModel setImgUrl(String imgUrl) {
+    public CourseViewModel setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
         return this;
     }
@@ -34,7 +31,7 @@ public class CourseServiceModel extends BaseServiceModel {
         return description;
     }
 
-    public CourseServiceModel setDescription(String description) {
+    public CourseViewModel setDescription(String description) {
         this.description = description;
         return this;
     }

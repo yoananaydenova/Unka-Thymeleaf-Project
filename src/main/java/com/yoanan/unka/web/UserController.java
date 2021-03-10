@@ -94,13 +94,12 @@ public class UserController {
         return "add-teacher";
     }
 
-
     @PostMapping("/add-teacher")
     public String teachConfirm(Principal principal){
 
         userService.addRole(principal.getName(), UserRole.TEACHER);
 
-        // To return create course page
+        // ToDo return create course page
         return "/home";
     }
 

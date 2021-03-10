@@ -20,4 +20,9 @@ public class HomeController {
     public String becomeTeacher(){
         return "become-teacher";
     }
+
+    @GetMapping("/about")
+    public String about(){
+        return "about";
+    }
 }

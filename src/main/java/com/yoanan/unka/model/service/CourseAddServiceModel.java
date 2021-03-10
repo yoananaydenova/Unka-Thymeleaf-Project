@@ -2,31 +2,30 @@ package com.yoanan.unka.model.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class CourseServiceModel extends BaseServiceModel {
-
+public class CourseAddServiceModel{
 
     private String name;
-    private String imgUrl;
+    private MultipartFile img;
     private String description;
 
-    public CourseServiceModel() {
+    public CourseAddServiceModel() {
     }
 
     public String getName() {
         return name;
     }
 
-    public CourseServiceModel setName(String name) {
+    public CourseAddServiceModel setName(String name) {
         this.name = name;
         return this;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public MultipartFile getImg() {
+        return img;
     }
 
-    public CourseServiceModel setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public CourseAddServiceModel setImg(MultipartFile img) {
+        this.img = img;
         return this;
     }
 
@@ -34,7 +33,7 @@ public class CourseServiceModel extends BaseServiceModel {
         return description;
     }
 
-    public CourseServiceModel setDescription(String description) {
+    public CourseAddServiceModel setDescription(String description) {
         this.description = description;
         return this;
     }
