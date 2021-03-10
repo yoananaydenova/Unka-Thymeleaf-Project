@@ -33,10 +33,10 @@
                 <span class="fa fa-search form-control-feedback"></span>
                 <input type="text" class="form-control" placeholder="Търси в курсове...">
             </div>
-
+            <a class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
             <th:block sec:authorize="!isAuthenticated()">
                 <a class="nav-link link-n" href="/about">За нас</a>
-                <a class="nav-link link-n" href="#">Преподавай</a>
+
                 <a class="nav-link link-n" th:href="@{/users/login}">Вход</a>
             </th:block>
 
@@ -69,7 +69,7 @@
             </div>
 
             <th:block sec:authorize="hasRole('STUDENT')">
-                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" href="/roles/teach">Преподавай</a>
+<!--                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/roles/add-teacher}">Преподавай</a>-->
                 <a class="nav-link link-n" href="/">Моите курсове</a>
                 <a class="nav-link link-n" href="#">Профил</a>
                 <th:block>

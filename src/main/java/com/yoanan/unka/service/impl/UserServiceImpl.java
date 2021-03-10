@@ -100,7 +100,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean usernameExists(String username) {
-      return userRepository.findByUsername(username).isPresent();
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    @Override
+    public void addRole(String username, UserRole role) {
+
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User with that username not found!"));
+
+
+        UserRoleEntity userRoleEntity = userRoleRepository
+                .findByRole(UserRole.TEACHER)
+                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+
+
+        UserDetails principal = unkaUserDetailsService.loadUserByUsername(username);
+
+        //Check user don`t have role
+        boolean existRole = principal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_" + role));
+
+        //Add role to user
+        if (principal != null && !existRole) {
+            userEntity.addRole(userRoleEntity);
+            userRepository.save(userEntity);
+        }
     }
 
 

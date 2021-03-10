@@ -1,6 +1,7 @@
 package com.yoanan.unka.service;
 
 
+import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
 
 
     boolean usernameExists(String username);
+
+    void addRole(String username, UserRole role);
 }

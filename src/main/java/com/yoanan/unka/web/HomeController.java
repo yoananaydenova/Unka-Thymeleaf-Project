@@ -15,4 +15,9 @@ public class HomeController {
     public String home(){
         return "home";
     }
+
+    @GetMapping("/become-teacher")
+    public String becomeTeacher(){
+        return "become-teacher";
+    }
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <title>Унка</title>
+</head>
+
+<body>
+<header>
+    <th:block th:include="~{fragments/navbar}"></th:block>
+</header>
+
+
+<main class="content-wrap">
+    <div class="container">
+    <h3 class="text-center"><span class="lable-intrance">Информация</span></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus adipisci asperiores aut autem consequatur
+            cumque delectus dicta dolorem dolores dolorum ea eaque facere illo ipsa iusto laboriosam laborum maiores
+            maxime, natus nemo non omnis placeat provident quae quaerat quam quidem quis quisquam repudiandae, rerum
+            sequi sint suscipit unde veniam veritatis vitae voluptatibus? Asperiores deleniti, dicta eaque fugit harum
+            necessitatibus perspiciatis possimus provident voluptatum! A accusamus alias assumenda aut beatae debitis
+            deleniti dicta dolore ducimus eius eligendi error eveniet, explicabo fugiat fugit id incidunt iusto maxime
+            nihil numquam omnis perspiciatis quos recusandae reiciendis saepe, tempore ullam voluptatem. Aliquid
+            consequuntur distinctio voluptate?</p>
+    <a th:href="@{/users/add-teacher}" type="button" class="btn btn-primary">Стани преподавател</a>
+    </div>
+</main>
+
+<th:block th:include="~{fragments/footer}"></th:block>
+
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 package com.yoanan.unka.web;
 
 import com.yoanan.unka.model.binding.UserRegisterBindingModel;
+import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
@@ -85,5 +87,24 @@ public class UserController {
 
         return "redirect:/home";
     }
+
+    // Form to be teacher
+    @GetMapping("/add-teacher")
+    public String teach(){
+        return "add-teacher";
+    }
+
+
+    @PostMapping("/add-teacher")
+    public String teachConfirm(Principal principal){
+
+        userService.addRole(principal.getName(), UserRole.TEACHER);
+
+        // To return create course page
+        return "/home";
+    }
+
+
+
 
 }
