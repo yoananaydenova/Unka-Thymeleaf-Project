@@ -1,19 +1,26 @@
 package com.yoanan.unka.service.impl;
 
+import com.yoanan.unka.model.entity.CategoryEntity;
 import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.service.CourseAddServiceModel;
 import com.yoanan.unka.model.service.CourseServiceModel;
+import com.yoanan.unka.repository.CategoryRepository;
 import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.service.CloudinaryService;
 import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.UserService;
+import org.apache.commons.collections.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.expression.Sets;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,37 +30,71 @@ public class CourseServiceImpl implements CourseService {
     private final CloudinaryService cloudinaryService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository, CloudinaryService cloudinaryService, UserService userService, ModelMapper modelMapper) {
+    public CourseServiceImpl(CourseRepository courseRepository, CloudinaryService cloudinaryService, UserService userService, ModelMapper modelMapper, CategoryRepository categoryRepository) {
         this.courseRepository = courseRepository;
         this.cloudinaryService = cloudinaryService;
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
+    @Transactional
     public void addCourse(String username, CourseAddServiceModel courseAddServiceModel) throws IOException {
 
         CourseEntity newCourse = modelMapper.map(courseAddServiceModel, CourseEntity.class);
 
-        System.out.println();
         MultipartFile img = courseAddServiceModel.getImg();
         String imageUrl = cloudinaryService.uploadImage(img);
-        System.out.println();
         newCourse.setImgUrl(imageUrl);
 
         UserEntity userEntity = userService.findByUsername(username);
         newCourse.setTeacher(userEntity);
 
-        courseRepository.save(newCourse);
+        if (courseAddServiceModel.getCategories().isEmpty()) {
+
+            CategoryEntity categoryEntity = categoryRepository
+                    .findById(1L)
+                    .orElseThrow(() ->
+                            new IllegalStateException("Category not found! Please seed the category!"));
+
+//            categoryEntity.addCourse(newCourse);
+//            categoryRepository.save(categoryEntity);
+            newCourse.addCategory(categoryEntity);
+
+        } else {
+            Set<CategoryEntity> categoryList = courseAddServiceModel
+                    .getCategories()
+                    .stream()
+                    .map(category -> {
+                        return categoryRepository
+                                .findById(Long.parseLong(category))
+                                .orElseThrow(() ->
+                                        new IllegalStateException("Category not found! Please seed the category!"));
+
+
+                    }).collect(Collectors.toSet());
+
+            newCourse.setCategories(categoryList);
+        }
+
+        courseRepository.saveAndFlush(newCourse);
     }
 
     @Override
     public List<CourseServiceModel> findAll() {
-       return courseRepository
+        List<CourseServiceModel> collect = courseRepository
                 .findAll()
                 .stream()
-                .map(ce-> modelMapper.map(ce, CourseServiceModel.class))
+                .map(ce -> {
+                    CourseServiceModel courseServiceModel = modelMapper.map(ce, CourseServiceModel.class);
+                    courseServiceModel.setTeacher(ce.getTeacher().getFullName());
+                    return courseServiceModel;
+                })
                 .collect(Collectors.toList());
+        System.out.println();
+        return collect;
     }
 }

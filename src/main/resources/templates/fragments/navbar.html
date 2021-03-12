@@ -2,9 +2,10 @@
           xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <nav class="navbar navbar-expand-lg bg-nav">
 
-        <a class="navbar-brand" href="/">
-            <img src="/img/logo.png" alt="Unka logo" width="100" height="50" class="d-inline-block align-top"/>
+        <a class="navbar-brand"  th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="Unka logo" width="100" height="50" class="d-inline-block align-top"/>
         </a>
+
 
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavAltMarkup">
 
@@ -25,7 +26,10 @@
                 <span class="fa fa-search form-control-feedback"></span>
                 <input type="text" class="form-control" placeholder="Търси в курсове...">
             </div>
-            <a class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
+
+            <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
+<!--            TODO reload navbar after student become teacher-->
+
             <th:block sec:authorize="!isAuthenticated()">
                 <a class="nav-link link-n" th:href="@{/about}">За нас</a>
 
@@ -49,14 +53,14 @@
                 <button class="btn btn-secondary dropdown-toggle" type="button"
                         id="dropdownMenuButtonTeacher"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Табло
+                   Преподавател
                 </button>
-
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonTeacher">
-                    <a class="dropdown-item" th:href="@{/courses/add}">Създай курс</a>
-                    <a class="dropdown-item" href="/">Създай урок</a>
-                    <a class="dropdown-item" href="/">Създай теория</a>
-                    <a class="dropdown-item" href="/">Създай упражнение</a>
+                    <a class="dropdown-item" th:href="@{/courses/add}">ТАБЛО</a>
+                    <a class="dropdown-item" th:href="@{/courses/add}">+Курс</a>
+                    <a class="dropdown-item" href="/">+Лекция</a>
+                    <a class="dropdown-item" href="/">+Теоретична част</a>
+                    <a class="dropdown-item" href="/">+Практическа част</a>
                 </div>
             </div>
 

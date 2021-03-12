@@ -1,12 +1,14 @@
 package com.yoanan.unka.model.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.math.BigDecimal;
 
 public class CourseServiceModel extends BaseServiceModel {
 
 
     private String name;
+    private BigDecimal price;
     private String imgUrl;
+    private String teacher;
     private String description;
 
     public CourseServiceModel() {
@@ -21,12 +23,30 @@ public class CourseServiceModel extends BaseServiceModel {
         return this;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public CourseServiceModel setPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
+
     public String getImgUrl() {
         return imgUrl;
     }
 
     public CourseServiceModel setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+        return this;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public CourseServiceModel setTeacher(String teacher) {
+        this.teacher = teacher;
         return this;
     }
 

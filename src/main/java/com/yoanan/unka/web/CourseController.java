@@ -1,8 +1,11 @@
 package com.yoanan.unka.web;
 
 import com.yoanan.unka.model.binding.CourseAddBindingModel;
+import com.yoanan.unka.model.service.CategoryServiceModel;
 import com.yoanan.unka.model.service.CourseAddServiceModel;
+import com.yoanan.unka.model.view.CategoryViewModel;
 import com.yoanan.unka.model.view.CourseViewModel;
+import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -23,32 +27,70 @@ public class CourseController {
 
     private final ModelMapper modelMapper;
     private final CourseService courseService;
+    private final CategoryService categoryService;
 
-    public CourseController(ModelMapper modelMapper, CourseService courseService) {
+    public CourseController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService) {
         this.modelMapper = modelMapper;
         this.courseService = courseService;
+        this.categoryService = categoryService;
     }
 
 
     @GetMapping("/add")
-    public String add() {
+    public String add(Model model) {
+        if (!model.containsAttribute("courseAddBindingModel")) {
+            model.addAttribute("courseAddBindingModel", new CourseAddBindingModel());
+
+            // add category checkbox
+            List<CategoryViewModel> categoryViews = categoryService
+                    .findAll()
+                    .stream()
+                    .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
+                    .collect(Collectors.toList());
+
+            model.addAttribute("categories", categoryViews);
+        }
+
+
+
+
         return "add-course";
     }
 
     @PostMapping("/add")
-    public String addConfirm(Model model, @ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,
+    public String addConfirm(@ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,Model model,
                              Principal principal) throws IOException {
         // TODO Valid
         CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
+
         courseService.addCourse(principal.getName(), courseAddServiceModel);
 
-        List<CourseViewModel> coursesViewModels = courseService
+        // add category checkbox
+        List<CategoryViewModel> categoryViews = categoryService
                 .findAll()
                 .stream()
-                .map(cs -> modelMapper.map(cs, CourseViewModel.class))
+                .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
                 .collect(Collectors.toList());
+        model.addAttribute("categories", categoryViews);
 
-        model.addAttribute("courses", coursesViewModels);
+        // Views for all categories
+//        List<CourseViewModel> coursesViewModels = courseService
+//                .findAll()
+//                .stream()
+//                .map(cs -> {
+//                    CourseViewModel courseView = modelMapper.map(cs, CourseViewModel.class);
+//                    if (courseView.getPrice().equals("0.00")) {
+//                        courseView.setPrice("FREE");
+//                    } else {
+//                        courseView.setPrice(courseView.getPrice() + " лв.");
+//                    }
+//                    return courseView;
+//                })
+//                .collect(Collectors.toList());
+//
+//        model.addAttribute("courses", coursesViewModels);
+
+
         return "add-course";
     }
 }

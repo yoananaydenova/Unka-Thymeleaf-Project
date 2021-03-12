@@ -12,39 +12,82 @@
 </header>
 
 <main class="content-wrap">
-    <h3 class="text-center"><span class="lable-intrance">Добавяне на курс</span></h3>
+    <div class="container">
+        <h3 class="text-center"><span class="lable-intrance">Добавяне на курс</span></h3>
 
-    <form th:action="@{/courses/add}" method="POST" enctype="multipart/form-data">
-        <fieldset>
-            <div class="field">
-                <label for="name" class="label">Name of course</label>
-                <input type="text" id="name"
-                       name="name" placeholder="Name" class="input">
-            </div>
-            <div class="field">
-                <label for="description" class="label">Description of course</label>
-                <input
-                        type="text"
-                        id="description" name="description" placeholder="Description"
-                        class="input">
-            </div>
-            <div class="form-group">
-                <label for="add-title-image" class="font-weight-bold">Снимка</label>
-                <input type="file" class="form-control-file" id="add-title-image" name="img" required="required">
-            </div>
+        <form th:action="@{/courses/add}" method="POST" th:object="${courseAddBindingModel}"
+              enctype="multipart/form-data">
+            <fieldset>
+                <div class="field">
+                    <label for="name" class="label">Име на курса</label>
+                    <input type="text" id="name"
+                           name="name" placeholder="Име на курса" class="input">
+                </div>
+                <div class="field">
+                    <label for="price" class="label">Цена</label>
+                    <input type="number" id="price"
+                           name="price" placeholder="Цена" class="input">
+                </div>
+                <div class="field">
+                    <label for="description" class="label">Description of course</label>
+                    <input
+                            type="text"
+                            id="description" name="description" placeholder="Description"
+                            class="input">
+                </div>
 
-            <div type="submit" class="btn btn-primary">
-                <button>Създай</button>
-            </div>
-        </fieldset>
-    </form>
+                <!--                <div class="field" th:each="categoryView, stat : *{categories}">-->
+                <!--                    <input type="checkbox" class="btn-check"-->
+                <!--                           th:field="*{userRole[__${stat.index}__]}" th:value="${categoryView}" />-->
+                <!--                    <label th:text="${categoryView.}">Test</label>-->
+                <!--                </div>-->
 
-    <th:block th:each="s : ${courses}" th:object="${s}">
-        <div class="row">
-            <h3 th:text="*{name}"></h3>
-            <img th:src="*{imgUrl}" alt="Student picture" width="300px"/>
-        </div>
-    </th:block>
+                <ul>
+                    <li th:each="categoryView : ${categories}">
+                        <div class="ui checkbox" >
+                            <input type="checkbox" class="btn-check" autocomplete="off" th:field="${courseAddBindingModel.categories}"
+                                   th:value="${categoryView.id}">
+                            <label class="btn btn-outline-primary"
+                                   th:text="${categoryView.name}">Категория</label>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="form-group">
+                    <label for="add-title-image" class="font-weight-bold">Снимка</label>
+                    <input type="file" class="form-control-file" id="add-title-image" name="img" required="required">
+                </div>
+
+                <div type="submit" class="btn btn-primary">
+                    <button>Създай</button>
+                </div>
+            </fieldset>
+        </form>
+
+        <!--        <div class="card-group">-->
+        <!--            <a th:each="s : ${courses}" th:object="${s}" href="/" class="course-box-link">-->
+        <!--                <div class="card m-3 course-box">-->
+        <!--                    <img th:src="*{imgUrl}"-->
+        <!--                         class="card-img-top course-img" alt="...">-->
+        <!--                    <div class="card-body">-->
+        <!--                        <h5 th:text="*{name}" class="card-title">Счетоводство и контрол</h5>-->
+        <!--                        <p th:text="*{#strings.abbreviate(description,70)}" class="card-text">Some quick example-->
+        <!--                            text to-->
+        <!--                            build on the card title and make up the-->
+        <!--                            bulk-->
+        <!--                            of the card's content.</p>-->
+
+        <!--                        <div class="d-flex justify-content-between">-->
+
+        <!--                            <span th:text="*{teacher}"> Снежана Найденова </span>-->
+        <!--                            <span th:text="*{price}" class="card-price"></span>-->
+
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </a>-->
+        <!--        </div>-->
+    </div>
 </main>
 
 <th:block th:include="~{fragments/footer}"></th:block>

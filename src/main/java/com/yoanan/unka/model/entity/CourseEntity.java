@@ -1,24 +1,29 @@
 package com.yoanan.unka.model.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
-@Table(name="courses")
+@Table(name = "courses")
 public class CourseEntity extends BaseEntity {
 
     private String name;
+    private BigDecimal price;
     private String imgUrl;
     private String description;
     private UserEntity teacher;
     private Set<UserEntity> students = new HashSet<>();
+    private Set<CategoryEntity> categories = new HashSet<>();
 
     public CourseEntity() {
     }
 
-    @Column(name="name", nullable = false)
+
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -28,7 +33,17 @@ public class CourseEntity extends BaseEntity {
         return this;
     }
 
-    @Column(name="img", nullable = false)
+    @Column(name = "price", nullable = false)
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public CourseEntity setPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
+
+    @Column(name = "img", nullable = false)
     public String getImgUrl() {
         return imgUrl;
     }
@@ -38,7 +53,7 @@ public class CourseEntity extends BaseEntity {
         return this;
     }
 
-    @Column(name="description",columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     public String getDescription() {
         return description;
     }
@@ -67,4 +82,20 @@ public class CourseEntity extends BaseEntity {
         this.students = users;
         return this;
     }
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    public Set<CategoryEntity> getCategories() {
+        return categories;
+    }
+
+    public CourseEntity setCategories(Set<CategoryEntity> categories) {
+        this.categories = categories;
+        return this;
+    }
+
+    public CourseEntity addCategory(CategoryEntity categoryEntity) {
+        this.categories.add(categoryEntity);
+        return this;
+    }
+
 }
