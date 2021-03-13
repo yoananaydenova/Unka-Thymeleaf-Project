@@ -4,8 +4,11 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -15,13 +18,13 @@ public class CourseAddBindingModel {
     private BigDecimal price;
     private String description;
     private MultipartFile img;
-    private Set<String> categories;
+    private Set<String> categories = new HashSet<>();
 
     public CourseAddBindingModel() {
     }
 
     @NotEmpty
-    @Length(min = 2, message = "Name of the course must be minimum 2 characters!")
+    @Length(min = 5, max=30, message = "Името на курса трябва да бъде от 5 до 30 символа!")
     public String getName() {
         return name;
     }
@@ -31,8 +34,8 @@ public class CourseAddBindingModel {
         return this;
     }
 
-    @NotEmpty
-    @DecimalMin(value = "0", message = "The price must be positive number!")
+    @NotNull(message = "Трябва да въведете цена на курса! Ако искате да е безплатен - въведете нула.")
+    @DecimalMin(value = "0", message = "Цената трябва да е положително число!")
     public BigDecimal getPrice() {
         return price;
     }
@@ -42,8 +45,7 @@ public class CourseAddBindingModel {
         return this;
     }
 
-    @NotEmpty
-    @Length(min = 2, message = "Description of the course must be minimum 2 characters!")
+    @Length(max = 500, message = "Описанието на курса трябва да е до 500 символа!")
     public String getDescription() {
         return description;
     }

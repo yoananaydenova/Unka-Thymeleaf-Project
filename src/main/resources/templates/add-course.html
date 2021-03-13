@@ -20,38 +20,50 @@
             <fieldset>
                 <div class="field">
                     <label for="name" class="label">Име на курса</label>
-                    <input type="text" id="name"
-                           name="name" placeholder="Име на курса" class="input">
+                    <input th:field="*{name}"
+                           th:errorclass="border-err"
+                           type="text" id="name"
+                           name="name"
+                           placeholder="Име на курса" class="input">
+                    <small class="msg-custom" th:if="${#fields.hasErrors('name')}"
+                           th:errors="*{name}"></small>
+                    <small th:if="${courseExistsError}" id="usernameUniqueError"
+                           class="text-light form-text bg-danger rounded">Курс създаден от Вас с това име вече съществува!</small>
                 </div>
                 <div class="field">
                     <label for="price" class="label">Цена</label>
-                    <input type="number" id="price"
-                           name="price" placeholder="Цена" class="input">
+                    <input th:field="*{price}"
+                           th:errorclass="border-err"
+                           type="number" id="price"
+                           name="price"
+                           placeholder="Цена" class="input">
+                    <small class="msg-custom" th:if="${#fields.hasErrors('price')}"
+                           th:errors="*{price}"></small>
                 </div>
                 <div class="field">
-                    <label for="description" class="label">Description of course</label>
-                    <input
-                            type="text"
-                            id="description" name="description" placeholder="Description"
-                            class="input">
+                    <label for="description" class="label">Описание:</label>
+                    <input th:field="*{description}"
+                           th:errorclass="border-err"
+                           type="text" id="description"
+                           name="description"
+                           placeholder="Описание на курса до 500 символа." class="input">
+                    <small class="msg-custom" th:if="${#fields.hasErrors('description')}"
+                           th:errors="*{description}"></small>
                 </div>
 
-                <!--                <div class="field" th:each="categoryView, stat : *{categories}">-->
-                <!--                    <input type="checkbox" class="btn-check"-->
-                <!--                           th:field="*{userRole[__${stat.index}__]}" th:value="${categoryView}" />-->
-                <!--                    <label th:text="${categoryView.}">Test</label>-->
-                <!--                </div>-->
-
+                <p>Ако не изберете категория, системата автоматично ще постави курса в категория "Друго".</p>
                 <ul>
                     <li th:each="categoryView : ${categories}">
-                        <div class="ui checkbox" >
-                            <input type="checkbox" class="btn-check" autocomplete="off" th:field="${courseAddBindingModel.categories}"
-                                   th:value="${categoryView.id}">
-                            <label class="btn btn-outline-primary"
-                                   th:text="${categoryView.name}">Категория</label>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   th:field="${courseAddBindingModel.categories}"
+                                   th:value="${categoryView.id}"
+                                   th:id="${categoryView.id}">
+                            <label th:text="${categoryView.name}" th:for="${categoryView.id}">Категория</label>
                         </div>
                     </li>
                 </ul>
+
 
                 <div class="form-group">
                     <label for="add-title-image" class="font-weight-bold">Снимка</label>

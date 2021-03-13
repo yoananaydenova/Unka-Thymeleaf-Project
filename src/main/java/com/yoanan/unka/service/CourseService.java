@@ -11,4 +11,6 @@ public interface CourseService {
     void addCourse(String username, CourseAddServiceModel courseServiceModel) throws IOException;
 
     List<CourseServiceModel> findAll();
+
+    boolean courseWithNameAndTeacher(String courseName, String username);
 }

@@ -10,15 +10,12 @@ import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.service.CloudinaryService;
 import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.UserService;
-import org.apache.commons.collections.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.expression.Sets;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,15 +50,13 @@ public class CourseServiceImpl implements CourseService {
         UserEntity userEntity = userService.findByUsername(username);
         newCourse.setTeacher(userEntity);
 
-        if (courseAddServiceModel.getCategories().isEmpty()) {
+        if (courseAddServiceModel.getCategories().size() == 0) {
 
             CategoryEntity categoryEntity = categoryRepository
                     .findById(1L)
                     .orElseThrow(() ->
                             new IllegalStateException("Category not found! Please seed the category!"));
 
-//            categoryEntity.addCourse(newCourse);
-//            categoryRepository.save(categoryEntity);
             newCourse.addCategory(categoryEntity);
 
         } else {
@@ -94,7 +89,18 @@ public class CourseServiceImpl implements CourseService {
                     return courseServiceModel;
                 })
                 .collect(Collectors.toList());
-        System.out.println();
+
         return collect;
+    }
+
+    @Override
+    public boolean courseWithNameAndTeacher(String courseName, String username) {
+
+        UserEntity byUsername = userService.findByUsername(username);
+
+        boolean byNameAndTeacher = courseRepository
+                .existsByNameAndTeacher(courseName, byUsername);
+        System.out.println();
+        return byNameAndTeacher;
     }
 }

@@ -3,6 +3,7 @@ package com.yoanan.unka.model.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CourseAddServiceModel{
@@ -11,7 +12,7 @@ public class CourseAddServiceModel{
     private BigDecimal price;
     private MultipartFile img;
     private String description;
-    private Set<String> categories;
+    private Set<String> categories = new HashSet<>();
 
     public CourseAddServiceModel() {
     }

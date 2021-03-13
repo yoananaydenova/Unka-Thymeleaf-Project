@@ -1,12 +1,13 @@
 package com.yoanan.unka.model.service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class CategoryServiceModel extends BaseServiceModel{
 
     private String name;
     private String description;
-    private Set<CourseServiceModel> courses;
+    private Set<CourseServiceModel> courses = new HashSet<>();
 
     public CategoryServiceModel() {
     }

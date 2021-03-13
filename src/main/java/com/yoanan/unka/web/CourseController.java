@@ -10,12 +10,15 @@ import com.yoanan.unka.service.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -40,29 +43,50 @@ public class CourseController {
     public String add(Model model) {
         if (!model.containsAttribute("courseAddBindingModel")) {
             model.addAttribute("courseAddBindingModel", new CourseAddBindingModel());
-
-            // add category checkbox
-            List<CategoryViewModel> categoryViews = categoryService
-                    .findAll()
-                    .stream()
-                    .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
-                    .collect(Collectors.toList());
-
-            model.addAttribute("categories", categoryViews);
         }
 
 
+        // add category checkbox
+        List<CategoryViewModel> categoryViews = categoryService
+                .findAll()
+                .stream()
+                .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
+                .collect(Collectors.toList());
+
+        model.addAttribute("categories", categoryViews);
 
 
         return "add-course";
     }
 
     @PostMapping("/add")
-    public String addConfirm(@ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,Model model,
+    public String addConfirm(@Valid @ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes,
+                             Model model,
                              Principal principal) throws IOException {
         // TODO Valid
-        CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
 
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.courseAddBindingModel", bindingResult);
+
+            return "redirect:/courses/add";
+        }
+
+        String name = courseAddBindingModel.getName();
+        String username1 = principal.getName();
+
+//         Combination of course`s name and teacher-creator must be unique
+        if (courseService.courseWithNameAndTeacher(name,username1)) {
+            redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
+            redirectAttributes.addFlashAttribute("courseExistsError", true);
+
+            return "redirect:/courses/add";
+        }
+
+        CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
         courseService.addCourse(principal.getName(), courseAddServiceModel);
 
         // add category checkbox
@@ -91,6 +115,7 @@ public class CourseController {
 //        model.addAttribute("courses", coursesViewModels);
 
 
-        return "add-course";
+
+        return "redirect:/home";
     }
 }
