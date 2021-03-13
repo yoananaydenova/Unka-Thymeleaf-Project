@@ -2,7 +2,7 @@
           xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <nav class="navbar navbar-expand-lg bg-nav">
 
-        <a class="navbar-brand"  th:href="@{/}">
+        <a class="navbar-brand" th:href="@{/}">
             <img th:src="@{/img/logo.png}" alt="Unka logo" width="100" height="50" class="d-inline-block align-top"/>
         </a>
 
@@ -16,9 +16,17 @@
                     Курсове
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCourse">
-                    <a class="dropdown-item" href="/">Счетоводство и контрол</a>
-                    <a class="dropdown-item" href="/">Икономически дисциплини</a>
-                    <a class="dropdown-item" href="/">Право</a>
+                    <a class="dropdown-item" href="/courses/all">Всички</a>
+                    <ul>
+                        <li th:each="categoryView : ${categories}" >
+
+                            <a class="dropdown-item"
+                               th:text="${categoryView.name}"
+                               th:href="@{/courses/delete/{id}(id=${categoryView.id})}">
+                            </a>
+
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -28,7 +36,7 @@
             </div>
 
             <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
-<!--            TODO reload navbar after student become teacher-->
+            <!--            TODO reload navbar after student become teacher-->
 
             <th:block sec:authorize="!isAuthenticated()">
                 <a class="nav-link link-n" th:href="@{/about}">За нас</a>
@@ -53,10 +61,10 @@
                 <button class="btn btn-secondary dropdown-toggle" type="button"
                         id="dropdownMenuButtonTeacher"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   Преподавател
+                    Преподавател
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonTeacher">
-                    <a class="dropdown-item" th:href="@{/courses/add}">ТАБЛО</a>
+                    <a class="dropdown-item" th:href="@{/board}">ТАБЛО</a>
                     <a class="dropdown-item" th:href="@{/courses/add}">+Курс</a>
                     <a class="dropdown-item" href="/">+Лекция</a>
                     <a class="dropdown-item" href="/">+Теоретична част</a>
@@ -65,13 +73,14 @@
             </div>
 
             <th:block sec:authorize="hasRole('STUDENT')">
-<!--                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/roles/add-teacher}">Преподавай</a>-->
+                <!--                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/roles/add-teacher}">Преподавай</a>-->
                 <a class="nav-link link-n" href="/">Моите курсове</a>
                 <a class="nav-link link-n" href="#">Профил</a>
                 <th:block>
 
-<!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->
-                    <a sec:authorize="isAuthenticated()" class="nav-link link-n" ><i class="fas fa-shopping-cart"></i></a>
+                    <!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->
+                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i
+                            class="fas fa-shopping-cart"></i></a>
 
                     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
                         <button type="submit"

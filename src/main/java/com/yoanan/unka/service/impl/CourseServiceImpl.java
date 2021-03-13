@@ -11,6 +11,7 @@ import com.yoanan.unka.service.CloudinaryService;
 import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,7 +81,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseServiceModel> findAll() {
-        List<CourseServiceModel> collect = courseRepository
+
+        return courseRepository
                 .findAll()
                 .stream()
                 .map(ce -> {
@@ -89,8 +91,6 @@ public class CourseServiceImpl implements CourseService {
                     return courseServiceModel;
                 })
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     @Override
@@ -98,9 +98,73 @@ public class CourseServiceImpl implements CourseService {
 
         UserEntity byUsername = userService.findByUsername(username);
 
-        boolean byNameAndTeacher = courseRepository
-                .existsByNameAndTeacher(courseName, byUsername);
-        System.out.println();
-        return byNameAndTeacher;
+        return courseRepository
+                .existsByNameAndTeacher_Username(courseName, username);
     }
+
+//    @Override
+////    public List<CourseServiceModel> findByTeacherUsername(String username) {
+////
+////        return courseRepository
+////                .findAllByTeacher_Username(username)
+////                .stream()
+////                .map(ce -> {
+////                    CourseServiceModel courseServiceModel = modelMapper.map(ce, CourseServiceModel.class);
+////                    courseServiceModel.setTeacher(ce.getTeacher().getFullName());
+////                    return courseServiceModel;
+////                })
+////                .collect(Collectors.toList());
+////
+////    }
+
+    @Override
+    public Page<CourseServiceModel> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        Page<CourseEntity> coursesPage = courseRepository
+                .findAll(pageable);
+
+        int totalElements = (int) coursesPage.getTotalElements();
+
+        return new PageImpl<CourseServiceModel>(coursesPage
+                .stream()
+                .map(course ->{
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .collect(Collectors.toList()), pageable, totalElements);
+
+    }
+
+    @Override
+    public Page<CourseServiceModel> findByTeacherPaginated(String username,
+                                                           int pageNo, int pageSize, String sortField, String sortDirection) {
+
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        Page<CourseEntity> coursesPage = courseRepository
+                .findAllByTeacher_Username(username, pageable);
+
+        int totalElements = (int) coursesPage.getTotalElements();
+
+        return new PageImpl<CourseServiceModel>(coursesPage
+                .stream()
+                .map(course ->{
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .collect(Collectors.toList()), pageable, totalElements);
+    }
+
+
 }

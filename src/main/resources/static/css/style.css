@@ -131,6 +131,7 @@ footer {
 
 .course-box {
     width: 20rem;
+    height: 32rem;
     border-width: 3px;
     border-color: #ffffff;
     border-radius: 15px;
@@ -232,6 +233,9 @@ footer {
     color: #aaa;
 }
 
+.img-list{
+    height: 77px;
+}
 
 
 

@@ -37,9 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryServiceModel> findAll() {
+    public List<CategoryServiceModel> findAllCategories() {
         return categoryRepository
-                .findAll()
+                .findAllByOrderByIdDesc()
                 .stream()
                 .map(csm -> modelMapper.map(csm, CategoryServiceModel.class))
                 .collect(Collectors.toList());
