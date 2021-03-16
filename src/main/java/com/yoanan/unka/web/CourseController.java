@@ -62,11 +62,8 @@ public class CourseController {
             return "redirect:/courses/add";
         }
 
-        String name = courseAddBindingModel.getName();
-        String username1 = principal.getName();
-
 //         Combination of course`s name and teacher-creator must be UNIQUE
-        if (courseService.courseWithNameAndTeacher(name, username1)) {
+        if (courseService.courseWithNameAndTeacher(courseAddBindingModel.getName(), principal.getName())) {
             redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
             redirectAttributes.addFlashAttribute("courseExistsError", true);
 
@@ -76,7 +73,7 @@ public class CourseController {
         CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
         courseService.addCourse(principal.getName(), courseAddServiceModel);
 
-        return "redirect:/courses/add";
+        return "redirect:/board";
     }
 
 

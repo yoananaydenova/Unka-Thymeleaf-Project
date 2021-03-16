@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @ModelAttribute("userRegisterBindingModel")
-    public UserRegisterBindingModel createBindingModel(){
+    public UserRegisterBindingModel createBindingModel() {
         return new UserRegisterBindingModel();
     }
 
@@ -41,16 +41,14 @@ public class UserController {
     }
 
     @PostMapping("/login-error")
-    public ModelAndView failedLogin(@ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
-                                            String username) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String failedLogin(@ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
+                                            String username,
+                                    RedirectAttributes redirectAttributes) {
 
-        modelAndView.addObject("bad_credentials", true);
-        modelAndView.addObject("username", username);
+        redirectAttributes.addFlashAttribute("bad_credentials", true);
+        redirectAttributes.addFlashAttribute("username", username);
 
-        modelAndView.setViewName("/login");
-
-        return modelAndView;
+        return "redirect:/users/login";
     }
 
     @GetMapping("/register")
@@ -62,9 +60,9 @@ public class UserController {
     public String registerAndLoginUser(
             @Valid UserRegisterBindingModel userRegisterBindingModel,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute(
                     "org.springframework.validation.BindingResult.userRegisterBindingModel", bindingResult);
@@ -90,20 +88,17 @@ public class UserController {
 
     // Form to be teacher
     @GetMapping("/add-teacher")
-    public String teach(){
+    public String teach() {
         return "add-teacher";
     }
 
     @PostMapping("/add-teacher")
-    public String teachConfirm(Principal principal){
+    public String teachConfirm(Principal principal) {
 
         userService.addRole(principal.getName(), UserRole.TEACHER);
-
-        // ToDo return create course page
+        // TODO Change role in same session
         return "/home";
     }
-
-
 
 
 }
