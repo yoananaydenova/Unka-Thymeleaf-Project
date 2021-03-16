@@ -13,24 +13,24 @@
 <main class="content-wrap">
     <div class="container">
 
-        <thead>
-        <tr>
-            <th>
-                <a th:href="@{'/all/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">
-                    Име на курс</a>
-            </th>
-            <th>
-                <a th:href="@{'/all/' + ${currentPage} + '?sortField=price&sortDir=' + ${reverseSortDir}}">
-                    Цена</a>
-            </th>
-            <th>
-                <a th:href="@{'/all/' + ${currentPage} + '?sortField=teacher&sortDir=' + ${reverseSortDir}}">
-                    Преподавател</a>
-            </th>
+        <h3 th:text="|Курсове в категория: ${categoryName}|"></h3>
+        <div class="row">
+            <h4>Сортирай по: </h4>
+            <a class="btn btn-primary"
+               th:href="@{${#httpServletRequest.requestURI} +'?pageNo=' +${currentPage} +'&sortField=name&sortDir='+ ${reverseSortDir}}">
+                Име на курс</a>
 
-        </tr>
-        </thead>
+            <a class="btn btn-primary"
+               th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage} + '&sortField=price&sortDir=' + ${reverseSortDir}}">
+                Цена</a>
 
+            <a class="btn btn-primary"
+               th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage} + '&sortField=teacher&sortDir=' + ${reverseSortDir}}">
+                Преподавател</a>
+
+        </div>
+
+        <h3 th:if="${courses.isEmpty()}">Няма курсове според избраните от Вас параметри. Опитайте отново!</h3>
 
         <div class="card-group">
             <a th:each="s : ${courses}" th:object="${s}" th:href="@{/courses/{id}(id=*{id})}" class="course-box-link">
@@ -54,25 +54,25 @@
 
         <div th:if="${totalPages > 1}">
             <div class="row col-sm-10">
-                <div class="col-sm-2">
+                <div class="col-sm-5">
                     Всички курсове: [[${totalItems}]]
                 </div>
                 <div class="col-sm-1">
      <span th:each="i: ${#numbers.sequence(1, totalPages)}">
       <a th:if="${currentPage != i}"
-         th:href="@{'/all/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+         th:href="@{${#httpServletRequest.requestURI} +'?pageNo=' + ${i}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
       <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
      </span>
                 </div>
                 <div class="col-sm-1">
                     <a th:if="${currentPage < totalPages}"
-                       th:href="@{'/all/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                       th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage + 1} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
                     <span th:unless="${currentPage < totalPages}">Next</span>
                 </div>
 
                 <div class="col-sm-1">
                     <a th:if="${currentPage < totalPages}"
-                       th:href="@{'/all/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                       th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${totalPages} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
                     <span th:unless="${currentPage < totalPages}">Last</span>
                 </div>
             </div>

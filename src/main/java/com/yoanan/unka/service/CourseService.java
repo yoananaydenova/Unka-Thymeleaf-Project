@@ -5,19 +5,18 @@ import com.yoanan.unka.model.service.CourseServiceModel;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface CourseService {
 
     void addCourse(String username, CourseAddServiceModel courseServiceModel) throws IOException;
 
-    List<CourseServiceModel> findAll();
-
     boolean courseWithNameAndTeacher(String courseName, String username);
 
-//    List<CourseServiceModel> findByTeacherUsername(String username);
+    Page<CourseServiceModel> findAllPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
 
-    Page<CourseServiceModel> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
+    Page<CourseServiceModel> findAllByTeacherPaginated(String username, int pageNo, int pageSize, String sortField, String sortDir);
 
-    Page<CourseServiceModel> findByTeacherPaginated(String username, int pageNo, int pageSize, String sortField, String sortDir);
+    Page<CourseServiceModel> findByCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
+
+    Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(String username, Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
 }

@@ -80,59 +80,28 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseServiceModel> findAll() {
-
-        return courseRepository
-                .findAll()
-                .stream()
-                .map(ce -> {
-                    CourseServiceModel courseServiceModel = modelMapper.map(ce, CourseServiceModel.class);
-                    courseServiceModel.setTeacher(ce.getTeacher().getFullName());
-                    return courseServiceModel;
-                })
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public boolean courseWithNameAndTeacher(String courseName, String username) {
-
-        UserEntity byUsername = userService.findByUsername(username);
-
         return courseRepository
                 .existsByNameAndTeacher_Username(courseName, username);
     }
 
-//    @Override
-////    public List<CourseServiceModel> findByTeacherUsername(String username) {
-////
-////        return courseRepository
-////                .findAllByTeacher_Username(username)
-////                .stream()
-////                .map(ce -> {
-////                    CourseServiceModel courseServiceModel = modelMapper.map(ce, CourseServiceModel.class);
-////                    courseServiceModel.setTeacher(ce.getTeacher().getFullName());
-////                    return courseServiceModel;
-////                })
-////                .collect(Collectors.toList());
-////
-////    }
-
     @Override
-    public Page<CourseServiceModel> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<CourseServiceModel> findAllPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
         Page<CourseEntity> coursesPage = courseRepository
                 .findAll(pageable);
 
         int totalElements = (int) coursesPage.getTotalElements();
 
-        return new PageImpl<CourseServiceModel>(coursesPage
+        return new PageImpl<>(coursesPage
                 .stream()
-                .map(course ->{
+                .map(course -> {
                     CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
                     courseModel.setTeacher(course.getTeacher().getFullName());
                     return courseModel;
@@ -142,9 +111,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseServiceModel> findByTeacherPaginated(String username,
-                                                           int pageNo, int pageSize, String sortField, String sortDirection) {
-
+    public Page<CourseServiceModel> findAllByTeacherPaginated(String username,
+                                                              int pageNo, int pageSize, String sortField, String sortDirection) {
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortField).ascending()
@@ -164,6 +132,55 @@ public class CourseServiceImpl implements CourseService {
                     return courseModel;
                 })
                 .collect(Collectors.toList()), pageable, totalElements);
+    }
+
+    @Override
+    public Page<CourseServiceModel> findByCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        Page<CourseEntity> coursesPage = courseRepository
+                .findAllByCategories_Id(categoryId, pageable);
+
+        int totalElements = (int) coursesPage.getTotalElements();
+
+        return new PageImpl<CourseServiceModel>(coursesPage
+                .stream()
+                .map(course ->{
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .collect(Collectors.toList()), pageable, totalElements);
+    }
+
+    @Override
+    public Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(String username, Long categoryId, int pageNo, int pageSize, String sortField, String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        Page<CourseEntity> coursesPage = courseRepository
+                .findAllByTeacher_UsernameAndCategories_Id(username, categoryId, pageable);
+
+        int totalElements = (int) coursesPage.getTotalElements();
+
+        return new PageImpl<CourseServiceModel>(coursesPage
+                .stream()
+                .map(course ->{
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .collect(Collectors.toList()), pageable, totalElements);
+
     }
 
 

@@ -45,4 +45,13 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public String findById(Long categoryId) {
+        return categoryRepository
+                .findById(categoryId)
+                .orElseThrow(() ->
+                        new IllegalStateException("Category not found! Please seed the category!"))
+                .getName();
+    }
 }

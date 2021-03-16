@@ -31,7 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Allow access to static resources to anyone
                 .antMatchers("/js/**", "/css/**", "/img/**").permitAll()
                 // Allow access to index, user login and registration to anyone
-                .antMatchers("/", "/about", "/users/login", "/users/register", "/become-teacher").permitAll()
+                .antMatchers("/", "/about",
+                        "/users/login", "/users/register",
+                        "/become-teacher", "/courses/all","/courses/**").permitAll()
                 // Protect all other pages
                 .antMatchers("/**").authenticated()
                 // Configure login with HTML form

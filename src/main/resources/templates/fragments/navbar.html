@@ -16,13 +16,13 @@
                     Курсове
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCourse">
-                    <a class="dropdown-item" href="/courses/all">Всички</a>
+                    <a class="dropdown-item" th:href="@{/courses/all}">Всички</a>
                     <ul>
                         <li th:each="categoryView : ${categories}" >
 
                             <a class="dropdown-item"
                                th:text="${categoryView.name}"
-                               th:href="@{/courses/delete/{id}(id=${categoryView.id})}">
+                               th:href="@{/courses/{id}(id=${categoryView.id})}">
                             </a>
 
                         </li>

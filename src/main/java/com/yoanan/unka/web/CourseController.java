@@ -3,7 +3,6 @@ package com.yoanan.unka.web;
 import com.yoanan.unka.model.binding.CourseAddBindingModel;
 import com.yoanan.unka.model.service.CourseAddServiceModel;
 import com.yoanan.unka.model.service.CourseServiceModel;
-import com.yoanan.unka.model.view.CategoryViewModel;
 import com.yoanan.unka.model.view.CourseViewModel;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
@@ -19,6 +18,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,23 +41,11 @@ public class CourseController {
         if (!model.containsAttribute("courseAddBindingModel")) {
             model.addAttribute("courseAddBindingModel", new CourseAddBindingModel());
         }
-
-        // add category checkbox and dropdown navigation
-
-        dropdownNavigationCategory(model, categoryService, modelMapper);
-
+        // Adding category checkbox with GlobalControllerAdvice
 
         return "add-course";
     }
 
-    static void dropdownNavigationCategory(Model model, CategoryService categoryService, ModelMapper modelMapper) {
-        List<CategoryViewModel> categoryViews = categoryService
-                .findAllCategories()
-                .stream()
-                .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
-                .collect(Collectors.toList());
-        model.addAttribute("categories", categoryViews);
-    }
 
     @PostMapping("/add")
     public String addConfirm(@Valid @ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,
@@ -77,7 +65,7 @@ public class CourseController {
         String name = courseAddBindingModel.getName();
         String username1 = principal.getName();
 
-//         Combination of course`s name and teacher-creator must be unique
+//         Combination of course`s name and teacher-creator must be UNIQUE
         if (courseService.courseWithNameAndTeacher(name, username1)) {
             redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
             redirectAttributes.addFlashAttribute("courseExistsError", true);
@@ -88,35 +76,35 @@ public class CourseController {
         CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
         courseService.addCourse(principal.getName(), courseAddServiceModel);
 
-        // add category checkbox and dropdown category navigation
-//        List<CategoryViewModel> categoryViews = categoryService
-//                .findAll()
-//                .stream()
-//                .map(csm -> modelMapper.map(csm, CategoryViewModel.class))
-//                .collect(Collectors.toList());
-//
-//        model.addAttribute("categories", categoryViews);
-
-
         return "redirect:/courses/add";
     }
 
 
+    @GetMapping(value = {"/all", "/{category}"})
+    public String findAllPaginateConfirm(@PathVariable(value = "category") Optional<Long> category,
+                                         @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+                                         @RequestParam(value = "sortField", defaultValue = "name") String sortField,
+                                         @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+                                         Model model) {
 
-    @GetMapping("/all")
-    public String all(Model model) {
-
-        return findPaginate(1,"name", "asc", model);
-    }
-
-    @GetMapping("/all/{pageNo}")
-    public String findPaginate(@PathVariable(value = "pageNo") int pageNo,
-                               @RequestParam(value = "sortField") String sortField,
-                               @RequestParam(value = "sortDir") String sortDir,
-                               Model model) {
         int pageSize = 6;
-        Page<CourseServiceModel> paginated = courseService
-                .findPaginated(pageNo, pageSize, sortField, sortDir);
+
+        Page<CourseServiceModel> paginated;
+        // Category name ALL
+        String categoryName = "ВСИЧКИ";
+
+        if (category.isPresent()) {
+            Long categoryId = category.get();
+            // Current category name
+            categoryName = categoryService.findById(categoryId).toUpperCase();
+            // Courses by category
+            paginated = courseService
+                    .findByCategoryPaginated(categoryId, pageNo, pageSize, sortField, sortDir);
+        } else {
+            // All courses
+            paginated = courseService
+                    .findAllPaginated(pageNo, pageSize, sortField, sortDir);
+        }
 
 
         List<CourseViewModel> coursesViewModels = paginated
@@ -135,6 +123,8 @@ public class CourseController {
 
         model.addAttribute("courses", coursesViewModels);
 
+        model.addAttribute("categoryName", categoryName);
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", paginated.getTotalPages());
         model.addAttribute("totalItems", paginated.getTotalElements());
@@ -143,7 +133,7 @@ public class CourseController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
-        System.out.println();
         return "courses";
     }
+
 }
