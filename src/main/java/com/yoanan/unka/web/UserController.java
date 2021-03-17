@@ -100,5 +100,12 @@ public class UserController {
         return "/home";
     }
 
+    // Profile page
+//    TODO Edit profile
+    @GetMapping("/profile")
+    public String profile() {
+
+        return "profile";
+    }
 
 }

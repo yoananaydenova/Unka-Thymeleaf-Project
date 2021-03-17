@@ -19,4 +19,7 @@ public interface CourseService {
     Page<CourseServiceModel> findByCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
 
     Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(String username, Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
+
+    CourseServiceModel findById(Long id);
+
 }

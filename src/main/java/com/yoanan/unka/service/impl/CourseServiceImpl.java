@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -126,7 +125,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course ->{
+                .map(course -> {
                     CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
                     courseModel.setTeacher(course.getTeacher().getFullName());
                     return courseModel;
@@ -150,7 +149,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course ->{
+                .map(course -> {
                     CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
                     courseModel.setTeacher(course.getTeacher().getFullName());
                     return courseModel;
@@ -174,13 +173,25 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course ->{
+                .map(course -> {
                     CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
                     courseModel.setTeacher(course.getTeacher().getFullName());
                     return courseModel;
                 })
                 .collect(Collectors.toList()), pageable, totalElements);
 
+    }
+
+    @Override
+    public CourseServiceModel findById(Long id) {
+        return courseRepository.findById(id)
+                .map(course -> {
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .orElseThrow(() ->
+                        new IllegalStateException("Course with id " + id + " not found!"));
     }
 
 

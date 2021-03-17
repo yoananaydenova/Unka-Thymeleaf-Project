@@ -6,10 +6,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    void seedCategory();
+    void seedCategories();
 
     List<CategoryServiceModel> findAllCategories();
-
 
     String findById(Long categoryId);
 }

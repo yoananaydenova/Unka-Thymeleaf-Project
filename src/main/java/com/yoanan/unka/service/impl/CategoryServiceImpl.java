@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void seedCategory() {
+    public void seedCategories() {
 
         if (categoryRepository.count() == 0) {
 
