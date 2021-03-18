@@ -1,8 +1,11 @@
 package com.yoanan.unka.web;
 
+import com.yoanan.unka.model.service.CourseServiceModel;
+import com.yoanan.unka.model.view.CourseViewModel;
 import com.yoanan.unka.service.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +24,11 @@ public class CourseController {
 
 
     @GetMapping("/{id}")
-    public String courseDetail(@PathVariable Long id){
+    public String courseDetail(@PathVariable Long id, Model model){
 
-        courseService.findById(id);
-
+        CourseViewModel courseViewModel = modelMapper.map(courseService.findById(id), CourseViewModel.class);
+        // TODO new view model with details of teacher, list with lessons
+        model.addAttribute("courseViewModel",courseViewModel);
         return "details-course";
     }
 }

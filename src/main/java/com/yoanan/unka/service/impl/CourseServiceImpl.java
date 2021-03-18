@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void addCourse(String username, CourseAddServiceModel courseAddServiceModel) throws IOException {
+    public void addCourse(CourseAddServiceModel courseAddServiceModel) throws IOException {
 
         CourseEntity newCourse = modelMapper.map(courseAddServiceModel, CourseEntity.class);
 
@@ -47,7 +47,7 @@ public class CourseServiceImpl implements CourseService {
         String imageUrl = cloudinaryService.uploadImage(img);
         newCourse.setImgUrl(imageUrl);
 
-        UserEntity userEntity = userService.findByUsername(username);
+        UserEntity userEntity = userService.findByUsername(courseAddServiceModel.getTeacher());
         newCourse.setTeacher(userEntity);
 
         if (courseAddServiceModel.getCategories().size() == 0) {

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface CourseService {
 
-    void addCourse(String username, CourseAddServiceModel courseServiceModel) throws IOException;
+    void addCourse(CourseAddServiceModel courseServiceModel) throws IOException;
 
     boolean courseWithNameAndTeacher(String courseName, String username);
 

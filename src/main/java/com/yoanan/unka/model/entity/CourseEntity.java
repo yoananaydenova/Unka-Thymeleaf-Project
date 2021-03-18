@@ -19,6 +19,7 @@ public class CourseEntity extends BaseEntity {
     private Set<UserEntity> students = new HashSet<>();
     private Set<CategoryEntity> categories = new HashSet<>();
 
+
     public CourseEntity() {
     }
 

@@ -37,7 +37,7 @@ public class CoursesController {
 
 
     @GetMapping("/add")
-    public String add(Model model, Principal principal) {
+    public String add(Model model) {
         if (!model.containsAttribute("courseAddBindingModel")) {
             model.addAttribute("courseAddBindingModel", new CourseAddBindingModel());
         }
@@ -50,8 +50,8 @@ public class CoursesController {
     public String addConfirm(@Valid @ModelAttribute("courseAddBindingModel") CourseAddBindingModel courseAddBindingModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             Model model,
                              Principal principal) throws IOException {
+
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
@@ -70,7 +70,8 @@ public class CoursesController {
         }
 
         CourseAddServiceModel courseAddServiceModel = modelMapper.map(courseAddBindingModel, CourseAddServiceModel.class);
-        courseService.addCourse(principal.getName(), courseAddServiceModel);
+        courseAddServiceModel.setTeacher(principal.getName());
+        courseService.addCourse(courseAddServiceModel);
 
         return "redirect:/board";
     }

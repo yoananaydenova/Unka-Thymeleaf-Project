@@ -1,9 +1,12 @@
 package com.yoanan.unka.service.impl;
 
+import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.model.view.CourseViewModel;
+import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
 import com.yoanan.unka.service.UserService;
@@ -16,23 +19,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final UnkaUserDetailsService unkaUserDetailsService;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService) {
+    public UserServiceImpl(UserRepository userRepository, CourseRepository courseRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService) {
         this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.unkaUserDetailsService = unkaUserDetailsService;
+
     }
 
 
@@ -130,7 +138,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with that username not found!"));
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
+    }
+
+    @Override
+    public void addCourseInCart(String username, Long courseId) {
+
+        System.out.println();
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
+
+        CourseEntity courseEntity = courseRepository.findById(courseId).
+                orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " not found!"));
+        System.out.println();
+        userEntity.addCourseInCart(courseEntity);
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<CourseViewModel> listCoursesInCart(String username) {
+
+        UserEntity userEntity = userRepository
+                .findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
+
+        Set<CourseEntity> coursesInCart = userEntity.getCoursesInCart();
+
+       return coursesInCart.stream()
+                .map(course -> {
+                    CourseViewModel courseView = modelMapper.map(course, CourseViewModel.class);
+                    courseView.setTeacher(course.getTeacher().getFullName());
+                    return courseView;
+                }).collect(Collectors.toList());
+
     }
 
 

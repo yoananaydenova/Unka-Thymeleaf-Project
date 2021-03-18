@@ -13,36 +13,29 @@
     </header>
 
     <main class="content-wrap">
-        <div class="container content-about">
-            <div class="lead-header image-background">
-                <h3>Name of course</h3>
-                <h4>price</h4>
+        <div class="container" th:object="${courseViewModel}">
+            <div  th:background="*{imgUrl}">
+                <h3 th:text="*{name}">Name of course</h3>
+                <h4 th:text="*{price}">price</h4>
 
 <!--                TODO Current user must be creater of this course !!!!-->
                 <a sec:authorize="hasRole('TEACHER')" class="btn btn-primary" th:href="@{/course/edit}">Редактирай</a>
 
-                <form  th:action="@{/cart}" method="post">
+                <form th:action="@{/shopping-cart/add/{id}(id=*{id})}" method="POST">
                     <button type="submit"
                             class="btn btn-primary">
                         Добави в количка
                     </button>
                 </form>
             </div>
-            <p>КРАТКО ОПИСАНИЕ НА КУРСА  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aperiam, architecto aspernatur beatae
-                corporis culpa cum debitis esse fugiat id ipsam laborum minus numquam omnis, optio, praesentium quia
-                quibusdam quidem quisquam ratione repellendus reprehenderit rerum sapiente soluta vero! Cum debitis
-                exercitationem possimus sed ullam? Aperiam atque blanditiis exercitationem ut veritatis! Amet cum dolore
-                doloribus ea earum error fuga ipsam iusto magni minima minus porro quae similique, tempora unde,
-                voluptas, voluptatibus! Aliquid atque autem consectetur cumque dolore ea id maxime molestias nesciunt
-                quam, ratione soluta suscipit voluptates. A accusantium, ea facere hic labore natus nesciunt
-                perspiciatis reprehenderit similique, ullam ut velit.</p>
+            <p th:text="*{description}">КРАТКО ОПИСАНИЕ НА КУРСА</p>
             <div>
-                Списък с лекции
+                Списък с лекции!!!!!!!!!!!!!!!!!!!!!!
             </div>
 
 
             <div>
-               <h3>Име на учителя</h3>
+               <h3 th:text="*{teacher}">Име на учителя</h3>
                <h4>Професия на учителя</h4>
                <h4>Профилна снимка на учителя</h4>
                 <p>Кратко представяне пред студентите:     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi asperiores aspernatur atque aut

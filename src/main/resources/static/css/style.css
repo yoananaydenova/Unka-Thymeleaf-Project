@@ -149,6 +149,23 @@ footer {
     border-width: 3px;
 }
 
+.shoping-courses {
+    display: flex;
+    flex-direction: row;
+    height: 140px;
+    margin: 20px;
+}
+
+.shoping-courses .shoping-courses-img {
+    padding: 1.25rem;
+    margin-right: 20px;
+}
+
+.shoping-courses .shoping-courses-img img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
 
 .custom-courses {
     justify-content: center;

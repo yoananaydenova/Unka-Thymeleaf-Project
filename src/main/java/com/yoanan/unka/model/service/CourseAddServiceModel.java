@@ -6,12 +6,13 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CourseAddServiceModel{
+public class CourseAddServiceModel {
 
     private String name;
     private BigDecimal price;
     private MultipartFile img;
     private String description;
+    private String teacher;
     private Set<String> categories = new HashSet<>();
 
     public CourseAddServiceModel() {
@@ -50,6 +51,15 @@ public class CourseAddServiceModel{
 
     public CourseAddServiceModel setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public CourseAddServiceModel setTeacher(String teacher) {
+        this.teacher = teacher;
         return this;
     }
 
