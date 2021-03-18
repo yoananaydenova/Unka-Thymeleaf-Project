@@ -17,22 +17,33 @@
 
         <h3>Количка</h3>
         <form th:action="@{/cart/checkout}" method="post">
-        <div>
-            Списък с курсове избрани за закупуване
+            <div>
+                Списък с курсове избрани за закупуване
 
-            <h3 th:if="${listCardCourses.isEmpty()}">Количката е празна.</h3>
+                <h3 th:if="${listCardCourses.isEmpty()}">Количката е празна.</h3>
 
 
-            <div th:if="${!listCardCourses.isEmpty()}" >
-                <a th:each="item : ${listCardCourses}" th:object="${item}" th:href="@{/course/{id}(id=*{id})}" class="course-box-link">
+                <a th:each="item : ${listCardCourses}"
+                   th:object="${item}" th:href="@{/course/{id}(id=*{id})}"
+                   class="course-box-link">
+
                     <div class="card w-75 shoping-courses">
-                        <div shoping-courses-img>
-                            <img th:src="*{imgUrl}"
-                                 class="card-img-left" alt="...">
-                        </div>
+
+                        <img th:src="*{imgUrl}"
+                             class="shoping-course-img" alt="..."/>
+
                         <div class="card-body">
                             <h5 th:text="*{name}" class="card-title">Счетоводство и контрол</h5>
-                            <p th:text="*{#strings.abbreviate(description,70)}" class="card-text">Some quick example</p>
+                            <p th:text="*{#strings.abbreviate(description,70)}" class="card-text">Some quick
+                                example</p>
+
+                            <div class="trash-icon">
+                                <form th:action="@{/}" method="POST">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
 
                             <div class="d-flex justify-content-between">
                                 <span th:text="*{teacher}"> Снежана Найденова </span>
@@ -41,10 +52,10 @@
                         </div>
                     </div>
                 </a>
+
             </div>
-        </div>
-        <h4>ОБЩА цена</h4>
-        <h5>ОТСТЪПКА от ОБЩА цена</h5>
+            <h4>ОБЩА цена</h4>
+            <h5>ОТСТЪПКА от ОБЩА цена</h5>
 
             <button type="submit"
                     class="btn btn-primary">
@@ -52,9 +63,6 @@
             </button>
         </form>
     </div>
-
-
-
 
 
 </main>

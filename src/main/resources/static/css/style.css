@@ -149,24 +149,6 @@ footer {
     border-width: 3px;
 }
 
-.shoping-courses {
-    display: flex;
-    flex-direction: row;
-    height: 140px;
-    margin: 20px;
-}
-
-.shoping-courses .shoping-courses-img {
-    padding: 1.25rem;
-    margin-right: 20px;
-}
-
-.shoping-courses .shoping-courses-img img {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-}
-
 .custom-courses {
     justify-content: center;
     display: flex;
@@ -250,9 +232,32 @@ footer {
     color: #aaa;
 }
 
-.img-list{
-    height: 77px;
+.shoping-courses {
+    display: flex;
+    flex-direction: row;
+    height: 140px;
+    margin: 20px;
 }
 
+.shoping-courses .shoping-courses-img {
+    padding: 1.25rem;
+    margin-right: 20px;
+}
+
+.shoping-course-img{
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.shoping-courses .trash-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+}
+
+.fa{
+    font-size: 18px;
+}
 
 

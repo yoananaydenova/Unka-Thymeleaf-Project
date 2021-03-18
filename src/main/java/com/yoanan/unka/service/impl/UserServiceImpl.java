@@ -141,36 +141,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
     }
 
-    @Override
-    public void addCourseInCart(String username, Long courseId) {
-
-        System.out.println();
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
-
-        CourseEntity courseEntity = courseRepository.findById(courseId).
-                orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " not found!"));
-        System.out.println();
-        userEntity.addCourseInCart(courseEntity);
-        userRepository.save(userEntity);
-    }
-
-    @Override
-    public List<CourseViewModel> listCoursesInCart(String username) {
-
-        UserEntity userEntity = userRepository
-                .findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
-
-        Set<CourseEntity> coursesInCart = userEntity.getCoursesInCart();
-
-       return coursesInCart.stream()
-                .map(course -> {
-                    CourseViewModel courseView = modelMapper.map(course, CourseViewModel.class);
-                    courseView.setTeacher(course.getTeacher().getFullName());
-                    return courseView;
-                }).collect(Collectors.toList());
-
-    }
 
 
 }

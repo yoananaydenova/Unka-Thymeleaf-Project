@@ -17,7 +17,6 @@ public class UserEntity extends BaseEntity{
     private List<UserRoleEntity> roles = new ArrayList<>();
     private Set<CourseEntity> enrolledCourses = new HashSet<>();
     private Set<CourseEntity> teachCourses = new HashSet<>();
-    private Set<CourseEntity> coursesInCart = new HashSet<>();
 
     public UserEntity() {
     }
@@ -83,21 +82,6 @@ public class UserEntity extends BaseEntity{
 
     public UserEntity setTeachCourses(Set<CourseEntity> teachCourses) {
         this.teachCourses = teachCourses;
-        return this;
-    }
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    public Set<CourseEntity> getCoursesInCart() {
-        return coursesInCart;
-    }
-
-    public UserEntity setCoursesInCart(Set<CourseEntity> coursesInCart) {
-        this.coursesInCart = coursesInCart;
-        return this;
-    }
-
-    public UserEntity addCourseInCart(CourseEntity courseEntity){
-        this.coursesInCart.add(courseEntity);
         return this;
     }
 

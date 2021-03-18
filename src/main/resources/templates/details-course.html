@@ -14,7 +14,8 @@
 
     <main class="content-wrap">
         <div class="container" th:object="${courseViewModel}">
-            <div  th:background="*{imgUrl}">
+            <div  >
+                <img class="img-list" th:src="*{imgUrl}"/>
                 <h3 th:text="*{name}">Name of course</h3>
                 <h4 th:text="*{price}">price</h4>
 
