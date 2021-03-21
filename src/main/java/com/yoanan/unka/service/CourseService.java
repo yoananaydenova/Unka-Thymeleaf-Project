@@ -10,16 +10,17 @@ public interface CourseService {
 
     void addCourse(CourseAddServiceModel courseServiceModel) throws IOException;
 
-    boolean courseWithNameAndTeacher(String courseName, String username);
+    boolean courseWithNameAndTeacher(String courseName);
 
     Page<CourseServiceModel> findAllPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
 
-    Page<CourseServiceModel> findAllByTeacherPaginated(String username, int pageNo, int pageSize, String sortField, String sortDir);
+    Page<CourseServiceModel> findAllByTeacherPaginated(int pageNo, int pageSize, String sortField, String sortDir);
 
     Page<CourseServiceModel> findByCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
 
-    Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(String username, Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
+    Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDir);
 
-    CourseServiceModel findById(Long id);
+    CourseServiceModel findCourseById( Long id);
+
 
 }

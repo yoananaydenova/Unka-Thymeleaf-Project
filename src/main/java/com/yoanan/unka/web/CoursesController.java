@@ -6,6 +6,8 @@ import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.view.CourseViewModel;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
+import com.yoanan.unka.service.EnrolledCoursesService;
+import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -27,12 +29,16 @@ public class CoursesController {
 
     private final ModelMapper modelMapper;
     private final CourseService courseService;
+    private final UserService userService;
     private final CategoryService categoryService;
+    private final EnrolledCoursesService enrolledCoursesService;
 
-    public CoursesController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService) {
+    public CoursesController(ModelMapper modelMapper, CourseService courseService, UserService userService, CategoryService categoryService, EnrolledCoursesService enrolledCoursesService) {
         this.modelMapper = modelMapper;
         this.courseService = courseService;
+        this.userService = userService;
         this.categoryService = categoryService;
+        this.enrolledCoursesService = enrolledCoursesService;
     }
 
 
@@ -62,7 +68,7 @@ public class CoursesController {
         }
 
 //         Combination of course`s name and teacher-creator must be UNIQUE
-        if (courseService.courseWithNameAndTeacher(courseAddBindingModel.getName(), principal.getName())) {
+        if (courseService.courseWithNameAndTeacher(courseAddBindingModel.getName())) {
             redirectAttributes.addFlashAttribute("courseAddBindingModel", courseAddBindingModel);
             redirectAttributes.addFlashAttribute("courseExistsError", true);
 
@@ -134,7 +140,24 @@ public class CoursesController {
     }
 
     @GetMapping("/my-courses")
-    public String EnrolledCourses(){
+    public String showMyEnrolledCourses(Model model) {
+
+        List<CourseServiceModel> myEnrolledServiceCourses = enrolledCoursesService.findAllMyEnrolledCourses();
+
+        List<CourseViewModel> myEnrolledCourses = myEnrolledServiceCourses
+                .stream()
+                .map(csm -> {
+                    CourseViewModel courseView = modelMapper.map(csm, CourseViewModel.class);
+                    if (courseView.getPrice().equals("0.00")) {
+                        courseView.setPrice("FREE");
+                    } else {
+                        courseView.setPrice(courseView.getPrice() + " лв.");
+                    }
+                    return courseView;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("courses", myEnrolledCourses);
         return "my-courses";
     }
 

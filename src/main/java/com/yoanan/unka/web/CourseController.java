@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/course")
 public class CourseController {
 
     private final ModelMapper modelMapper;
     private final CourseService courseService;
+
 
     public CourseController(ModelMapper modelMapper, CourseService courseService) {
         this.modelMapper = modelMapper;
@@ -24,11 +27,15 @@ public class CourseController {
 
 
     @GetMapping("/{id}")
-    public String courseDetail(@PathVariable Long id, Model model){
+    public String courseDetail(@PathVariable Long id, Model model) {
 
-        CourseViewModel courseViewModel = modelMapper.map(courseService.findById(id), CourseViewModel.class);
+        CourseServiceModel courseById = courseService.findCourseById(id);
+        // Add button Adding in shopping cart
+        CourseViewModel courseViewModel = modelMapper.map(courseService.findCourseById(id), CourseViewModel.class);
+
         // TODO new view model with details of teacher, list with lessons
-        model.addAttribute("courseViewModel",courseViewModel);
+        model.addAttribute("courseViewModel", courseViewModel);
+
         return "details-course";
     }
 }

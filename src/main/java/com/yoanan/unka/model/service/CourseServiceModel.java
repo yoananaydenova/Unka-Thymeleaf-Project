@@ -11,6 +11,10 @@ public class CourseServiceModel extends BaseServiceModel {
     private String teacher;
     private String description;
 
+    private boolean isInShoppingCart;
+    private boolean isEnrolled;
+    private boolean isTeacherOfCourse;
+
     public CourseServiceModel() {
     }
 
@@ -56,6 +60,33 @@ public class CourseServiceModel extends BaseServiceModel {
 
     public CourseServiceModel setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public boolean isInShoppingCart() {
+        return isInShoppingCart;
+    }
+
+    public CourseServiceModel setInShoppingCart(boolean inShoppingCart) {
+        isInShoppingCart = inShoppingCart;
+        return this;
+    }
+
+    public boolean isEnrolled() {
+        return isEnrolled;
+    }
+
+    public CourseServiceModel setEnrolled(boolean enrolled) {
+        isEnrolled = enrolled;
+        return this;
+    }
+
+    public boolean isTeacherOfCourse() {
+        return isTeacherOfCourse;
+    }
+
+    public CourseServiceModel setTeacherOfCourse(boolean teacherOfCourse) {
+        isTeacherOfCourse = teacherOfCourse;
         return this;
     }
 }

@@ -14,70 +14,29 @@
     <div class="container">
 
         <h1>My courses</h1>
-<!--        <h3 th:text="|Курсове в категория: ${categoryName}|"></h3>-->
-<!--        <div class="row">-->
-<!--            <h4>Сортирай по: </h4>-->
-<!--            <a class="btn btn-primary"-->
-<!--               th:href="@{${#httpServletRequest.requestURI} +'?pageNo=' +${currentPage} +'&sortField=name&sortDir='+ ${reverseSortDir}}">-->
-<!--                Име на курс</a>-->
 
-<!--            <a class="btn btn-primary"-->
-<!--               th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage} + '&sortField=price&sortDir=' + ${reverseSortDir}}">-->
-<!--                Цена</a>-->
+        <h3 th:if="${courses.isEmpty()}">Не се обучавате в курсове. Добавете курс!</h3>
 
-<!--            <a class="btn btn-primary"-->
-<!--               th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage} + '&sortField=teacher&sortDir=' + ${reverseSortDir}}">-->
-<!--                Преподавател</a>-->
+        <div class="card-group">
+            <a th:each="s : ${courses}" th:object="${s}" th:href="@{/course/{id}(id=*{id})}" class="course-box-link">
+                <div class="card m-3 course-box">
+                    <img th:src="*{imgUrl}"
+                         class="card-img-top course-img" alt="...">
+                    <div class="card-body">
+                        <h5 th:text="*{name}" class="card-title">Счетоводство и контрол</h5>
+                        <p th:text="*{#strings.abbreviate(description,70)}" class="card-text">Some quick example</p>
 
-<!--        </div>-->
+                        <div class="d-flex justify-content-between">
 
-<!--        <h3 th:if="${courses.isEmpty()}">Няма курсове според избраните от Вас параметри. Опитайте отново!</h3>-->
+                            <span th:text="*{teacher}"> Снежана Найденова </span>
+                            <span th:text="*{price}" class="card-price"></span>
 
-<!--        <div class="card-group">-->
-<!--            <a th:each="s : ${courses}" th:object="${s}" th:href="@{/course/{id}(id=*{id})}" class="course-box-link">-->
-<!--                <div class="card m-3 course-box">-->
-<!--                    <img th:src="*{imgUrl}"-->
-<!--                         class="card-img-top course-img" alt="...">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 th:text="*{name}" class="card-title">Счетоводство и контрол</h5>-->
-<!--                        <p th:text="*{#strings.abbreviate(description,70)}" class="card-text">Some quick example</p>-->
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
 
-<!--                        <div class="d-flex justify-content-between">-->
-
-<!--                            <span th:text="*{teacher}"> Снежана Найденова </span>-->
-<!--                            <span th:text="*{price}" class="card-price"></span>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </a>-->
-<!--        </div>-->
-
-<!--        <div th:if="${totalPages > 1}">-->
-<!--            <div class="row col-sm-10">-->
-<!--                <div class="col-sm-5">-->
-<!--                    Всички курсове: [[${totalItems}]]-->
-<!--                </div>-->
-<!--                <div class="col-sm-1">-->
-<!--     <span th:each="i: ${#numbers.sequence(1, totalPages)}">-->
-<!--      <a th:if="${currentPage != i}"-->
-<!--         th:href="@{${#httpServletRequest.requestURI} +'?pageNo=' + ${i}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>-->
-<!--      <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;-->
-<!--     </span>-->
-<!--                </div>-->
-<!--                <div class="col-sm-1">-->
-<!--                    <a th:if="${currentPage < totalPages}"-->
-<!--                       th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${currentPage + 1} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>-->
-<!--                    <span th:unless="${currentPage < totalPages}">Следващ</span>-->
-<!--                </div>-->
-
-<!--                <div class="col-sm-1">-->
-<!--                    <a th:if="${currentPage < totalPages}"-->
-<!--                       th:href="@{${#httpServletRequest.requestURI} +'?pageNo='+ ${totalPages} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>-->
-<!--                    <span th:unless="${currentPage < totalPages}">Последен</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
 
 </main>

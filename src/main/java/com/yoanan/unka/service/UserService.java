@@ -3,11 +3,10 @@ package com.yoanan.unka.service;
 
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
+import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
-import com.yoanan.unka.model.view.CourseViewModel;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UserService {
 

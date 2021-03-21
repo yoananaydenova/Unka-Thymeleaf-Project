@@ -6,10 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="shopping_carts")
-public class ShoppingCartEntity extends BaseEntity{
+@Table(name = "shopping_carts")
+public class ShoppingCartEntity extends BaseEntity {
 
     private UserEntity student;
+    //TODO update when buy/delete course
     private BigDecimal totalPrice;
     private Set<CourseEntity> coursesInCart = new HashSet<>();
 
@@ -56,7 +57,8 @@ public class ShoppingCartEntity extends BaseEntity{
         return this;
     }
 
-    public ShoppingCartEntity addCourseInCart(CourseEntity courseEntity){
+    public ShoppingCartEntity addCourseInCart(CourseEntity courseEntity) {
+        this.setTotalPrice(this.getTotalPrice().add(courseEntity.getPrice()));
         this.coursesInCart.add(courseEntity);
         return this;
     }

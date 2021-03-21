@@ -13,9 +13,7 @@ public class UserEntity extends BaseEntity{
     private String username;
     private String fullName;
     private String password;
-
     private List<UserRoleEntity> roles = new ArrayList<>();
-    private Set<CourseEntity> enrolledCourses = new HashSet<>();
     private Set<CourseEntity> teachCourses = new HashSet<>();
 
     public UserEntity() {
@@ -62,16 +60,6 @@ public class UserEntity extends BaseEntity{
 
     public UserEntity addRole(UserRoleEntity userRoleEntity){
         this.roles.add(userRoleEntity);
-        return this;
-    }
-
-    @ManyToMany
-    public Set<CourseEntity> getEnrolledCourses() {
-        return enrolledCourses;
-    }
-
-    public UserEntity setEnrolledCourses(Set<CourseEntity> courses) {
-        this.enrolledCourses = courses;
         return this;
     }
 

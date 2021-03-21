@@ -1,12 +1,10 @@
 package com.yoanan.unka.service.impl;
 
-import com.yoanan.unka.model.entity.CourseEntity;
+import com.yoanan.unka.config.IAuthenticationFacade;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
-import com.yoanan.unka.model.view.CourseViewModel;
-import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
 import com.yoanan.unka.service.UserService;
@@ -19,28 +17,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CourseRepository courseRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final UnkaUserDetailsService unkaUserDetailsService;
+    private final IAuthenticationFacade authenticationFacade;
 
 
-    public UserServiceImpl(UserRepository userRepository, CourseRepository courseRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService, IAuthenticationFacade authenticationFacade) {
         this.userRepository = userRepository;
-        this.courseRepository = courseRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.unkaUserDetailsService = unkaUserDetailsService;
 
+        this.authenticationFacade = authenticationFacade;
     }
 
 
@@ -140,7 +136,6 @@ public class UserServiceImpl implements UserService {
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
     }
-
 
 
 }

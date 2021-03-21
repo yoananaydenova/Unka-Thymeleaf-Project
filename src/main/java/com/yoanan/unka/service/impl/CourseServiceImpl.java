@@ -1,5 +1,6 @@
 package com.yoanan.unka.service.impl;
 
+import com.yoanan.unka.config.IAuthenticationFacade;
 import com.yoanan.unka.model.entity.CategoryEntity;
 import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.UserEntity;
@@ -7,11 +8,14 @@ import com.yoanan.unka.model.service.CourseAddServiceModel;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.repository.CategoryRepository;
 import com.yoanan.unka.repository.CourseRepository;
+import com.yoanan.unka.repository.ShoppingCartRepository;
 import com.yoanan.unka.service.CloudinaryService;
 import com.yoanan.unka.service.CourseService;
+import com.yoanan.unka.service.EnrolledCoursesService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,16 +29,22 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CloudinaryService cloudinaryService;
+   private final EnrolledCoursesService enrolledCoursesService;
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final CategoryRepository categoryRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public CourseServiceImpl(CourseRepository courseRepository, CloudinaryService cloudinaryService, UserService userService, ModelMapper modelMapper, CategoryRepository categoryRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, CloudinaryService cloudinaryService, EnrolledCoursesService enrolledCoursesService, UserService userService, ModelMapper modelMapper, CategoryRepository categoryRepository, ShoppingCartRepository shoppingCartRepository, IAuthenticationFacade authenticationFacade) {
         this.courseRepository = courseRepository;
         this.cloudinaryService = cloudinaryService;
+        this.enrolledCoursesService = enrolledCoursesService;
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -63,14 +73,11 @@ public class CourseServiceImpl implements CourseService {
             Set<CategoryEntity> categoryList = courseAddServiceModel
                     .getCategories()
                     .stream()
-                    .map(category -> {
-                        return categoryRepository
-                                .findById(Long.parseLong(category))
-                                .orElseThrow(() ->
-                                        new IllegalStateException("Category not found! Please seed the category!"));
-
-
-                    }).collect(Collectors.toSet());
+                    .map(category -> categoryRepository
+                            .findById(Long.parseLong(category))
+                            .orElseThrow(() ->
+                                    new IllegalStateException("Category not found! Please seed the category!")))
+                    .collect(Collectors.toSet());
 
             newCourse.setCategories(categoryList);
         }
@@ -79,7 +86,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean courseWithNameAndTeacher(String courseName, String username) {
+    public boolean courseWithNameAndTeacher(String courseName) {
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
         return courseRepository
                 .existsByNameAndTeacher_Username(courseName, username);
     }
@@ -110,14 +121,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseServiceModel> findAllByTeacherPaginated(String username,
-                                                              int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<CourseServiceModel> findAllByTeacherPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
         Page<CourseEntity> coursesPage = courseRepository
                 .findAllByTeacher_Username(username, pageable);
 
@@ -158,13 +173,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(String username, Long categoryId, int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<CourseServiceModel> findAllByTeacherAndCategoryPaginated(Long categoryId, int pageNo, int pageSize, String sortField, String sortDirection) {
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
 
         Page<CourseEntity> coursesPage = courseRepository
                 .findAllByTeacher_UsernameAndCategories_Id(username, categoryId, pageable);
@@ -183,15 +201,33 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseServiceModel findById(Long id) {
-        return courseRepository.findById(id)
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+    public CourseServiceModel findCourseById(Long id) {
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        CourseEntity courseEntity = courseRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalStateException("Course with id " + id + " not found!"));
+        CourseServiceModel courseServiceModel = modelMapper.map(courseEntity, CourseServiceModel.class);
+
+       //Set teacher name
+        courseServiceModel.setTeacher(courseEntity.getTeacher().getFullName());
+
+        if (authentication.isAuthenticated()) {
+            // Check is in Shopping cart ??
+            //TODO shopping cart service
+            courseServiceModel
+                    .setInShoppingCart(shoppingCartRepository.findShoppingCartEntityByStudent_UsernameAndCoursesInCart_Id(username, id).isPresent());
+            // Check is teacher of course
+            courseServiceModel.setTeacherOfCourse(courseEntity.getTeacher().getUsername().equals(username));
+            // Check is current user enrolled
+            courseServiceModel.setEnrolled(enrolledCoursesService.isEnrolledByUsernameAndCourseId(id));
+
+        }
+
+        return courseServiceModel;
+
     }
 
 

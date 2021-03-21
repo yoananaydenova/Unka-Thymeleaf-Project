@@ -1,12 +1,12 @@
 package com.yoanan.unka.service;
 
-import com.yoanan.unka.model.view.CourseViewModel;
-
-import java.util.List;
+import com.yoanan.unka.model.service.ShoppingCartServiceModel;
 
 public interface ShoppingCartService {
 
-    void addCourseInCart(String username, Long courseId);
+    void addCourseInCart(Long courseId);
 
-    List<CourseViewModel> listCoursesInCart(String username);
+    ShoppingCartServiceModel getShoppingCart();
+
+    void emptyShoppingCart();
 }

@@ -55,11 +55,11 @@ public class HomeController {
             categoryName = categoryService.findById(categoryId).toUpperCase();
             // Courses by category
             paginated = courseService
-                    .findAllByTeacherAndCategoryPaginated(principal.getName(),categoryId, pageNo, pageSize, sortField, sortDir);
+                    .findAllByTeacherAndCategoryPaginated(categoryId, pageNo, pageSize, sortField, sortDir);
         } else {
             // All courses
             paginated = courseService
-                    .findAllByTeacherPaginated(principal.getName(), pageNo, pageSize, sortField, sortDir);
+                    .findAllByTeacherPaginated( pageNo, pageSize, sortField, sortDir);
         }
 
         List<CourseViewModel> coursesViewModels = paginated

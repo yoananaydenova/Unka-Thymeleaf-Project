@@ -3,7 +3,6 @@ package com.yoanan.unka.model.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -16,9 +15,7 @@ public class CourseEntity extends BaseEntity {
     private String imgUrl;
     private String description;
     private UserEntity teacher;
-    private Set<UserEntity> students = new HashSet<>();
     private Set<CategoryEntity> categories = new HashSet<>();
-
 
     public CourseEntity() {
     }
@@ -74,15 +71,6 @@ public class CourseEntity extends BaseEntity {
         return this;
     }
 
-    @ManyToMany(mappedBy = "enrolledCourses", targetEntity = UserEntity.class)
-    public Set<UserEntity> getStudents() {
-        return students;
-    }
-
-    public CourseEntity setStudents(Set<UserEntity> users) {
-        this.students = users;
-        return this;
-    }
 
     @ManyToMany(cascade = CascadeType.ALL)
     public Set<CategoryEntity> getCategories() {
@@ -98,5 +86,6 @@ public class CourseEntity extends BaseEntity {
         this.categories.add(categoryEntity);
         return this;
     }
+
 
 }

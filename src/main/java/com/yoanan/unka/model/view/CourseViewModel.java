@@ -8,6 +8,10 @@ public class CourseViewModel extends BaseViewModel {
     private String teacher;
     private String description;
 
+    private boolean isInShoppingCart;
+    private boolean isEnrolled;
+    private boolean isTeacherOfCourse;
+
 
     public CourseViewModel() {
     }
@@ -54,6 +58,33 @@ public class CourseViewModel extends BaseViewModel {
 
     public CourseViewModel setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public boolean isInShoppingCart() {
+        return isInShoppingCart;
+    }
+
+    public CourseViewModel setInShoppingCart(boolean inShoppingCart) {
+        isInShoppingCart = inShoppingCart;
+        return this;
+    }
+
+    public boolean isEnrolled() {
+        return isEnrolled;
+    }
+
+    public CourseViewModel setEnrolled(boolean enrolled) {
+        isEnrolled = enrolled;
+        return this;
+    }
+
+    public boolean isTeacherOfCourse() {
+        return isTeacherOfCourse;
+    }
+
+    public CourseViewModel setTeacherOfCourse(boolean teacherOfCourse) {
+        isTeacherOfCourse = teacherOfCourse;
         return this;
     }
 }

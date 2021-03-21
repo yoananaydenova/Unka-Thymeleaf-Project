@@ -20,14 +20,22 @@
                 <h4 th:text="*{price}">price</h4>
 
 <!--                TODO Current user must be creater of this course !!!!-->
-                <a sec:authorize="hasRole('TEACHER')" class="btn btn-primary" th:href="@{/course/edit}">Редактирай</a>
+                <div sec:authorize="isAuthenticated()">
+                <a th:if="*{isTeacherOfCourse}" class="btn btn-primary" th:href="@{/course/edit}">Редактирай</a>
+                </div>
 
-                <form th:action="@{/shopping-cart/add/{id}(id=*{id})}" method="POST">
+                <div sec:authorize="isAuthenticated()">
+                    <h3  th:if="*{inShoppingCart}">Курсът е добавен в количката</h3>
+                </div>
+
+
+                <form th:unless="*{inShoppingCart or isEnrolled or isTeacherOfCourse}" th:action="@{/shopping-cart/add/{id}(id=*{id})}" method="POST">
                     <button type="submit"
                             class="btn btn-primary">
                         Добави в количка
                     </button>
                 </form>
+
             </div>
             <p th:text="*{description}">КРАТКО ОПИСАНИЕ НА КУРСА</p>
             <div>
