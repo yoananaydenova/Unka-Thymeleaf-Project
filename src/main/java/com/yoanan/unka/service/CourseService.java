@@ -1,10 +1,12 @@
 package com.yoanan.unka.service;
 
+import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.service.CourseAddServiceModel;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface CourseService {
 
@@ -22,5 +24,7 @@ public interface CourseService {
 
     CourseServiceModel findCourseById( Long id);
 
+    List<CourseServiceModel> findAllCoursesCreatedByCurrentLoggedTeacher();
 
+    CourseEntity findEntityById(Long id);
 }

@@ -4,6 +4,7 @@ import com.yoanan.unka.config.IAuthenticationFacade;
 import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.ShoppingCartEntity;
 import com.yoanan.unka.model.entity.UserEntity;
+import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.ShoppingCartServiceModel;
 import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.repository.ShoppingCartRepository;
@@ -14,8 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -50,7 +53,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (shoppingCart.isEmpty()) {
             UserEntity userEntity = userService.findByUsername(username);
 
-            newShoppingCart = new ShoppingCartEntity(userEntity, BigDecimal.ZERO, Set.of(courseEntity));
+            newShoppingCart = new ShoppingCartEntity(userEntity, courseEntity.getPrice(), Set.of(courseEntity));
         } else {
             newShoppingCart = shoppingCart.get().addCourseInCart(courseEntity);
         }
@@ -63,21 +66,32 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
 
-        Optional<ShoppingCartEntity> shoppingCart = shoppingCartRepository.findByStudent_Username(username);
+        Optional<ShoppingCartEntity> shoppingCartOpt = shoppingCartRepository.findByStudent_Username(username);
 
-        ShoppingCartEntity shoppingCartServiceModel;
-        if (shoppingCart.isEmpty()) {
+        ShoppingCartEntity savedShoppingCart;
+        if (shoppingCartOpt.isEmpty()) {
 
             UserEntity userEntity = userService.findByUsername(username);
 
             ShoppingCartEntity newShoppingCart = new ShoppingCartEntity(userEntity, BigDecimal.ZERO);
 
-            shoppingCartServiceModel = shoppingCartRepository.save(newShoppingCart);
+            savedShoppingCart = shoppingCartRepository.save(newShoppingCart);
         } else {
-            shoppingCartServiceModel = shoppingCart.get();
+            savedShoppingCart = shoppingCartOpt.get();
         }
 
-        return modelMapper.map(shoppingCartServiceModel, ShoppingCartServiceModel.class);
+        ShoppingCartServiceModel shoppingCartService = modelMapper.map(savedShoppingCart, ShoppingCartServiceModel.class);
+
+        Set<CourseServiceModel> courseServiceModels = shoppingCartOpt.get()
+                .getCoursesInCart()
+                .stream().map(course -> {
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                }).collect(Collectors.toSet());
+
+        shoppingCartService.setCoursesInCart(courseServiceModels);
+        return shoppingCartService;
     }
 
 
@@ -92,6 +106,28 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         shoppingCartEntity.setTotalPrice(BigDecimal.ZERO);
         shoppingCartEntity.getCoursesInCart().clear();
+        shoppingCartRepository.save(shoppingCartEntity);
+    }
+
+    @Override
+    public void deleteCourseFromCart(Long courseId) {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        ShoppingCartEntity shoppingCartEntity = shoppingCartRepository.findByStudent_Username(username)
+                .orElseThrow(() -> new IllegalStateException("Shopping cart with user with username " + username + " not found!"));
+
+       CourseEntity courseEntity = shoppingCartEntity
+                .getCoursesInCart()
+                .stream()
+                .filter(c -> c.getId().equals(courseId))
+                .findFirst()
+               .orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " not found!"));
+
+
+        shoppingCartEntity.getCoursesInCart().remove(courseEntity);
+        shoppingCartEntity.setTotalPrice(shoppingCartEntity.getTotalPrice().subtract(courseEntity.getPrice()));
+
         shoppingCartRepository.save(shoppingCartEntity);
     }
 

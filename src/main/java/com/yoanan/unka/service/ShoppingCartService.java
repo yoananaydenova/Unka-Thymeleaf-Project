@@ -9,4 +9,6 @@ public interface ShoppingCartService {
     ShoppingCartServiceModel getShoppingCart();
 
     void emptyShoppingCart();
+
+    void deleteCourseFromCart(Long courseId);
 }

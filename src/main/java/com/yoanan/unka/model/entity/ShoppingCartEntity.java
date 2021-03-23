@@ -38,6 +38,7 @@ public class ShoppingCartEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "total_price", nullable = false)
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }

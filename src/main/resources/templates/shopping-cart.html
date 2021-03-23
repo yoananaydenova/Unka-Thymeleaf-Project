@@ -24,7 +24,7 @@
 
 
                 <a th:each="item : ${shoppingCart.coursesInCart}"
-                   th:object="${item}" th:href="@{/course/{id}(id=*{id})}"
+                   th:object="${item}" th:href="@{/courses/course/{id}(id=*{id})}"
                    class="course-box-link">
 
                     <div class="card w-75 shoping-courses">
@@ -38,7 +38,7 @@
                                 example</p>
 
                             <div class="trash-icon">
-                                <form th:action="@{/}" method="POST">
+                                <form th:action="@{/shopping-cart/{id}(id=${item.id})}" th:method="DELETE">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-trash"></i>
                                     </button>

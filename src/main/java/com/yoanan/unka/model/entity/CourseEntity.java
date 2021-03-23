@@ -87,5 +87,4 @@ public class CourseEntity extends BaseEntity {
         return this;
     }
 
-
 }

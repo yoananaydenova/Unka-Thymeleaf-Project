@@ -33,8 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Allow access to index, user login and registration to anyone
                 .antMatchers("/", "/about",
                         "/users/login", "/users/register",
-                        "/become-teacher", "/courses/all","/courses/all/**", "/course/**").permitAll()
+                        "/become-teacher", "/courses/all","/courses/all/**", "/courses/course/**").permitAll()
                 // Protect all other pages
+                .antMatchers("/courses/add", "/lessons/add", "/board").hasRole("TEACHER")
                 .antMatchers("/**").authenticated()
                 // Configure login with HTML form
                 .and()

@@ -33,7 +33,7 @@
         <h3 th:if="${courses.isEmpty()}">Няма курсове според избраните от Вас параметри. Опитайте отново!</h3>
 
         <div class="card-group">
-            <a th:each="s : ${courses}" th:object="${s}" th:href="@{/course/{id}(id=*{id})}" class="course-box-link">
+            <a th:each="s : ${courses}" th:object="${s}" th:href="@{/courses/course/{id}(id=*{id})}" class="course-box-link">
                 <div class="card m-3 course-box">
                     <img th:src="*{imgUrl}"
                          class="card-img-top course-img" alt="...">

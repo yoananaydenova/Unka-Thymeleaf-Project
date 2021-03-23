@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CloudinaryService cloudinaryService;
-   private final EnrolledCoursesService enrolledCoursesService;
+    private final EnrolledCoursesService enrolledCoursesService;
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final CategoryRepository categoryRepository;
@@ -211,12 +212,11 @@ public class CourseServiceImpl implements CourseService {
                         new IllegalStateException("Course with id " + id + " not found!"));
         CourseServiceModel courseServiceModel = modelMapper.map(courseEntity, CourseServiceModel.class);
 
-       //Set teacher name
+        //Set teacher name
         courseServiceModel.setTeacher(courseEntity.getTeacher().getFullName());
 
         if (authentication.isAuthenticated()) {
             // Check is in Shopping cart ??
-            //TODO shopping cart service
             courseServiceModel
                     .setInShoppingCart(shoppingCartRepository.findShoppingCartEntityByStudent_UsernameAndCoursesInCart_Id(username, id).isPresent());
             // Check is teacher of course
@@ -228,6 +228,29 @@ public class CourseServiceImpl implements CourseService {
 
         return courseServiceModel;
 
+    }
+
+    @Override
+    public List<CourseServiceModel> findAllCoursesCreatedByCurrentLoggedTeacher() {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+       return courseRepository
+                .findAllByTeacher_Username(username)
+                .stream()
+                .map(course -> {
+                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                    courseModel.setTeacher(course.getTeacher().getFullName());
+                    return courseModel;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CourseEntity findEntityById(Long id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() ->
+                new IllegalStateException("Course wit id " + id + " not found!"));
     }
 
 

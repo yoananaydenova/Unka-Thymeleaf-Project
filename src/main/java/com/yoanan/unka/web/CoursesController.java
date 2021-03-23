@@ -4,10 +4,11 @@ import com.yoanan.unka.model.binding.CourseAddBindingModel;
 import com.yoanan.unka.model.service.CourseAddServiceModel;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.view.CourseViewModel;
+import com.yoanan.unka.model.view.LessonNameViewModel;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.EnrolledCoursesService;
-import com.yoanan.unka.service.UserService;
+import com.yoanan.unka.service.LessonService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -29,15 +30,15 @@ public class CoursesController {
 
     private final ModelMapper modelMapper;
     private final CourseService courseService;
-    private final UserService userService;
     private final CategoryService categoryService;
+    private final LessonService lessonService;
     private final EnrolledCoursesService enrolledCoursesService;
 
-    public CoursesController(ModelMapper modelMapper, CourseService courseService, UserService userService, CategoryService categoryService, EnrolledCoursesService enrolledCoursesService) {
+    public CoursesController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService, LessonService lessonService, EnrolledCoursesService enrolledCoursesService) {
         this.modelMapper = modelMapper;
         this.courseService = courseService;
-        this.userService = userService;
         this.categoryService = categoryService;
+        this.lessonService = lessonService;
         this.enrolledCoursesService = enrolledCoursesService;
     }
 
@@ -159,6 +160,23 @@ public class CoursesController {
 
         model.addAttribute("courses", myEnrolledCourses);
         return "my-courses";
+    }
+
+    @GetMapping("/course/{id}")
+    public String courseDetail(@PathVariable Long id, Model model) {
+
+        // Add button Adding in shopping cart
+        CourseViewModel courseViewModel = modelMapper.map(courseService.findCourseById(id), CourseViewModel.class);
+
+        List<LessonNameViewModel> lessons = lessonService.findAllLessonsByCourseId(id)
+                .stream()
+                .map(l -> modelMapper.map(l, LessonNameViewModel.class))
+                .collect(Collectors.toList());
+        // TODO new view model with details of teacher
+        model.addAttribute("courseViewModel", courseViewModel);
+        model.addAttribute("lessonsList", lessons);
+
+        return "details-course";
     }
 
 }

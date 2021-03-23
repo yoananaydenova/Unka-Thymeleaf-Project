@@ -16,4 +16,6 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCartEntity
    Optional <ShoppingCartEntity> findByStudent_Username(String username);
 
    Optional<ShoppingCartEntity> findShoppingCartEntityByStudent_UsernameAndCoursesInCart_Id(String username,Long id);
+
 }
+

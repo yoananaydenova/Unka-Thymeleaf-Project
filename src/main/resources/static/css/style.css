@@ -260,4 +260,37 @@ footer {
     font-size: 18px;
 }
 
+.lesson-list-item{
+    text-decoration: none;
+    color: #666666;
+    height: 50px;
+    width: 60rem;
+    padding: 10px 15px;
+    font-size: 20px;
+}
 
+.lesson-list-item:hover{
+    background-color: pink;
+}
+.lesson-list-item:hover .fas{
+    background-color: pink;
+}
+
+.lesson-list-item .fas{
+    color:  #666666;
+    background-color: #ffffff;
+    font-size: 26px;
+}
+
+.lesson-btn-list{
+    float: right;
+    display: inline-block;
+}
+
+.vertical-list-lessons{
+    width: 20%;
+}
+
+.lesson-menu-item{
+    width: 100%;
+}
