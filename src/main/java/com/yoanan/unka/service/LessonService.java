@@ -1,5 +1,6 @@
 package com.yoanan.unka.service;
 
+import com.yoanan.unka.model.entity.LessonEntity;
 import com.yoanan.unka.model.service.LessonAddServiceModel;
 import com.yoanan.unka.model.service.LessonServiceModel;
 
@@ -15,4 +16,5 @@ public interface LessonService {
 
     LessonServiceModel findLessonById(Long id);
 
+    LessonEntity findLessonEntityById(Long id);
 }

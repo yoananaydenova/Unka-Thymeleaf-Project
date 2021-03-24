@@ -244,7 +244,7 @@ footer {
     margin-right: 20px;
 }
 
-.shoping-course-img{
+.shoping-course-img {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
@@ -256,11 +256,11 @@ footer {
     padding: 10px;
 }
 
-.fa{
+.fa {
     font-size: 18px;
 }
 
-.lesson-list-item{
+.lesson-list-item {
     text-decoration: none;
     color: #666666;
     height: 50px;
@@ -269,28 +269,59 @@ footer {
     font-size: 20px;
 }
 
-.lesson-list-item:hover{
-    background-color: pink;
-}
-.lesson-list-item:hover .fas{
+.lesson-list-item:hover {
     background-color: pink;
 }
 
-.lesson-list-item .fas{
-    color:  #666666;
+.lesson-list-item:hover .fas {
+    background-color: pink;
+}
+
+.lesson-list-item .fas {
+    color: #666666;
     background-color: #ffffff;
     font-size: 26px;
 }
 
-.lesson-btn-list{
+.lesson-btn-list {
     float: right;
     display: inline-block;
 }
 
-.vertical-list-lessons{
+.vertical-list-lessons {
     width: 20%;
 }
 
-.lesson-menu-item{
+.exercise-menu-item {
     width: 100%;
+}
+
+.exercise-menu-item:hover {
+    background-color: pink;
+    text-decoration: none;
+}
+
+.exercise-menu-item li, a {
+    font-size: 18px;
+    text-decoration: none;
+    color: #666666;
+}
+
+input:valid {
+    border: green solid 2px;
+}
+
+input:invalid {
+    border: red solid 2px;
+}
+
+input:invalid:required {
+    background-color: pink;
+}
+
+.solution-label {
+    display: flex;
+    align-items: flex-end;
+    font-size: 31px;
+    margin: 0px;
 }

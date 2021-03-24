@@ -1,7 +1,7 @@
 package com.yoanan.unka.model.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ public class SolutionEntity extends BaseEntity {
     public SolutionEntity() {
     }
 
-    @ManyToOne
+    @OneToOne
     public ExerciseEntity getExercise() {
         return exercise;
     }

@@ -52,20 +52,20 @@ public class UserServiceImpl implements UserService {
             UserEntity student = new UserEntity()
                     .setUsername("student")
                     .setFullName("First Student")
-                    .setPassword(passwordEncoder.encode("123"))
+                    .setPassword(passwordEncoder.encode("123456"))
                     .setRoles(List.of(studentRole));
 
             UserEntity teacher = new UserEntity()
                     .setUsername("teacher")
                     .setFullName("First Teacher")
-                    .setPassword(passwordEncoder.encode("123"));
+                    .setPassword(passwordEncoder.encode("123456"));
             // Teacher has 2 roles
             teacher.setRoles(List.of(teacherRole, studentRole));
 
             UserEntity admin = new UserEntity()
                     .setUsername("admin")
                     .setFullName("Admin Adminov")
-                    .setPassword(passwordEncoder.encode("123"));
+                    .setPassword(passwordEncoder.encode("123456"));
 
             // Admin has 3 roles
             admin.setRoles(List.of(adminRole, teacherRole, studentRole));

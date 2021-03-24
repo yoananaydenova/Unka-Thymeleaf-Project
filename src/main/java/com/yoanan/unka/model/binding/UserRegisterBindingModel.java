@@ -22,7 +22,7 @@ public class UserRegisterBindingModel {
     }
 
     @NotEmpty
-    @Length(min = 3, message = "Username length must be minimum 3 characters!")
+    @Length(min = 6, max = 20, message = "Username length must be minimum 6 and maximum 20 characters!")
     public String getUsername() {
         return username;
     }
@@ -33,7 +33,7 @@ public class UserRegisterBindingModel {
     }
 
     @NotEmpty
-    @Length(min = 3, message = "Full name length must be minimum 3 characters!")
+    @Length(min = 6, max=30, message = "Full name length must be minimum 6 and maximum 30 characters!")
     public String getFullName() {
         return fullName;
     }

@@ -15,7 +15,9 @@
     <div class="container">
         <h3 class="text-center"><span class="lable-intrance">Добавяне на урок</span></h3>
 
-        <form th:action="@{/lessons/add}" method="POST" th:object="${lessonAddBindingModel}"
+        <h3 th:if="${coursesList.isEmpty()}">Няма създадени от Вас курсове. Създайте курс и добавете урок към него.</h3>
+
+        <form th:unless="${coursesList.isEmpty()}" th:action="@{/lessons/add}" method="POST" th:object="${lessonAddBindingModel}"
               enctype="multipart/form-data">
             <fieldset>
 
@@ -23,11 +25,11 @@
                     <label for="courseName" class="title">Изберете курс, част от който е урока:</label>
 
                     <select id="courseName" name="courseId">
-                        <option value="">Изберете курс</option>
+                        <option value="0">Изберете курс</option>
                         <option th:each="i : ${coursesList}"
                                 th:value="${i.id}"
-                                th:text="${i.name}">
-
+                                th:text="${i.name}"
+                                th:selected="${selectedCourse == i.id}">
                         </option>
                     </select>
                 </div>
@@ -65,9 +67,8 @@
                     <input type="text" class="form-control-file" id="add-lesson-video" name="videoUrl">
                 </div>
 
-                <div type="submit" class="btn btn-primary">
-                    <button>Създай</button>
-                </div>
+                <button type="submit" name="action" value="save" class="btn btn-primary">Създай</button>
+
             </fieldset>
         </form>
 

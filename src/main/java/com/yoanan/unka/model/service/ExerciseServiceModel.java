@@ -1,17 +1,12 @@
 package com.yoanan.unka.model.service;
 
-import com.yoanan.unka.model.entity.LessonEntity;
-import com.yoanan.unka.model.entity.SolutionEntity;
-
-import java.util.Set;
-
 public class ExerciseServiceModel extends BaseServiceModel {
 
     private LessonServiceModel lesson;
     private String title;
     private String description;
     private String text;
-    private String task;
+
 
     public ExerciseServiceModel() {
     }
@@ -52,12 +47,4 @@ public class ExerciseServiceModel extends BaseServiceModel {
         return this;
     }
 
-    public String getTask() {
-        return task;
-    }
-
-    public ExerciseServiceModel setTask(String task) {
-        this.task = task;
-        return this;
-    }
 }

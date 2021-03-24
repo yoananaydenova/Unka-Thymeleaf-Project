@@ -3,7 +3,6 @@
 
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
-    <title>Регистрация</title>
 </head>
 
 <body>
@@ -25,6 +24,7 @@
             </div>
             <input th:value="*{username}"
                    th:errorclass="is-invalid"
+                   required minlength="6" maxlength="20"
                    type="text"
                    class="form-control"
                    id="username"
@@ -45,6 +45,7 @@
             <input
                     th:value="*{fullName}"
                     th:errorclass="is-invalid"
+                    required minlength="6" maxlength="30"
                     type="text"
                     class="form-control"
                     id="fullName"
@@ -62,7 +63,9 @@
             <input
                     th:value="*{email}"
                     th:errorclass="is-invalid"
-                    type="text" class="form-control" id="email"
+                    required
+                    type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    class="form-control" id="email"
                     name="email"/>
 
             <small id="emailError"
@@ -75,9 +78,10 @@
             </div>
             <input type="password"
                    th:errorclass="is-invalid"
+                   required minlength="6" maxlength="20"
                    class="form-control"
-                   id="password" name="password"/>
-
+                   id="password" name="password"
+                   onkeyup='check();'/>
             <small id="passwordError"
                    class="invalid-feedback text-light form-text bg-danger rounded">
                 Password length must be between 6 and 20 characters and passwords should match.
@@ -91,7 +95,10 @@
             <input type="password"
                    class="form-control"
                    th:errorclass="is-invalid"
-                   id="repeatPassword" name="repeatPassword"/>
+                   required minlength="6" maxlength="20"
+                   id="repeatPassword" name="repeatPassword"
+                   onkeyup='check();'/>
+            <span style="background-color: white; border-radius: 3px; margin: 4px;" id="message"></span>
             <small id="repeatPasswordError"
                    class="invalid-feedback text-light form-text bg-danger rounded">
                 Password length must be between 6 and 20 characters and passwords should match.
@@ -110,7 +117,7 @@
 </main>
 
 <th:block th:include="~{fragments/footer}"></th:block>
-
+<script th:src="@{/js/register.js}"></script>
 
 </body>
 

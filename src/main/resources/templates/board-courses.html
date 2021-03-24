@@ -74,13 +74,17 @@
             </thead>
             <tbody>
             <tr th:each="course : ${courses}" th:object="${course}">
-                <td th:text="*{name}"></td>
+                <td >
+                    <a th:href="@{/courses/course/{id}(id=${course.id})}" th:text="*{name}"></a>
+                </td>
                 <td th:text="*{price}"></td>
                 <td><img class="img-list" th:src="*{imgUrl}"/></td>
                 <td th:text="*{description}"></td>
 
 
                 <td>
+                    <a class="btn btn-primary" th:href="@{/lessons/add/{id}(id=${course.id})}">Добави урок</a>
+                    <a  class="btn btn-primary" th:href="@{/exercises/add(courseId=${course.id})}">Добави упражнение</a>
                     <a th:href="@{/courses/edit/{id}(id=*{id})}" class="btn btn-primary">Редактирай</a>
                     <a th:href="@{/courses/delete/{id}(id=*{id})}" class="btn btn-primary">Изтрии</a>
                 </td>

@@ -1,8 +1,9 @@
 package com.yoanan.unka.model.entity;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "exercises")
@@ -12,7 +13,7 @@ public class ExerciseEntity extends BaseEntity {
     private String title;
     private String description;
     private String text;
-    private String task;
+
  //   private Set<SolutionEntity> solutions = new HashSet<>();
 
     public ExerciseEntity() {
@@ -57,15 +58,7 @@ public class ExerciseEntity extends BaseEntity {
         return this;
     }
 
-    @Column(name = "task", columnDefinition = "TEXT")
-    public String getTask() {
-        return task;
-    }
 
-    public ExerciseEntity setTask(String task) {
-        this.task = task;
-        return this;
-    }
 
 
 
