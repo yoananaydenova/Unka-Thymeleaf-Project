@@ -64,7 +64,6 @@ public class LessonController {
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) throws IOException {
 
-
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("lessonAddBindingModel", lessonAddBindingModel);
             redirectAttributes.addFlashAttribute(
@@ -85,8 +84,7 @@ public class LessonController {
 
         LessonServiceModel lessonServiceModel = lessonService.addLesson(lessonAddServiceModel);
 
-//TODO redirect to view lesson - get id from lessonServiceModel
-        return "redirect:/board";
+        return "redirect:/lessons/" + lessonServiceModel.getId();
     }
 
 
@@ -94,14 +92,20 @@ public class LessonController {
     public String lessonDetail(@PathVariable Long id, Model model) {
 
         LessonViewModel lessonViewModel = modelMapper.map(lessonService.findLessonById(id), LessonViewModel.class);
+        model.addAttribute("lessonViewModel", lessonViewModel);
 
+        // list of exercise
         List<ExerciseNameViewModel> exercisesNameList = exerciseService
                 .findAllExercisesByLessonId(lessonViewModel.getId())
                 .stream()
                 .map(es -> modelMapper.map(es, ExerciseNameViewModel.class))
                 .collect(Collectors.toList());
-        model.addAttribute("lessonViewModel", lessonViewModel);
         model.addAttribute("exercisesNameList", exercisesNameList);
+
+         // variable for visualization of buttons
+        boolean isTeacherOfCourse = courseService.isTeacherOfCourseByCourseId(lessonViewModel.getCourse().getId());
+        model.addAttribute("isTeacherOfCourse", isTeacherOfCourse);
+
         return "details-lesson";
     }
 }

@@ -1,24 +1,30 @@
 package com.yoanan.unka.model.binding;
 
-import com.yoanan.unka.model.entity.LessonEntity;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ExerciseSolutionAddBindingModel {
+
 
     private Long lessonId;
     private String title;
     private String description;
     private String text;
 
-    private Integer debitNumber;
-    private Integer creditNumber;
-    private BigDecimal debitValue;
-    private BigDecimal creditValue;
+    private Long debitChartId;
+    private Long creditChartId;
+    private Double debitValue;
+    private Double creditValue;
 
     public ExerciseSolutionAddBindingModel() {
     }
 
+    @NotNull(message = "Избора на урок е задължителен!")
+    @Min(value = 1, message = "Избора на урок е задължителен!")
     public Long getLessonId() {
         return lessonId;
     }
@@ -28,6 +34,8 @@ public class ExerciseSolutionAddBindingModel {
         return this;
     }
 
+    @NotNull(message = "Заглавието е задължително")
+    @Length(min = 5, message = "Заглавието трябва да е минимум от 5 символа")
     public String getTitle() {
         return title;
     }
@@ -37,6 +45,7 @@ public class ExerciseSolutionAddBindingModel {
         return this;
     }
 
+    @Length(max = 100, message = "Изисквинията за изпълнение на задачата са максимум до 100 символа")
     public String getDescription() {
         return description;
     }
@@ -46,6 +55,8 @@ public class ExerciseSolutionAddBindingModel {
         return this;
     }
 
+    @NotNull(message = "Условието е задължително")
+    @Length(min = 10, message = "Условието трябва да е минимум от 10 символа")
     public String getText() {
         return text;
     }
@@ -55,38 +66,45 @@ public class ExerciseSolutionAddBindingModel {
         return this;
     }
 
-    public Integer getDebitNumber() {
-        return debitNumber;
+    @NotNull(message = "Въвеждането на сметка е зъдължително")
+    public Long getDebitChartId() {
+        return debitChartId;
     }
 
-    public ExerciseSolutionAddBindingModel setDebitNumber(Integer debitNumber) {
-        this.debitNumber = debitNumber;
+    public ExerciseSolutionAddBindingModel setDebitChartId(Long debitChartId) {
+        this.debitChartId = debitChartId;
         return this;
     }
 
-    public Integer getCreditNumber() {
-        return creditNumber;
+    @NotNull(message = "Въвеждането на сметка е зъдължително")
+    public Long getCreditChartId() {
+        return creditChartId;
     }
 
-    public ExerciseSolutionAddBindingModel setCreditNumber(Integer creditNumber) {
-        this.creditNumber = creditNumber;
+    public ExerciseSolutionAddBindingModel setCreditChartId(Long creditChartId) {
+        this.creditChartId = creditChartId;
         return this;
     }
 
-    public BigDecimal getDebitValue() {
+    @NotNull(message = "Въвеждането на сума е зъдължително")
+    //@Digits(integer=10, fraction=2, message = "Валидни са стойности с 10 позиции преди запетаята и 2 след.")
+    public Double getDebitValue() {
         return debitValue;
     }
 
-    public ExerciseSolutionAddBindingModel setDebitValue(BigDecimal debitValue) {
+    public ExerciseSolutionAddBindingModel setDebitValue(Double debitValue) {
         this.debitValue = debitValue;
         return this;
     }
 
-    public BigDecimal getCreditValue() {
+
+    @NotNull(message = "Въвеждането на сума е зъдължително")
+  //  @Digits(integer=10, fraction=2, message = "Валидни са стойности с 10 позиции преди запетаята и 2 след.")
+    public Double getCreditValue() {
         return creditValue;
     }
 
-    public ExerciseSolutionAddBindingModel setCreditValue(BigDecimal creditValue) {
+    public ExerciseSolutionAddBindingModel setCreditValue(Double creditValue) {
         this.creditValue = creditValue;
         return this;
     }

@@ -17,29 +17,32 @@
 
         <h3 th:if="${coursesList.isEmpty()}">Няма създадени от Вас курсове. Създайте курс и добавете урок към него.</h3>
 
-        <form th:unless="${coursesList.isEmpty()}" th:action="@{/lessons/add}" method="POST" th:object="${lessonAddBindingModel}"
+        <form th:unless="${coursesList.isEmpty()}" th:action="@{/lessons/add}" method="POST"
+              th:object="${lessonAddBindingModel}"
               enctype="multipart/form-data">
             <fieldset>
 
                 <div class="field">
                     <label for="courseName" class="title">Изберете курс, част от който е урока:</label>
 
-                    <select id="courseName" name="courseId">
-                        <option value="0">Изберете курс</option>
+                    <select id="courseName" required class="custom-select" name="courseId">
+                        <option value="">Изберете курс</option>
                         <option th:each="i : ${coursesList}"
                                 th:value="${i.id}"
                                 th:text="${i.name}"
                                 th:selected="${selectedCourse == i.id}">
                         </option>
                     </select>
+
                 </div>
                 <div class="field">
                     <label for="title" class="title">Заглавие на урока</label>
                     <input th:field="*{title}"
+                           required
                            th:errorclass="border-err"
                            type="text" id="title"
                            name="title"
-                           placeholder="Заглавие на урока" class="input">
+                           placeholder="Заглавие на урока" class="form-control">
                     <small class="msg-custom" th:if="${#fields.hasErrors('title')}"
                            th:errors="*{title}"></small>
                     <small th:if="${lessonExistsError}" id="usernameUniqueError"
@@ -49,22 +52,23 @@
                 <div class="field">
                     <label for="description" class="label">Описание:</label>
                     <input th:field="*{description}"
-                           th:errorclass="border-err"
-                           type="text" id="description"
-                           name="description"
-                           placeholder="Описание на урока до 500 символа." class="input">
+                              th:errorclass="border-err"
+                              type="text"
+                              id="description"
+                              name="description"
+                              placeholder="Описание на урока до 500 символа." class="form-control ">
                     <small class="msg-custom" th:if="${#fields.hasErrors('description')}"
                            th:errors="*{description}"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="add-lesson-image" class="font-weight-bold">Снимка</label>
-                    <input type="file" class="form-control-file" id="add-lesson-image" name="img" required="required">
+                    <input type="file" class="form-control-file" id="add-lesson-image" name="img">
                 </div>
 
                 <div class="field">
                     <label for="add-lesson-video" class="font-weight-bold">Линк към видео</label>
-                    <input type="text" class="form-control-file" id="add-lesson-video" name="videoUrl">
+                    <input pattern="http://www\.youtube\.com\/(.+)|https://www\.youtube\.com\/(.+)" type="text" class="form-control-file" id="add-lesson-video" name="videoUrl">
                 </div>
 
                 <button type="submit" name="action" value="save" class="btn btn-primary">Създай</button>
@@ -76,7 +80,6 @@
 </main>
 
 <th:block th:include="~{fragments/footer}"></th:block>
-
 
 </body>
 

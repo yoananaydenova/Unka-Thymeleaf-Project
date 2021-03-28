@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
             teacher.setRoles(List.of(teacherRole, studentRole));
 
             UserEntity admin = new UserEntity()
-                    .setUsername("admin")
+                    .setUsername("admina")
                     .setFullName("Admin Adminov")
                     .setPassword(passwordEncoder.encode("123456"));
 

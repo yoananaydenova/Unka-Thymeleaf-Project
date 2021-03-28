@@ -5,7 +5,8 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 @FieldMatch(
         first = "password",
         second = "repeatPassword"
@@ -45,6 +46,7 @@ public class UserRegisterBindingModel {
 
     @NotEmpty
     @Email(message = "Enter valid email address!")
+    @Pattern(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$", message = "Enter valid email address!")
     public String getEmail() {
         return email;
     }

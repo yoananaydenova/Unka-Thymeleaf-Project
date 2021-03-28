@@ -90,7 +90,6 @@ public class CoursesController {
                                          @RequestParam(value = "sortField", defaultValue = "name") String sortField,
                                          @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
                                          Model model) {
-
         int pageSize = 6;
 
         Page<CourseServiceModel> paginated;

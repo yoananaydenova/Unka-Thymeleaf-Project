@@ -48,7 +48,7 @@ public class ExerciseEntity extends BaseEntity {
         this.description = description;
         return this;
     }
-    @Column(name = "text", columnDefinition = "TEXT")
+    @Column(name = "text", nullable = false, columnDefinition = "TEXT")
     public String getText() {
         return text;
     }

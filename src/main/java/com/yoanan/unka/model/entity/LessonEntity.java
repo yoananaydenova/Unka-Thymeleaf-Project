@@ -20,7 +20,7 @@ public class LessonEntity extends BaseEntity {
     public LessonEntity() {
     }
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     public CourseEntity getCourse() {
         return course;
     }

@@ -13,13 +13,13 @@
 </header>
 
 <main class="content-wrap">
-    <div class="container-fluid" style="display: flex" >
+    <div class="container-fluid" style="display: flex">
 
 
         <ul th:unless="${exercisesNameList.isEmpty()}" class="vertical-list-lessons">
             <li style="background-color: #d1ecf1; padding: 10px;">Упражнения:</li>
             <li th:each="e : ${exercisesNameList}" class="list-group-item exercise-menu-item">
-                <a th:href="@{/}">
+                <a th:href="@{/exercises/{id}(id=${e.id})}">
                     <i class="fa fa-dumbbell"></i>
                     <small th:text="${e.title}"></small>
                 </a>
@@ -27,26 +27,30 @@
         </ul>
 
 
-        <div th:object="${lessonViewModel}">
+        <div class="lesson-view" th:object="${lessonViewModel}">
             <img class="img-list" th:src="*{imgUrl}"/>
             <h3 th:text="*{title}">Name of lesson</h3>
             <h4 th:text="*{description}">Description</h4>
-            <!--             TODO video and text-->
-            <!--            <img class="img-list" th:src="*{imgUrl}"/>-->
-            <!--            <p th:text="*{}"></p>-->
-            <div sec:authorize="isAuthenticated()">
-<!--                !!! TODO Authenticated seed from teacher-->
 
-                <a  class="btn btn-primary" th:href="@{/exercises/edit/{id}(id=${id})}">Редактирай</a>
-                <a  class="btn btn-primary" th:href="@{/exercises/add(courseId=${lessonViewModel.course.id}, lessonId=${lessonViewModel.id})}">Добави упражнение</a>
+
+            <div class="rounded embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" th:src="'https://www.youtube.com/embed/' + *{videoUrl}"
+                        allowfullscreen></iframe>
             </div>
 
-            <form th:action="@{/lessons/{id}(id=*{id})}" method="POST">
-<!--                Continue to first exercise-->
-                <button class="btn btn-primary">
-                    <i class="fas fa-chevron-circle-right"></i> Продължи
-                </button>
-            </form>
+
+            <div sec:authorize="isAuthenticated()">
+                <a class="btn btn-primary" th:if="${isTeacherOfCourse}" th:href="@{/exercises/edit/{id}(id=${id})}">Редактирай</a>
+                <a class="btn btn-primary" th:if="${isTeacherOfCourse}"
+                   th:href="@{/exercises/add(courseId=${lessonViewModel.course.id}, lessonId=${lessonViewModel.id})}">Добави
+                    упражнение</a>
+            </div>
+
+            <!--                Continue to first exercise-->
+            <a th:unless="${exercisesNameList.isEmpty()}" class="btn btn-primary" th:href="@{/exercises/1}">
+                <i class="fas fa-chevron-circle-right"></i> Продължи към упражненията
+            </a>
+
         </div>
 
     </div>

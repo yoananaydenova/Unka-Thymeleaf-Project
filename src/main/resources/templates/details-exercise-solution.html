@@ -13,72 +13,57 @@
 
 </header>
 
-<main class="content-wrap">
-    <div class="container">
-        <h3 class="text-center"><span class="lable-intrance">Добавяне на упражнение</span></h3>
+<main class="d-flex" >
 
 
-        <h3 th:if="${lessonsList.isEmpty()}">Няма създадени от Вас уроци. Създайте урок и добавете упражнение към
-            него.</h3>
+    <ul th:unless="${exercisesNameList.isEmpty()}" class="vertical-list-lessons">
+        <li style="background-color: #d1ecf1; padding: 10px;">Упражнения:</li>
+        <li th:each="e: ${exercisesNameList}" class="list-group-item exercise-menu-item">
+            <a th:href="@{/exercises/{id}(id=${e.id})}">
+                <i class="fa fa-dumbbell"></i>
+                <small th:text="${e.title}"></small>
+            </a>
+            <i th:if="${e.id==exerciseViewModel.id}" style="color: #EF4E7C;" class="fa fa-map-marker-alt"></i>
+        </li>
+    </ul>
 
-        <form th:unless="${lessonsList.isEmpty()}"
-              th:action="@{/exercises/add}"
+    <div class="container-fluid">
+
+        <h3 class="text-center"><span class="lable-intrance">Решаване на упражнение</span></h3>
+
+        <a class="btn btn-primary" th:if="${isTeacherOfCourse}"
+           th:href="@{/exercises/edit/{id}(id=${id})}">Редактирай</a>
+
+        <small th:if="${isFalseSolutionMessage}" id="isFalseSolutionMessage" class="text-danger font-weight-bold">
+            Грешно решение! Опитай отново!</small>
+
+        <small th:if="${isTrueSolutionMessage}" id="isTrueSolutionMessage" class="text-success font-weight-bold">
+            Отлично! Продължавай напред!</small>
+
+        <form th:action="@{/exercises/solution}"
               method="POST"
-              th:object="${exerciseSolutionAddBindingModel}"
+              th:object="${solutionAddBindingModel}"
               enctype="multipart/form-data">
 
-            <label th:text="|КУРС: ${courseName.name}|"></label>
-            <input type="hidden" name="courseId" th:value="${courseName.id}"/>
+            <h4 class="font-weight-bold" th:text="|КУРС: ${exerciseViewModel.getLesson().getCourse().name}|"></h4>
+
+            <h4 class="font-weight-bold" th:text="|УРОК: ${exerciseViewModel.getLesson().title}|"></h4>
+            <input type="hidden" name="exerciseId" th:value="${exerciseViewModel.getLesson().id}"/>
+
+            <!--            Go to lesson-->
+            <a class="btn btn-primary" th:href="@{/lessons/{id}(id=${exerciseViewModel.getLesson().id})}">
+                <i class="fas fa-chevron-circle-right"></i> Към урока
+            </a>
+
+            <hr/>
+            <h4 class="font-weight-bold" th:text="|УПРАЖНЕНИЕ: ${exerciseViewModel.title}|"></h4>
+            <h6 class="font-weight-bold">Изисквания за изпълнение на упражнението:</h6>
+            <p th:text="${exerciseViewModel.description}"></p>
+
+            <h6 class="font-weight-bold">Условие на упражнението:</h6>
+            <p th:text="${exerciseViewModel.text}"></p>
 
             <fieldset>
-                <div class="field">
-                    <label for="lessonName" class="title">Изберете урок, към който да е упражнението: *</label>
-                    <select required id="lessonName" class="custom-select" name="lessonId">
-                        <option value="0">Изберете урок</option>
-                        <option th:each="lesson : ${lessonsList}"
-                                th:value="${lesson.id}"
-                                th:text="${lesson.title}"
-                                th:selected="${selectedLesson != null ? selectedLesson == lesson.id : lesson.id}">
-                        </option>
-                    </select>
-                    <small class="text-danger" th:if="${#fields.hasErrors('lessonId')}"
-                           th:errors="*{lessonId}"></small>
-                </div>
-
-                <div class="field">
-                    <label for="title" class="title">Заглавие на упражнението: *</label>
-                    <input th:field="*{title}"
-                           type="text" id="title"
-                           name="title"
-                           required
-                           placeholder="Заглавие на упражнението" class="input">
-                    <small class="text-danger" th:if="${#fields.hasErrors('title')}"
-                           th:errors="*{title}"></small>
-                    <small th:if="${exerciseExistsError}" id="exerciseUniqueError"
-                           class="text-danger">
-                        В урока вече съществува упражнение с това име!</small>
-                </div>
-                <div class="field">
-                    <label for="description" class="label">Изисквания за изпълнение на упражнението:</label>
-                    <input th:field="*{description}"
-                           type="text" id="description"
-                           name="description"
-                           placeholder="Изисквания за изпълнение на упражнението" class="input">
-                    <small class="text-danger" th:if="${#fields.hasErrors('description')}"
-                           th:errors="*{description}"></small>
-                </div>
-
-                <div class="field">
-                    <label for="text" class="label">Условие на упражнението: </label>
-                    <input th:field="*{text}"
-                           type="text" id="text"
-                           required
-                           name="text"
-                           placeholder="Условие на упражнението" class="input">
-                    <small class="text-danger" th:if="${#fields.hasErrors('text')}"
-                           th:errors="*{text}"></small>
-                </div>
-
 
                 <hr/>
                 <h3>Попълнете решението на счетоводната задача:</h3>
@@ -106,7 +91,7 @@
                                    name="debitValue"
                                    required
                                    type="number" step="0.01" value='0.00' placeholder='0.00'
-                                  class="form-control mr-sm-2 w-25">
+                                   class="form-control mr-sm-2 w-25">
                             <small class="text-danger" th:if="${#fields.hasErrors('debitValue')}"
                                    th:errors="*{debitValue}"></small>
                         </div>
@@ -141,8 +126,15 @@
                 </div>
 
 
-                <button type="submit" name="action" value="save" class="btn btn-primary">Създай</button>
+                <button type="submit" name="action" value="save" class="btn btn-primary">Провери</button>
 
+                <hr/>
+
+                <a th:unless="${exercisesNameList.get(exercisesNameList.size()-1).getId() == exerciseViewModel.id}"
+                   class="btn btn-primary"
+                   th:href="@{/exercises/{id}(id=${exercisesNameList.get(indexOfCurrentExercise + 1).id})}">
+                    <i class="fas fa-chevron-circle-right"></i> Към следващо упражнение
+                </a>
             </fieldset>
         </form>
 

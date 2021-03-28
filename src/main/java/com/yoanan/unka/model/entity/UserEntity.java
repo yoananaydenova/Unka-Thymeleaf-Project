@@ -29,6 +29,7 @@ public class UserEntity extends BaseEntity{
         return this;
     }
 
+    @Column(name="full_name")
     public String getFullName() {
         return fullName;
     }
@@ -63,7 +64,7 @@ public class UserEntity extends BaseEntity{
         return this;
     }
 
-    @OneToMany(mappedBy="teacher")
+    @OneToMany(mappedBy="teacher", fetch = FetchType.EAGER)
     public Set<CourseEntity> getTeachCourses() {
         return teachCourses;
     }

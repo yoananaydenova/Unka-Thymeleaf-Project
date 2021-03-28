@@ -10,5 +10,7 @@ public interface ExerciseService {
 
     boolean isUniqueExerciseWithNameAndLessonId(String title, Long lessonId);
 
-    void addExercise(ExerciseServiceModel exerciseServiceModel);
+    ExerciseServiceModel addExercise(ExerciseServiceModel exerciseServiceModel);
+
+    ExerciseServiceModel findExerciseById(Long id);
 }

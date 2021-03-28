@@ -35,7 +35,7 @@
                 <input type="text" class="form-control" placeholder="Търси в курсове...">
             </div>
 
-            <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
+            <a sec:authorize="!hasRole('TEACHER')" th:unless="${hasProfileInfo}" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
             <!--            TODO reload navbar after student become teacher-->
 
             <th:block sec:authorize="!isAuthenticated()">
@@ -75,7 +75,7 @@
             <th:block sec:authorize="hasRole('STUDENT')">
                 <!--                <a sec:authorize="!hasRole('TEACHER')" class="nav-link link-n" th:href="@{/roles/add-teacher}">Преподавай</a>-->
                 <a class="nav-link link-n" th:href="@{/courses/my-courses}">Моите курсове</a>
-                <a class="nav-link link-n" th:href="@{/users/profile}">Профил</a>
+                <a class="nav-link link-n" th:href="@{/profile}">Профил</a>
                 <th:block>
 
                     <!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->

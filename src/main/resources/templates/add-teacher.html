@@ -14,50 +14,30 @@
 <main class="content-wrap">
     <div class="container">
 
-        <p>Информация за това какво е да си учител
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque cum deserunt dolorem, eos esse eum
-            ex
-            facilis id illum impedit molestiae nemo nobis optio porro quas qui, quisquam rem unde voluptatum. Alias
-            animi deleniti ducimus eveniet facere, illo mollitia obcaecati odit perspiciatis rem tempore ut? Asperiores
-            incidunt magnam praesentium?</p>
 
         <h3 class="text-center"><span class="lable-intrance">Въпросник</span></h3>
-        <form method="POST"
-              th:action="@{/users/add-teacher}">
+        <form method="POST" th:action="@{/users/add-teacher}" th:object="${profileInformationAddBindingModel}">
             <div class="form-groupEntity">
-                <label for="exampleFormControlInput1">Каква професия упражнявате?</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1"
+                <label for="profession">Професия</label>
+                <input type="text" class="form-control" id="profession" th:field="*{profession}"
                        placeholder="Учител / Счетоводител / Икономист...">
             </div>
             <div class="form-groupEntity">
-                <label for="exampleFormControlSelect1">Колко години опит в областта имате</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>повече</option>
-                </select>
+                <label for="yearsExperience">Години опит в областта</label>
+                <input type="number" min="0" class="form-control"
+                       th:errorclass="is-invalid"
+                       id="yearsExperience"
+                       th:field="*{yearsExperience}"
+                       placeholder="Въведете опита си в години">
+
+<!--                <small th:if="${#fields.hasErrors('yearsExperience')}"-->
+<!--                       th:errors="*{yearsExperience}" id="yearsExperienceError"-->
+<!--                       class="text-light form-text bg-danger rounded">Минималната стойност е 0!</small>-->
             </div>
             <div class="form-groupEntity">
-                <label for="exampleFormControlSelect2">Изберете областите, в които сте уверени да преподавате:</label>
-                <select multiple class="form-control" id="exampleFormControlSelect2">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </select>
-            </div>
-            <div class="form-groupEntity">
-                <label for="exampleFormControlTextarea1">Описание на опита Ви в посочените области на
-                    компетенция:</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <div class="form-groupEntity">
-                <label for="exampleFormControlTextarea2">Кратко представяне пред студентите:</label>
-                <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                <label for="presentation">Представете се на бъдещите си курсисти /образование, професионален опит,
+                    работодатели, проекти и др./:</label>
+                <textarea class="form-control" id="presentation" rows="3" th:field="*{presentation}"></textarea>
             </div>
             <div class="button-holder d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Преподавай</button>

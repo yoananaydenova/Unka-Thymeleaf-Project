@@ -42,12 +42,20 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public void addExercise(ExerciseServiceModel exerciseServiceModel) {
+    public ExerciseServiceModel addExercise(ExerciseServiceModel exerciseServiceModel) {
         ExerciseEntity exerciseEntity = modelMapper.map(exerciseServiceModel, ExerciseEntity.class);
         LessonEntity lessonEntityById = lessonService.findLessonEntityById(exerciseServiceModel.getLesson().getId());
         exerciseEntity.setLesson(lessonEntityById);
-        System.out.println();
         exerciseEntity.setId(null);
-        exerciseRepository.save(exerciseEntity);
+       return modelMapper.map(exerciseRepository.save(exerciseEntity), ExerciseServiceModel.class);
+    }
+
+    @Override
+    public ExerciseServiceModel findExerciseById(Long id) {
+
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalStateException("Lesson with id " + id + " not found!"));
+        return modelMapper.map(exerciseEntity, ExerciseServiceModel.class);
     }
 }

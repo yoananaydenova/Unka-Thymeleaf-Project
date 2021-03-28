@@ -1,18 +1,22 @@
 package com.yoanan.unka.web;
 
+import com.yoanan.unka.model.binding.ProfileInformationAddBindingModel;
 import com.yoanan.unka.model.binding.UserRegisterBindingModel;
 import com.yoanan.unka.model.entity.enums.UserRole;
+import com.yoanan.unka.model.service.ProfileInformationAddServiceModel;
+import com.yoanan.unka.model.service.ProfileInformationServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.service.ProfileInformationService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -24,10 +28,12 @@ public class UserController {
 
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final ProfileInformationService profileInformationService;
 
-    public UserController(ModelMapper modelMapper, UserService userService) {
+    public UserController(ModelMapper modelMapper, UserService userService, ProfileInformationService profileInformationService) {
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.profileInformationService = profileInformationService;
     }
 
     @ModelAttribute("userRegisterBindingModel")
@@ -88,24 +94,35 @@ public class UserController {
 
     // Form to be teacher
     @GetMapping("/add-teacher")
-    public String teach() {
+    public String teach(Model model) {
+        if (!model.containsAttribute("profileInformationAddBindingModel")) {
+            model.addAttribute("profileInformationAddBindingModel", new ProfileInformationAddBindingModel());
+        }
         return "add-teacher";
     }
 
     @PostMapping("/add-teacher")
-    public String teachConfirm(Principal principal) {
+    public String teachConfirm(@Valid @ModelAttribute("profileInformationAddBindingModel") ProfileInformationAddBindingModel profileInformationAddBindingModel,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) {
+
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("profileInformationAddBindingModel", profileInformationAddBindingModel);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.profileInformationAddBindingModel", bindingResult);
+
+            return "redirect:/users/add-teacher";
+        }
+
 
         userService.addRole(principal.getName(), UserRole.TEACHER);
+        profileInformationService.addInformation(modelMapper.map(profileInformationAddBindingModel, ProfileInformationAddServiceModel.class));
         // TODO Change role in same session
-        return "/home";
+        return "redirect:/home";
     }
 
-    // Profile page
-//    TODO Edit profile
-    @GetMapping("/profile")
-    public String profile() {
 
-        return "profile";
-    }
 
 }

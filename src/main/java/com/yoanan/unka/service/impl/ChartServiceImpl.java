@@ -5,6 +5,7 @@ import com.yoanan.unka.model.binding.ChartBindingModel;
 import com.yoanan.unka.model.entity.ChartEntity;
 import com.yoanan.unka.model.entity.GroupEntity;
 import com.yoanan.unka.model.entity.SectionEntity;
+import com.yoanan.unka.model.service.ChartServiceModel;
 import com.yoanan.unka.repository.ChartRepository;
 import com.yoanan.unka.repository.GroupRepository;
 import com.yoanan.unka.repository.SectionRepository;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChartServiceImpl implements ChartService {
@@ -98,5 +101,28 @@ public class ChartServiceImpl implements ChartService {
         }
 
 
+    }
+
+    @Override
+    public ChartServiceModel findByIdOfChart(Long chartId) {
+
+        ChartEntity chartEntity = chartRepository.findById(chartId).orElseThrow(() ->
+                new IllegalStateException("Chart with id " + chartId + " not found!"));
+
+        return modelMapper.map(chartEntity, ChartServiceModel.class);
+
+    }
+
+    @Override
+    public List<ChartServiceModel> findAllChartsWithGroupsName() {
+        return chartRepository
+                .findAll()
+                .stream()
+                .map(chart -> {
+                    ChartServiceModel serviceModel = modelMapper.map(chart, ChartServiceModel.class);
+                    serviceModel.setGroupName(chart.getGroup().getName());
+                    return serviceModel;
+                })
+                .collect(Collectors.toList());
     }
 }

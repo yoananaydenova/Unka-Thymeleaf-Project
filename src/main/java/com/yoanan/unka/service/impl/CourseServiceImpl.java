@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
 
+    private static final String NAME_OF_CATEGORY_ACCOUNTING = "Счетоводство";
+
     private final CourseRepository courseRepository;
     private final CloudinaryService cloudinaryService;
     private final EnrolledCoursesService enrolledCoursesService;
@@ -235,7 +237,7 @@ public class CourseServiceImpl implements CourseService {
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
 
-       return courseRepository
+        return courseRepository
                 .findAllByTeacher_Username(username)
                 .stream()
                 .map(course -> {
@@ -250,7 +252,14 @@ public class CourseServiceImpl implements CourseService {
     public CourseEntity findEntityById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() ->
-                new IllegalStateException("Course wit id " + id + " not found!"));
+                        new IllegalStateException("Course wit id " + id + " not found!"));
+    }
+
+    @Override
+    public boolean isTeacherOfCourseByCourseId(Long courseId) {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+        return courseRepository.existsByIdAndTeacher_Username(courseId, username);
     }
 
 

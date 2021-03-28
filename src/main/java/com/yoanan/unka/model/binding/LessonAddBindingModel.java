@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class LessonAddBindingModel {
 
@@ -16,7 +18,7 @@ public class LessonAddBindingModel {
     public LessonAddBindingModel() {
     }
 
-    @NotEmpty
+    @NotEmpty(message = "Заглавието е зъдължително!")
     @Length(min = 3, max=30, message = "Заглавието на урока трябва да бъде от 3 до 30 символа!")
     public String getTitle() {
         return title;
@@ -37,6 +39,7 @@ public class LessonAddBindingModel {
         return this;
     }
 
+
     public MultipartFile getImg() {
         return img;
     }
@@ -46,7 +49,7 @@ public class LessonAddBindingModel {
         return this;
     }
 
-    //TODO validate video url
+    //Validate video url in service, may be empty
     public String getVideoUrl() {
         return videoUrl;
     }
@@ -56,6 +59,7 @@ public class LessonAddBindingModel {
         return this;
     }
 
+    @NotNull
     public Long getCourseId() {
         return courseId;
     }

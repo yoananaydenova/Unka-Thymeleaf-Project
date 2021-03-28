@@ -1,21 +1,20 @@
-package com.yoanan.unka.model.service;
+package com.yoanan.unka.model.view;
 
-public class ExerciseServiceModel extends BaseServiceModel {
+public class ExerciseViewModel extends BaseViewModel{
 
-    private LessonServiceModel lesson;
+    private LessonViewModel lesson;
     private String title;
     private String description;
     private String text;
 
-
-    public ExerciseServiceModel() {
+    public ExerciseViewModel() {
     }
 
-    public LessonServiceModel getLesson() {
+    public LessonViewModel getLesson() {
         return lesson;
     }
 
-    public ExerciseServiceModel setLesson(LessonServiceModel lesson) {
+    public ExerciseViewModel setLesson(LessonViewModel lesson) {
         this.lesson = lesson;
         return this;
     }
@@ -24,7 +23,7 @@ public class ExerciseServiceModel extends BaseServiceModel {
         return title;
     }
 
-    public ExerciseServiceModel setTitle(String title) {
+    public ExerciseViewModel setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -33,7 +32,7 @@ public class ExerciseServiceModel extends BaseServiceModel {
         return description;
     }
 
-    public ExerciseServiceModel setDescription(String description) {
+    public ExerciseViewModel setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -42,7 +41,7 @@ public class ExerciseServiceModel extends BaseServiceModel {
         return text;
     }
 
-    public ExerciseServiceModel setText(String text) {
+    public ExerciseViewModel setText(String text) {
         this.text = text;
         return this;
     }

@@ -27,4 +27,6 @@ public interface CourseService {
     List<CourseServiceModel> findAllCoursesCreatedByCurrentLoggedTeacher();
 
     CourseEntity findEntityById(Long id);
+
+    boolean isTeacherOfCourseByCourseId(Long courseId);
 }

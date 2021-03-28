@@ -1,5 +1,6 @@
 package com.yoanan.unka.model.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -10,10 +11,10 @@ import java.math.BigDecimal;
 public class SolutionEntity extends BaseEntity {
 
     private  ExerciseEntity exercise;
-    private int debitNumber;
-    private int creditNumber;
-    private BigDecimal debitValue;
-    private BigDecimal creditValue;
+    private Long debitChartId;
+    private Long creditChartId;
+    private Double debitValue;
+    private Double creditValue;
 
     public SolutionEntity() {
     }
@@ -28,38 +29,43 @@ public class SolutionEntity extends BaseEntity {
         return this;
     }
 
-    public int getDebitNumber() {
-        return debitNumber;
+    @Column(name = "debit_chart_id", nullable = false)
+    public Long getDebitChartId() {
+        return debitChartId;
     }
 
-    public SolutionEntity setDebitNumber(int debitNumber) {
-        this.debitNumber = debitNumber;
+    public SolutionEntity setDebitChartId(Long debitChartId) {
+        this.debitChartId = debitChartId;
         return this;
     }
 
-    public int getCreditNumber() {
-        return creditNumber;
+    @Column(name = "credit_chart_id", nullable = false)
+    public Long getCreditChartId() {
+        return creditChartId;
     }
 
-    public SolutionEntity setCreditNumber(int creditNumber) {
-        this.creditNumber = creditNumber;
+    public SolutionEntity setCreditChartId(Long creditChartId) {
+        this.creditChartId = creditChartId;
         return this;
     }
 
-    public BigDecimal getDebitValue() {
+
+    @Column(name = "debit_value", nullable = false)
+    public Double getDebitValue() {
         return debitValue;
     }
 
-    public SolutionEntity setDebitValue(BigDecimal debitValue) {
+    public SolutionEntity setDebitValue(Double debitValue) {
         this.debitValue = debitValue;
         return this;
     }
 
-    public BigDecimal getCreditValue() {
+    @Column(name = "credit_value", nullable = false)
+    public Double getCreditValue() {
         return creditValue;
     }
 
-    public SolutionEntity setCreditValue(BigDecimal creditValue) {
+    public SolutionEntity setCreditValue(Double creditValue) {
         this.creditValue = creditValue;
         return this;
     }

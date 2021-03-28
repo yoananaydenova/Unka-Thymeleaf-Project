@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
@@ -12,16 +13,203 @@
 
 
 <main class="content-wrap">
-    <div class="container">
-        <h1>Profile</h1>
-    </div>
+    <div class="container emp-profile" th:object="${profileInformation}">
 
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="profile-img">
+
+                    <!--                        <img id="myImage" th:if="*{imgUrl == null}" src="/img/profile-placeholder.png"-->
+                    <!--                             alt="profile image"/>-->
+                    <!--                        <img th:unless="*{imgUrl == null}" th:src="*{imgUrl}" alt=" User profile image"/>-->
+
+                    <img th:src="*{imgUrl == null ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
+
+                    <form th:action="@{/profile/edit/photo}" method="POST" id="imageForm" enctype="multipart/form-data">
+                        <div class="file btn btn-lg btn-primary">
+                            Смени снимка
+                            <input type="file" name="img" accept="image/*" onchange="loadFile(event)">
+                        </div>
+
+                        <div id="button-holder"></div>
+                        <!--                        <button type="submit" class="btn btn-primary" id="btnChangePhoto">Смени</button>-->
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5 th:text="*{user.fullName}">
+                        Kshiti Ghelani
+                    </h5>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                               aria-controls="home" aria-selected="true">За мен</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                               aria-controls="profile" aria-selected="false">Дейност</a>
+                        </li>
+                        <li sec:authorize="hasRole('TEACHER')" class="nav-item">
+                            <a class="nav-link" id="presentation-tab" data-toggle="tab" href="#presentation"
+                               role="tab" aria-controls="presentation" aria-selected="false">Представяне</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary" name="btnAddMore">Редактирай профил</button>
+                <button type="submit" class="btn btn-primary" name="btnAddMore">Изтрии профил</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <!--                        <p>МОИТЕ КУРСОВЕ</p>-->
+                    <!--                        <ul th:unless="${allMyEnrolledCourses.isEmpty()}">-->
+                    <!--                            <li th:each="e: ${allMyEnrolledCourses}">-->
+                    <!--                                <a th:text="${e.name}" th:href="@{/courses/course/{id}(id=${e.id})}"> </a><br/>-->
+                    <!--                            </li>-->
+                    <!--                        </ul>-->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Потребителско име</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="*{user.username}">Kshiti123</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Име и фамилия</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="*{user.fullName}">Kshiti Ghelani</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Имейл</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>kshitighelani@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Телефон</label>
+                            </div>
+                            <div class="col-md-6">
+                                <small th:if="*{phoneNumber == null}" class="text-danger">Редактирайте профила и
+                                    добавете информация</small>
+                                <p th:text="*{phoneNumber}">123 456 7890</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Професия</label>
+                            </div>
+                            <div class="col-md-6">
+                                <small th:if="*{profession == null}" class="text-danger">Редактирайте профила и
+                                    добавете информация</small>
+                                <p th:text="*{profession}">Web Developer and Designer</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Професионален опит в областта</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="|*{yearsExperience == null ? 0 : yearsExperience } години|">2 години</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Участник в курсове</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${allMyEnrolledCourses.size()}"></p>
+                            </div>
+                        </div>
+
+                        <div class="row" sec:authorize="hasRole('TEACHER')">
+                            <div class="col-md-6">
+                                <label>Създадени курсове</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="*{user.getTeachCourses().size()}">10</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div sec:authorize="hasRole('TEACHER')" class="tab-pane fade" id="presentation" role="tabpanel"
+                         aria-labelledby="presentation-tab">
+                        <div class="row">
+                            <div class="row-md-6 pb-3">
+                                <label>Запознаване с курсистите /образование, професионален опит, работодатели,
+                                    проекти и др./:</label>
+                            </div>
+                            <div class="row-md-6">
+                                <small th:if="*{presentation == null}" class="text-danger">Редактирайте профила и
+                                    добавете информация</small>
+                                <p th:text="*{presentation}">Lorem ipsum dolor sit amet, consectetur adipisicing
+                                    elit. Ab beatae consequuntur
+                                    cum doloremque doloribus ducimus eaque error, eveniet excepturi expedita iusto
+                                    labore laborum libero magni minus molestiae nostrum numquam officia pariatur
+                                    quae quidem repellendus rerum sapiente sint, unde! Delectus dolorem facilis
+                                    molestias temporibus voluptatem! Esse eum incidunt ipsa maiores quae.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </main>
 
 <th:block th:include="~{fragments/footer}"></th:block>
+<script>
+    let loadFile = function (event) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            console.log('On load')
+            // Add photo in placeholder
+            let output = document.getElementById('myImage');
+            output.src = reader.result;
+
+            // Add button
+            let newButton = document.createElement('button');
+            newButton.setAttribute('class', 'btn btn-primary');
+            newButton.setAttribute('id', 'btnChangePhoto');
+            newButton.innerText = "Смени";
+            newButton.addEventListener("click", saveImage);
+            console.log('Add button')
+            document.getElementById("button-holder").appendChild(newButton);
+        };
+        console.log('After load')
+        reader.readAsDataURL(event.target.files[0]);
+    };
+
+    function saveImage(event) {
+        console.log('Click method')
+
+        document.getElementById("imageForm").submit();
+
+    }
 
 
+</script>
 </body>
 
 </html>
