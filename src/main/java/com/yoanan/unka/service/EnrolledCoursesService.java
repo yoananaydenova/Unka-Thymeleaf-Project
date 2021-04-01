@@ -11,5 +11,8 @@ public interface EnrolledCoursesService {
     boolean isEnrolledByUsernameAndCourseId(Long courseId);
 
     List<CourseServiceModel> findAllMyEnrolledCourses();
-    
+
+    int findAllMyEnrolledCoursesNumber();
+
+    int findAllEnrolledCoursesNumberByUserId(Long userId);
 }

@@ -5,6 +5,7 @@ public class ProfileInformationViewModel extends BaseViewModel{
     private UserViewModel user;
     private String imgUrl;
     private String phoneNumber;
+    private String email;
     private String profession;
     private Integer yearsExperience;
     private String presentation;
@@ -36,6 +37,15 @@ public class ProfileInformationViewModel extends BaseViewModel{
 
     public ProfileInformationViewModel setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public ProfileInformationViewModel setEmail(String email) {
+        this.email = email;
         return this;
     }
 

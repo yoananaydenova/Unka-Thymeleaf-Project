@@ -9,6 +9,7 @@ public class UserViewModel extends BaseViewModel{
     private String fullName;
     private String email;
     private List<CourseViewModel> teachCourses = new ArrayList<>();
+    private List<Long> roleId = new ArrayList<>();
 
     public UserViewModel() {
     }
@@ -46,6 +47,15 @@ public class UserViewModel extends BaseViewModel{
 
     public UserViewModel setTeachCourses(List<CourseViewModel> teachCourses) {
         this.teachCourses = teachCourses;
+        return this;
+    }
+
+    public List<Long> getRoleId() {
+        return roleId;
+    }
+
+    public UserViewModel setRoleId(List<Long> roleId) {
+        this.roleId = roleId;
         return this;
     }
 }

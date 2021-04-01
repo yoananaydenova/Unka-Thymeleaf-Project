@@ -64,6 +64,7 @@ public class UserEntity extends BaseEntity{
         return this;
     }
 
+
     @OneToMany(mappedBy="teacher", fetch = FetchType.EAGER)
     public Set<CourseEntity> getTeachCourses() {
         return teachCourses;

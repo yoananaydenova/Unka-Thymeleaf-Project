@@ -5,6 +5,7 @@ import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
 import com.yoanan.unka.service.UserService;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -107,11 +110,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
+
     @Override
     public void addRole(String username, UserRole role) {
 
         UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("User with that username not found!"));
+                .orElseThrow(() -> new IllegalStateException("User with that username" + username + " not found!"));
 
 
         UserRoleEntity userRoleEntity = userRoleRepository
@@ -137,5 +141,125 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("User with username " + username + " not found!"));
     }
 
+    @Override
+    public List<UserServiceModel> findAll() {
+
+        return userRepository
+                .findAll()
+                .stream()
+                .map(user -> modelMapper.map(user, UserServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean currentUserIsTeacher() {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+        return userRepository.existsUserEntityByUsernameAndRoles_Role(username, UserRole.TEACHER);
+    }
+
+    @Override
+    public boolean currentUserIsAdmin() {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+        return userRepository.existsUserEntityByUsernameAndRoles_Role(username, UserRole.ADMIN);
+    }
+
+
+    @Override
+    public UserServiceModel findUserById(Long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist!!!"));
+
+        return modelMapper.map(userEntity, UserServiceModel.class);
+    }
+
+    @Override
+    public boolean findUserByIdIsLogedUser(Long userId) {
+        UserEntity userEntityById = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist!!!"));
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        UserEntity userEntityFromDB = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User with that username" + username + " not found!"));
+        return userEntityById.getUsername().equals(userEntityFromDB.getUsername());
+    }
+
+    @Override
+    public void saveChangeFullName(UserServiceModel userServiceModel) {
+        String fullName = userServiceModel.getFullName();
+        if (fullName != null || !fullName.trim().isEmpty()) {
+            UserEntity userEntity = userRepository.findById(userServiceModel.getId())
+                    .orElseThrow(() -> new IllegalStateException("User with id " + userServiceModel.getId() + " does not exist!!!"));
+
+            userEntity.setFullName(fullName);
+            userRepository.save(userEntity);
+        }
+    }
+
+    @Override
+    public void changeRoleOfUser(Long userId, Long newRoleId) {
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist!!!"));
+
+        List<UserRoleEntity> roles = userEntity.getRoles();
+
+        UserRoleEntity newUserRoleEntity = userRoleRepository.findById(newRoleId)
+                .orElseThrow(() -> new IllegalStateException("Role with id " + newRoleId + " does not exist!!!"));
+
+
+        //Check user have role
+        boolean existNewRoleForUser = roles.stream()
+                .anyMatch(a -> a.getId().equals(newRoleId));
+
+        boolean isNewRoleTeacher = newUserRoleEntity.getRole().equals(UserRole.TEACHER);
+        boolean isNewRoleAdmin = newUserRoleEntity.getRole().equals(UserRole.ADMIN);
+
+        UserRoleEntity userRoleADMIN = userRoleRepository
+                .findByRole(UserRole.ADMIN)
+                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+
+        //Add role to user
+        if (!existNewRoleForUser) {
+            UserRoleEntity userRoleTEACHER = userRoleRepository
+                    .findByRole(UserRole.TEACHER)
+                    .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+
+            if (isNewRoleTeacher) {
+                userEntity.addRole(userRoleTEACHER);
+
+            } else if (isNewRoleAdmin) {
+
+                // User is Student
+                if (roles.size() == 1) {
+
+                    userEntity.addRole(userRoleTEACHER);
+                    userEntity.addRole(userRoleADMIN);
+
+                    //User is teacher
+                } else if (roles.size() == 2) {
+                    userEntity.addRole(userRoleADMIN);
+                }
+
+            }
+
+            //Remove role Admin -> user will be only teacher
+        }else {
+            if(isNewRoleTeacher && roles.size() == 3){
+                UserRoleEntity userRoleAdminToRemove = userEntity.getRoles()
+                        .stream()
+                        .filter(r -> r.getRole().equals(UserRole.ADMIN))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("User role ADMIN not found!"));
+                userEntity.getRoles().remove(userRoleAdminToRemove);
+
+            }
+        }
+
+        userRepository.save(userEntity);
+    }
 
 }

@@ -35,8 +35,9 @@
                 <input type="text" class="form-control" placeholder="Търси в курсове...">
             </div>
 
-            <a sec:authorize="!hasRole('TEACHER')" th:unless="${hasProfileInfo}" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
-            <!--            TODO reload navbar after student become teacher-->
+            <!--/*@thymesVar id="isTeacher" type=""*/-->
+            <a sec:authorize="!hasRole('TEACHER')" th:unless="${isTeacher}" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
+            <!--           Reload navbar after student become teacher-->
 
             <th:block sec:authorize="!isAuthenticated()">
                 <a class="nav-link link-n" th:href="@{/about}">За нас</a>
@@ -52,7 +53,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonAdmin">
                     <a class="dropdown-item" href="/statistics">Статистика</a>
-                    <a class="dropdown-item" href="/roles/add">Акаунти</a>
+                    <a class="dropdown-item" th:href="@{/users/all}">Акаунти</a>
                 </div>
             </div>
 

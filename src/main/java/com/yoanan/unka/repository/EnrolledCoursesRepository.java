@@ -12,4 +12,8 @@ public interface EnrolledCoursesRepository extends JpaRepository<EnrolledCourses
     Optional<EnrolledCoursesEntity> findByStudent_Username(String username);
 
     Optional<EnrolledCoursesEntity> findByStudent_UsernameAndMyEnrolledCourses_Id(String username, Long id);
+
+    Optional<EnrolledCoursesEntity> findByStudent_Id(Long id);
+
+
 }

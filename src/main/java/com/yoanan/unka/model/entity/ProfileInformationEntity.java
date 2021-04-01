@@ -12,6 +12,7 @@ public class ProfileInformationEntity extends BaseEntity {
     private UserEntity user;
     private String imgUrl;
     private String phoneNumber;
+    private String email;
     private String profession;
     private Integer yearsExperience;
     private String presentation;
@@ -46,6 +47,16 @@ public class ProfileInformationEntity extends BaseEntity {
 
     public ProfileInformationEntity setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public ProfileInformationEntity setEmail(String email) {
+        this.email = email;
         return this;
     }
 

@@ -40,11 +40,13 @@
             </form>
 
         </div>
-        <p th:text="*{description}">КРАТКО ОПИСАНИЕ НА КУРСА</p>
+        <h5>КРАТКО ОПИСАНИЕ НА КУРСА</h5>
+        <p th:text="*{description}"></p>
         <div>
 
             <h4>Учебна програма на курса:</h4>
 
+            <small th:if="${lessonsList.isEmpty()}" class="text-danger">Преродавателят не е добавил уроци.</small>
             <ul>
                 <li th:each="lesson : ${lessonsList}"  class="list-group-item lesson-list-item">
                     <i class="fas fa-file-alt"></i>
@@ -60,18 +62,11 @@
 
 
         <div>
+            <h5>Информация за преподавателя:</h5>
             <h3 th:text="*{teacher}">Име на учителя</h3>
-            <h4>Професия на учителя</h4>
-            <h4>Профилна снимка на учителя</h4>
-            <p>Кратко представяне пред студентите: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi
-                asperiores aspernatur atque aut
-                consequatur, dolorem ea error eum harum, libero maiores molestias nam nemo nobis omnis perspiciatis
-                quia recusandae reiciendis repudiandae similique soluta suscipit tempora temporibus unde ut
-                voluptatem voluptatum. Aliquam amet, asperiores aspernatur, assumenda consectetur distinctio dolorum
-                expedita impedit maxime nihil odio odit perspiciatis quas quibusdam quod sed sint tempore voluptate?
-                Aut eligendi molestiae officiis voluptas? Ab adipisci asperiores corporis dolore facilis fugit in
-                iusto, laborum minus, nostrum perferendis quod ratione rem saepe similique, totam vero! Accusamus
-                aperiam cumque est illum, laudantium maiores omnis optio quam tenetur vero?</p>
+            <h4 th:text="${profileInformation.profession}">Професия на учителя</h4>
+            <img class="img-list" th:src="${profileInformation.imgUrl}"/>
+            <p th:text="${profileInformation.presentation}"></p>
         </div>
     </div>
 

@@ -20,10 +20,6 @@
 
                 <div class="profile-img">
 
-                    <!--                        <img id="myImage" th:if="*{imgUrl == null}" src="/img/profile-placeholder.png"-->
-                    <!--                             alt="profile image"/>-->
-                    <!--                        <img th:unless="*{imgUrl == null}" th:src="*{imgUrl}" alt=" User profile image"/>-->
-
                     <img th:src="*{imgUrl == null ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
 
                     <form th:action="@{/profile/edit/photo}" method="POST" id="imageForm" enctype="multipart/form-data">
@@ -33,7 +29,7 @@
                         </div>
 
                         <div id="button-holder"></div>
-                        <!--                        <button type="submit" class="btn btn-primary" id="btnChangePhoto">Смени</button>-->
+
                     </form>
 
                 </div>
@@ -53,27 +49,45 @@
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                                aria-controls="profile" aria-selected="false">Дейност</a>
                         </li>
-                        <li sec:authorize="hasRole('TEACHER')" class="nav-item">
-                            <a class="nav-link" id="presentation-tab" data-toggle="tab" href="#presentation"
-                               role="tab" aria-controls="presentation" aria-selected="false">Представяне</a>
-                        </li>
+                        <!--/*@thymesVar id="isTeacher" type=""*/-->
+                        <th:block th:if="${isTeacher}">
+                            <li class="nav-item">
+                                <a class="nav-link" id="presentation-tab" data-toggle="tab" href="#presentation"
+                                   role="tab" aria-controls="presentation" aria-selected="false">Представяне</a>
+                            </li>
+                        </th:block>
                     </ul>
                 </div>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary" name="btnAddMore">Редактирай профил</button>
-                <button type="submit" class="btn btn-primary" name="btnAddMore">Изтрии профил</button>
+                <a th:href="@{/profile/edit/{id}(id=*{user.id})}" class="btn btn-primary">Редактирай профил</a>
+                <a th:href="@{/profile/delete/{id}(id=*{user.id})}" class="btn btn-primary">Изтрии профил</a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
-                    <!--                        <p>МОИТЕ КУРСОВЕ</p>-->
-                    <!--                        <ul th:unless="${allMyEnrolledCourses.isEmpty()}">-->
-                    <!--                            <li th:each="e: ${allMyEnrolledCourses}">-->
-                    <!--                                <a th:text="${e.name}" th:href="@{/courses/course/{id}(id=${e.id})}"> </a><br/>-->
-                    <!--                            </li>-->
-                    <!--                        </ul>-->
+                    <h6>РОЛИ</h6>
+                    <ul>
+                        <li>
+                            <div class="form-check">
+                                <input type="checkbox" id="studentRole" name="studentRole" disabled
+                                       th:checked="*{user.roleId.contains(1L)}" value="1">
+                                <label for="studentRole">Студент</label><br>
+                                <!--/*@thymesVar id="isTeacher" type=""*/-->
+                                <th:block th:if="${isTeacher}">
+                                    <input type="checkbox" id="teacherRole" disabled name="teacherRole"
+                                           th:checked="*{user.roleId.contains(2L)}" value="2">
+                                    <label for="teacherRole">Учител</label><br>
+                                </th:block>
+                                <th:block sec:authorize="hasRole('ADMIN')">
+                                    <input type="checkbox" id="adminRole" disabled name="adminRole"
+                                           th:checked="*{user.roleId.contains(3L)}" value="3">
+                                    <label for="adminRole">Администратор</label><br>
+                                </th:block>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="col-md-8">
@@ -100,7 +114,9 @@
                                 <label>Имейл</label>
                             </div>
                             <div class="col-md-6">
-                                <p>kshitighelani@gmail.com</p>
+                                <small th:if="*{email == null}" class="text-danger">Редактирайте профила и
+                                    добавете информация</small>
+                                <p th:text="*{email}">kshitighelani@gmail.com</p>
                             </div>
                         </div>
                         <div class="row">
@@ -138,11 +154,12 @@
                                 <label>Участник в курсове</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${allMyEnrolledCourses.size()}"></p>
+                                <p th:text="${allMyEnrolledCoursesNumber}"></p>
                             </div>
                         </div>
 
-                        <div class="row" sec:authorize="hasRole('TEACHER')">
+                        <!--/*@thymesVar id="isTeacher" type=""*/-->
+                        <div class="row" th:if="${isTeacher}">
                             <div class="col-md-6">
                                 <label>Създадени курсове</label>
                             </div>
@@ -151,7 +168,8 @@
                             </div>
                         </div>
                     </div>
-                    <div sec:authorize="hasRole('TEACHER')" class="tab-pane fade" id="presentation" role="tabpanel"
+                    <!--/*@thymesVar id="isTeacher" type=""*/-->
+                    <div th:if="${isTeacher}" class="tab-pane fade" id="presentation" role="tabpanel"
                          aria-labelledby="presentation-tab">
                         <div class="row">
                             <div class="row-md-6 pb-3">
@@ -161,12 +179,7 @@
                             <div class="row-md-6">
                                 <small th:if="*{presentation == null}" class="text-danger">Редактирайте профила и
                                     добавете информация</small>
-                                <p th:text="*{presentation}">Lorem ipsum dolor sit amet, consectetur adipisicing
-                                    elit. Ab beatae consequuntur
-                                    cum doloremque doloribus ducimus eaque error, eveniet excepturi expedita iusto
-                                    labore laborum libero magni minus molestiae nostrum numquam officia pariatur
-                                    quae quidem repellendus rerum sapiente sint, unde! Delectus dolorem facilis
-                                    molestias temporibus voluptatem! Esse eum incidunt ipsa maiores quae.</p>
+                                <p th:text="*{presentation}"></p>
                             </div>
                         </div>
                     </div>
@@ -183,7 +196,7 @@
     let loadFile = function (event) {
         let reader = new FileReader();
         reader.onload = function () {
-            console.log('On load')
+
             // Add photo in placeholder
             let output = document.getElementById('myImage');
             output.src = reader.result;
@@ -194,18 +207,15 @@
             newButton.setAttribute('id', 'btnChangePhoto');
             newButton.innerText = "Смени";
             newButton.addEventListener("click", saveImage);
-            console.log('Add button')
+
             document.getElementById("button-holder").appendChild(newButton);
         };
-        console.log('After load')
+
         reader.readAsDataURL(event.target.files[0]);
     };
 
     function saveImage(event) {
-        console.log('Click method')
-
         document.getElementById("imageForm").submit();
-
     }
 
 

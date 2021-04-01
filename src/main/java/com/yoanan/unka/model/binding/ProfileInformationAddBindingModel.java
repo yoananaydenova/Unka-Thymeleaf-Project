@@ -1,10 +1,5 @@
 package com.yoanan.unka.model.binding;
 
-import com.yoanan.unka.model.entity.UserEntity;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 public class ProfileInformationAddBindingModel {
 
 

@@ -5,6 +5,7 @@ public class ProfileInformationServiceModel extends BaseServiceModel {
     private UserServiceModel user;
     private String imgUrl;
     private String phoneNumber;
+    private String email;
     private String profession;
     private Integer yearsExperience;
     private String presentation;
@@ -36,6 +37,15 @@ public class ProfileInformationServiceModel extends BaseServiceModel {
 
     public ProfileInformationServiceModel setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public ProfileInformationServiceModel setEmail(String email) {
+        this.email = email;
         return this;
     }
 

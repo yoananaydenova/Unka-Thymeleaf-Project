@@ -5,7 +5,9 @@ import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.model.service.UserServiceModel;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserService {
@@ -20,4 +22,17 @@ public interface UserService {
 
     UserEntity findByUsername(String username);
 
+    List<UserServiceModel> findAll();
+
+    boolean currentUserIsTeacher();
+
+    boolean currentUserIsAdmin();
+
+     UserServiceModel findUserById(Long userId);
+
+    boolean findUserByIdIsLogedUser(Long id);
+
+    void saveChangeFullName(UserServiceModel userServiceModel);
+
+    void changeRoleOfUser(Long userId, Long newRoleId);
 }

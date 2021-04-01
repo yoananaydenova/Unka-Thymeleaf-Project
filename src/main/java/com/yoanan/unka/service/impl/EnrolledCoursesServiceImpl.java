@@ -101,5 +101,28 @@ public class EnrolledCoursesServiceImpl implements EnrolledCoursesService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public int findAllMyEnrolledCoursesNumber() {
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        Optional<EnrolledCoursesEntity> enrolledCoursesEntityOpt = enrolledCoursesRepository.findByStudent_Username(username);
+
+        if (enrolledCoursesEntityOpt.isEmpty()) {
+            return 0;
+        }
+        return enrolledCoursesEntityOpt.get().getMyEnrolledCourses().size();
+    }
+
+    @Override
+    public int findAllEnrolledCoursesNumberByUserId(Long userId) {
+        Optional<EnrolledCoursesEntity> enrolledCoursesEntityOpt = enrolledCoursesRepository.findByStudent_Id(userId);
+        if (enrolledCoursesEntityOpt.isEmpty()) {
+            return 0;
+        }
+        return enrolledCoursesEntityOpt.get().getMyEnrolledCourses().size();
+    }
+
 
 }

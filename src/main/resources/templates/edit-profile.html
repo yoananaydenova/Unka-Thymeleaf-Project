@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
@@ -13,21 +14,31 @@
 
 <main class="content-wrap">
     <div class="container emp-profile">
-        <form method="POST">
+        <div class="float-right">
+            <button class="btn btn-primary">Откажи</button>
+        </div>
+        <form th:action="@{/profile/edit/{id}(id=*{userId})}" method="POST" enctype="multipart/form-data"
+              th:object="${profileInformation}">
+
+            <input type="hidden" th:field="*{userId}">
+            <input type="hidden" th:field="*{imgUrl}">
+            <input type="hidden" th:field="*{rolesId}">
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog"
-                             alt=""/>
+
+                        <img th:src="*{imgUrl== null ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
+
                         <div class="file btn btn-lg btn-primary">
                             Change Photo
-                            <input type="file" name="file"/>
+                            <input name="img" type="file"/>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="profile-head">
-                        <h5>
+                        <h5 th:text="*{fullName}">
                             Kshiti Ghelani
                         </h5>
 
@@ -40,7 +51,8 @@
                                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                                    aria-controls="profile" aria-selected="false">Дейност</a>
                             </li>
-                            <li class="nav-item">
+                            <!--/*@thymesVar id="isTeacher" type=""*/-->
+                            <li th:if="${isTeacher}" class="nav-item">
                                 <a class="nav-link" id="presentation-tab" data-toggle="tab" href="#presentation"
                                    role="tab" aria-controls="presentation" aria-selected="false">Представяне</a>
                             </li>
@@ -48,21 +60,49 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary" name="btnAddMore">Редактирай профил</button>
+                    <button type="submit" class="btn btn-primary" name="btnAddMore">Потвърди</button>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-work">
-                        <p>ПОСЛЕДНО СЪЗДАДЕНИ КУРСОВЕ</p>
-                        <a href="">Website Link</a><br/>
-                        <a href="">Bootsnipp Profile</a><br/>
-                        <a href="">Bootply Profile</a>
-                        <a href="">Web Designer</a><br/>
-                        <a href="">Web Developer</a><br/>
-                        <a href="">WordPress</a><br/>
-                        <a href="">WooCommerce</a><br/>
-                        <a href="">PHP, .Net</a><br/>
+                        <h6>РОЛИ</h6>
+                        <ul>
+                            <li>
+                                <div class="form-check">
+                                    <input type="checkbox" id="studentRole" name="studentRole" disabled
+                                           th:checked="*{rolesId.contains(1L)}" value="1">
+                                    <label for="studentRole">Студент</label><br>
+                                    <!--/*@thymesVar id="isTeacher" type=""*/-->
+                                    <th:block sec:authorize="hasRole('TEACHER')">
+                                        <input type="checkbox" id="teacherRole" disabled name="teacherRole"
+                                               th:checked="*{rolesId.contains(2L)}" value="2">
+                                        <label for="teacherRole">Учител</label><br>
+                                    </th:block>
+                                    <th:block sec:authorize="hasRole('ADMIN')">
+                                        <input type="checkbox" id="adminRole" disabled name="adminRole"
+                                               th:checked="*{rolesId.contains(3L)}" value="3">
+                                        <label for="adminRole">Администратор</label><br>
+                                    </th:block>
+                                </div>
+
+
+                                <th:block sec:authorize="hasRole('ADMIN')">
+                                    <div class="field">
+                                        <label for="listRole" class="title">Изберете нова роля за потребителя:</label>
+                                        <select id="listRole" class="custom-select" name="newRole">
+                                            <option value="">Изберете нова роля</option>
+                                            <option th:each="r : ${listRoles}"
+                                                    th:value="${r.id}"
+                                                    th:text="${r.role}">
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </th:block>
+
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -73,7 +113,7 @@
                                     <label>Потребителско име</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Kshiti123</p>
+                                    <p th:text="*{username}">Kshiti123</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -81,7 +121,7 @@
                                     <label>Име и фамилия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Kshiti Ghelani</p>
+                                    <input type="text" name="fullName" th:value="*{fullName}">
                                 </div>
                             </div>
                             <div class="row">
@@ -89,7 +129,8 @@
                                     <label>Имейл</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>kshitighelani@gmail.com</p>
+                                    <input type="email" th:field="*{email}"
+                                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                                 </div>
                             </div>
                             <div class="row">
@@ -97,7 +138,7 @@
                                     <label>Телефон</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>123 456 7890</p>
+                                    <input type="tel" th:field="*{phoneNumber}">
                                 </div>
                             </div>
                             <div class="row">
@@ -105,7 +146,7 @@
                                     <label>Професия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Web Developer and Designer</p>
+                                    <input type="text" th:field="*{profession}">
                                 </div>
                             </div>
                             <div class="row">
@@ -113,7 +154,8 @@
                                     <label>Професионален опит в областта</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>2 години</p>
+                                    <input type="number" min="0" th:field="*{yearsExperience}">
+                                    <small> години</small>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +165,7 @@
                                     <label>Участник в курсове</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>2</p>
+                                    <p th:text="*{enrolledCourses}">2</p>
                                 </div>
                             </div>
 
@@ -132,22 +174,20 @@
                                     <label>Създадени курсове</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>10</p>
+                                    <p th:text="*{teachCourses}">10</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="presentation" role="tabpanel" aria-labelledby="presentation-tab">
+                        <!--/*@thymesVar id="isTeacher" type=""*/-->
+                        <div th:if="${isTeacher}" class="tab-pane fade" id="presentation" role="tabpanel"
+                             aria-labelledby="presentation-tab">
                             <div class="row">
                                 <div class="row-md-6 pb-3">
                                     <label>Запознаване с курсистите /образование, професионален опит, работодатели,
                                         проекти и др./:</label>
                                 </div>
                                 <div class="row-md-6">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab beatae consequuntur
-                                        cum doloremque doloribus ducimus eaque error, eveniet excepturi expedita iusto
-                                        labore laborum libero magni minus molestiae nostrum numquam officia pariatur
-                                        quae quidem repellendus rerum sapiente sint, unde! Delectus dolorem facilis
-                                        molestias temporibus voluptatem! Esse eum incidunt ipsa maiores quae.</p>
+                                    <input type="text" th:field="*{presentation}">
                                 </div>
                             </div>
                         </div>
@@ -162,7 +202,20 @@
 
 <th:block th:include="~{fragments/footer}"></th:block>
 
+<script>
+    let loadFile = function (event) {
+        let reader = new FileReader();
+        reader.onload = function () {
 
+            // Add photo in placeholder
+            let output = document.getElementById('myImage');
+            output.src = reader.result;
+
+        };
+
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>
 </body>
 
 </html>

@@ -3,6 +3,7 @@ package com.yoanan.unka.web;
 import com.yoanan.unka.model.view.CategoryViewModel;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.ProfileInformationService;
+import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,12 +17,13 @@ public class GlobalControllerAdvice {
     private final ModelMapper modelMapper;
     private final CategoryService categoryService;
     private final ProfileInformationService profileInformationService;
+    private final UserService userService;
 
-    public GlobalControllerAdvice(ModelMapper modelMapper, CategoryService categoryService, ProfileInformationService profileInformationService) {
+    public GlobalControllerAdvice(ModelMapper modelMapper, CategoryService categoryService, ProfileInformationService profileInformationService, UserService userService) {
         this.modelMapper = modelMapper;
         this.categoryService = categoryService;
-
         this.profileInformationService = profileInformationService;
+        this.userService = userService;
     }
 
     // add category checkbox in add-course and dropdown category navigation
@@ -34,9 +36,10 @@ public class GlobalControllerAdvice {
                 .collect(Collectors.toList());
     }
 
-    @ModelAttribute("hasProfileInfo")
+    // Hide munu button become teacher
+    @ModelAttribute("isTeacher")
     public boolean hasProfileInformation(){
-        return profileInformationService.hasProfileInformation();
+       return userService.currentUserIsTeacher();
     }
 
 

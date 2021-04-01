@@ -9,8 +9,8 @@ public class UserServiceModel extends BaseServiceModel{
 
     private String username;
     private String fullName;
-    private String email;
     private List<CourseServiceModel> teachCourses = new ArrayList<>();
+    private List<UserRoleServiceModel>roles = new ArrayList<>();
 
     public UserServiceModel() {
     }
@@ -33,21 +33,21 @@ public class UserServiceModel extends BaseServiceModel{
         return this;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public UserServiceModel setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-
     public List<CourseServiceModel> getTeachCourses() {
         return teachCourses;
     }
 
     public UserServiceModel setTeachCourses(List<CourseServiceModel> teachCourses) {
         this.teachCourses = teachCourses;
+        return this;
+    }
+
+    public List<UserRoleServiceModel> getRoles() {
+        return roles;
+    }
+
+    public UserServiceModel setRoles(List<UserRoleServiceModel> roles) {
+        this.roles = roles;
         return this;
     }
 }

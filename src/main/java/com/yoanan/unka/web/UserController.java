@@ -4,7 +4,6 @@ import com.yoanan.unka.model.binding.ProfileInformationAddBindingModel;
 import com.yoanan.unka.model.binding.UserRegisterBindingModel;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.ProfileInformationAddServiceModel;
-import com.yoanan.unka.model.service.ProfileInformationServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
 import com.yoanan.unka.service.ProfileInformationService;
 import com.yoanan.unka.service.UserService;
@@ -13,10 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -119,8 +115,14 @@ public class UserController {
 
         userService.addRole(principal.getName(), UserRole.TEACHER);
         profileInformationService.addInformation(modelMapper.map(profileInformationAddBindingModel, ProfileInformationAddServiceModel.class));
-        // TODO Change role in same session
+
         return "redirect:/home";
+    }
+
+
+    @GetMapping("/all")
+    public String listAllUsers (){
+        return "all-users";
     }
 
 
