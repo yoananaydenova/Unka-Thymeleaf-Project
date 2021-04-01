@@ -31,8 +31,8 @@
                         <img th:src="*{imgUrl== null ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
 
                         <div class="file btn btn-lg btn-primary">
-                            Change Photo
-                            <input name="img" type="file"/>
+                            Смени снимка
+                            <input type="file" name="img" accept="image/*" onchange="loadFile(event)">
                         </div>
                     </div>
                 </div>
