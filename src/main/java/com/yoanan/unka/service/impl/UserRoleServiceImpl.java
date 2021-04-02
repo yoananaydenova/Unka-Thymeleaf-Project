@@ -1,5 +1,6 @@
 package com.yoanan.unka.service.impl;
 
+import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRoleServiceModel;
 import com.yoanan.unka.repository.UserRoleRepository;
@@ -23,11 +24,18 @@ public class UserRoleServiceImpl implements UserRoleService {
 
 
     @Override
-    public List<UserRoleServiceModel> findAllWithoutStudent() {
-        return userRoleRepository
-                .findAllByRoleNotLike(UserRole.STUDENT)
+    public List<UserRoleServiceModel> findAllWithoutStudentAndRootAdmin() {
+        UserRoleEntity teacherRoleEntity = userRoleRepository
+                .findByRole(UserRole.TEACHER)
+                .orElseThrow(() -> new IllegalStateException("Role not found! Please seed the roles!"));
+
+        UserRoleEntity adminRoleEntity = userRoleRepository
+                .findByRole(UserRole.ADMIN)
+                .orElseThrow(() -> new IllegalStateException("Role not found! Please seed the roles!"));
+
+        return List.of(teacherRoleEntity, adminRoleEntity)
                 .stream()
-                .map(role-> modelMapper.map(role, UserRoleServiceModel.class ))
+                .map(role -> modelMapper.map(role, UserRoleServiceModel.class))
                 .collect(Collectors.toList());
     }
 }

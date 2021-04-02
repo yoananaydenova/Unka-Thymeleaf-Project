@@ -15,7 +15,8 @@
 <main class="content-wrap">
     <div class="container emp-profile">
         <div class="float-right">
-            <button class="btn btn-primary">Откажи</button>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/users/all}" class="btn btn-primary">Откажи</a>
+            <a sec:authorize="!hasRole('ADMIN')" th:href="@{/profile}" class="btn btn-primary">Откажи</a>
         </div>
         <form th:action="@{/profile/edit/{id}(id=*{userId})}" method="POST" enctype="multipart/form-data"
               th:object="${profileInformation}">

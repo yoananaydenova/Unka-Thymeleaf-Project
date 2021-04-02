@@ -50,6 +50,8 @@ public class UserServiceImpl implements UserService {
             UserRoleEntity studentRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.STUDENT));
             UserRoleEntity teacherRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.TEACHER));
             UserRoleEntity adminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ADMIN));
+            UserRoleEntity rootAdminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ROOT_ADMIN));
+
 
             // Student
             UserEntity student = new UserEntity()
@@ -70,8 +72,8 @@ public class UserServiceImpl implements UserService {
                     .setFullName("Admin Adminov")
                     .setPassword(passwordEncoder.encode("123456"));
 
-            // Admin has 3 roles
-            admin.setRoles(List.of(adminRole, teacherRole, studentRole));
+            // Admin has 4 roles
+            admin.setRoles(List.of(rootAdminRole, adminRole, teacherRole, studentRole));
 
             userRepository.saveAll(List.of(student, teacher, admin));
         }
@@ -246,16 +248,18 @@ public class UserServiceImpl implements UserService {
 
             }
 
-            //Remove role Admin -> user will be only teacher
+            //Remove role Admin if user has not root_admin-> user will be only teacher
         }else {
-            if(isNewRoleTeacher && roles.size() == 3){
+
+            boolean userIsRootAdmin = userRepository.existsUserEntityByUsernameAndRoles_Role(userEntity.getUsername(), UserRole.ROOT_ADMIN);
+
+            if(isNewRoleTeacher && roles.size() == 3 && !userIsRootAdmin){
                 UserRoleEntity userRoleAdminToRemove = userEntity.getRoles()
                         .stream()
                         .filter(r -> r.getRole().equals(UserRole.ADMIN))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("User role ADMIN not found!"));
                 userEntity.getRoles().remove(userRoleAdminToRemove);
-
             }
         }
 

@@ -108,7 +108,7 @@ public class ProfileInformationController {
     // List with roles options for admin
     @ModelAttribute("listRoles")
     public List<UserRoleViewModel> listRolesForAdminChoice() {
-        return userRoleService.findAllWithoutStudent().stream()
+        return userRoleService.findAllWithoutStudentAndRootAdmin().stream()
                 .map(role -> modelMapper.map(role, UserRoleViewModel.class))
                 .collect(Collectors.toList());
     }

@@ -13,6 +13,6 @@ public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Long> 
 
     Optional<UserRoleEntity> findByRole(UserRole userRole);
 
-  List<UserRoleEntity> findAllByRoleNotLike(UserRole userRole);
+//  List<UserRoleEntity> findAllByRole(UserRole firstUserRole, UserRole secondUserRole);
 
 }
