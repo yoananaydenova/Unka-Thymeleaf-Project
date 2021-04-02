@@ -6,7 +6,7 @@ public class UserRegisterServiceModel {
     private String username;
     private String fullName;
     private String password;
-    private String email;
+
 
     public UserRegisterServiceModel() {
     }
@@ -36,15 +36,6 @@ public class UserRegisterServiceModel {
 
     public UserRegisterServiceModel setPassword(String password) {
         this.password = password;
-        return this;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public UserRegisterServiceModel setEmail(String email) {
-        this.email = email;
         return this;
     }
 

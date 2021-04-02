@@ -49,6 +49,7 @@ public class ProfileInformationChangeBindingModel {
         return this;
     }
 
+
     public MultipartFile getImg() {
         return img;
     }
@@ -79,6 +80,7 @@ public class ProfileInformationChangeBindingModel {
         return this;
     }
 
+    @Length(max = 30, message = "Професията е с максимална дължина 30 символа!")
     public String getProfession() {
         return profession;
     }
@@ -98,6 +100,7 @@ public class ProfileInformationChangeBindingModel {
         return this;
     }
 
+    @Length(max = 500, message = "Представянето е с максимална дължина 500 символа!")
     public String getPresentation() {
         return presentation;
     }

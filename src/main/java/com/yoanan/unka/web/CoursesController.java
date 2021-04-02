@@ -49,6 +49,7 @@ public class CoursesController {
         if (!model.containsAttribute("courseAddBindingModel")) {
             model.addAttribute("courseAddBindingModel", new CourseAddBindingModel());
         }
+
         // Adding category checkbox with GlobalControllerAdvice
         return "add-course";
     }

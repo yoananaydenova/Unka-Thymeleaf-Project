@@ -15,7 +15,6 @@ public class UserRegisterBindingModel {
 
     private String username;
     private String fullName;
-    private String email;
     private String password;
     private String repeatPassword;
 
@@ -41,18 +40,6 @@ public class UserRegisterBindingModel {
 
     public UserRegisterBindingModel setFullName(String fullName) {
         this.fullName = fullName;
-        return this;
-    }
-
-    @NotEmpty
-    @Email(message = "Enter valid email address!")
-    @Pattern(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$", message = "Enter valid email address!")
-    public String getEmail() {
-        return email;
-    }
-
-    public UserRegisterBindingModel setEmail(String email) {
-        this.email = email;
         return this;
     }
 

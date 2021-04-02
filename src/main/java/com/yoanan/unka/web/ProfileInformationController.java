@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class ProfileInformationController {
         profileInformationChangeBindingModel.setEnrolledCourses(enrolledCoursesService
                 .findAllEnrolledCoursesNumberByUserId(id));
 
-        model.addAttribute("profileInformation", profileInformationChangeBindingModel);
+        model.addAttribute("profileInformationChangeBindingModel", profileInformationChangeBindingModel);
 
         return "edit-profile";
 
@@ -116,14 +117,18 @@ public class ProfileInformationController {
 
     @PostMapping("/edit/{id}")
     public String editConfirm(@Valid @ModelAttribute("profileInformationChangeBindingModel")
-                                     ProfileInformationChangeBindingModel profileInformationChangeBindingModel,
-                             BindingResult bindingResult, Model model,
-                             @PathVariable Long id) throws IOException {
-        System.out.println();
+                                      ProfileInformationChangeBindingModel profileInformationChangeBindingModel,
+                              BindingResult bindingResult,
+                              Model model,
+                              @PathVariable Long id) throws IOException {
+
 
         if (bindingResult.hasErrors()) {
             profileInformationChangeBindingModel.setUserId(id);
-            model.addAttribute("profileInformation", profileInformationChangeBindingModel);
+
+            model.addAttribute(
+                    "org.springframework.validation.BindingResult.profileInformationChangeBindingModel", bindingResult);
+
             return "edit-profile";
         }
 
@@ -135,7 +140,7 @@ public class ProfileInformationController {
             //save change of user info
             UserServiceModel userServiceModel = modelMapper.map(profileInformationChangeBindingModel, UserServiceModel.class);
             userService.saveChangeFullName(userServiceModel);
-            System.out.println();
+
             ProfileInformationChangeServiceModel profileInformationChangeServiceModel = modelMapper.map(profileInformationChangeBindingModel, ProfileInformationChangeServiceModel.class);
             profileInformationChangeServiceModel.setUserId(profileInformationChangeBindingModel.getUserId());
             profileInformationService.saveChangedInfo(profileInformationChangeServiceModel);
@@ -143,9 +148,8 @@ public class ProfileInformationController {
         }
 
         Long newRoleId = profileInformationChangeBindingModel.getNewRole();
-        if (isAdmin && newRoleId!= null) {
+        if (isAdmin && newRoleId != null) {
             //save change of role
-
             userService.changeRoleOfUser(id, newRoleId);
 
             return "redirect:/users/all";

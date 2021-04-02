@@ -58,22 +58,6 @@
 
         <div class="form-groupEntity">
             <div class="d-flex">
-                <label for="email" class="intrance">Имейл</label>
-            </div>
-            <input
-                    th:value="*{email}"
-                    th:errorclass="is-invalid"
-                    required
-                    type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                    class="form-control" id="email"
-                    name="email"/>
-
-            <small id="emailError"
-                   class="invalid-feedback text-light form-text bg-danger rounded">Must be valid
-                email</small>
-        </div>
-        <div class="form-groupEntity">
-            <div class="d-flex">
                 <label for="password" class="intrance">Парола</label>
             </div>
             <input type="password"

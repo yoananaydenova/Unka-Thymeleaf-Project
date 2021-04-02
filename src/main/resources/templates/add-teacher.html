@@ -19,25 +19,28 @@
         <form method="POST" th:action="@{/users/add-teacher}" th:object="${profileInformationAddBindingModel}">
             <div class="form-groupEntity">
                 <label for="profession">Професия</label>
-                <input type="text" class="form-control" id="profession" th:field="*{profession}"
+                <input type="text" class="form-control" maxlength="30" th:errorclass="border-err" id="profession" th:field="*{profession}"
                        placeholder="Учител / Счетоводител / Икономист...">
+                <small class="text-danger" th:if="${#fields.hasErrors('profession')}"
+                       th:errors="*{profession}"></small>
             </div>
             <div class="form-groupEntity">
                 <label for="yearsExperience">Години опит в областта</label>
                 <input type="number" min="0" class="form-control"
-                       th:errorclass="is-invalid"
+                       th:errorclass="border-err"
                        id="yearsExperience"
                        th:field="*{yearsExperience}"
                        placeholder="Въведете опита си в години">
+                <small class="text-danger" th:if="${#fields.hasErrors('yearsExperience')}"
+                       th:errors="*{yearsExperience}"></small>
 
-<!--                <small th:if="${#fields.hasErrors('yearsExperience')}"-->
-<!--                       th:errors="*{yearsExperience}" id="yearsExperienceError"-->
-<!--                       class="text-light form-text bg-danger rounded">Минималната стойност е 0!</small>-->
             </div>
             <div class="form-groupEntity">
                 <label for="presentation">Представете се на бъдещите си курсисти /образование, професионален опит,
                     работодатели, проекти и др./:</label>
-                <textarea class="form-control" id="presentation" rows="3" th:field="*{presentation}"></textarea>
+                <textarea maxlength="500" th:errorclass="border-err" class="form-control" id="presentation" rows="3" th:field="*{presentation}"></textarea>
+                <small class="text-danger" th:if="${#fields.hasErrors('presentation')}"
+                       th:errors="*{presentation}"></small>
             </div>
             <div class="button-holder d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Преподавай</button>

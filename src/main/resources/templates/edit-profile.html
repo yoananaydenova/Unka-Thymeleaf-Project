@@ -19,7 +19,7 @@
             <a sec:authorize="!hasRole('ADMIN')" th:href="@{/profile}" class="btn btn-primary">Откажи</a>
         </div>
         <form th:action="@{/profile/edit/{id}(id=*{userId})}" method="POST" enctype="multipart/form-data"
-              th:object="${profileInformation}">
+              th:object="${profileInformationChangeBindingModel}">
 
             <input type="hidden" th:field="*{userId}">
             <input type="hidden" th:field="*{imgUrl}">
@@ -29,7 +29,7 @@
                 <div class="col-md-4">
                     <div class="profile-img">
 
-                        <img th:src="*{imgUrl== null ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
+                        <img th:src="*{imgUrl== null or imgUrl== '' ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
 
                         <div class="file btn btn-lg btn-primary">
                             Смени снимка
@@ -122,42 +122,52 @@
                                     <label>Име и фамилия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="fullName" th:value="*{fullName}">
+                                    <input type="text" minlength="6"  maxlength="30" th:errorclass="border-err" th:field="*{fullName}">
                                 </div>
+                                <small class="text-danger" th:if="${#fields.hasErrors('fullName')}"
+                                       th:errors="*{fullName}"></small>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>Имейл</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="email" th:field="*{email}"
+                                    <input type="email" th:errorclass="border-err" th:field="*{email}"
                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                                 </div>
+                                <small class="text-danger" th:if="${#fields.hasErrors('email')}"
+                                       th:errors="*{email}"></small>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>Телефон</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="tel" th:field="*{phoneNumber}">
+                                    <input type="tel" maxlength="10" th:errorclass="border-err" th:field="*{phoneNumber}">
                                 </div>
+
+                                <small class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                                       th:errors="*{phoneNumber}"></small>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>Професия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" th:field="*{profession}">
+                                    <input type="text" maxlength="30" th:errorclass="border-err" th:field="*{profession}">
                                 </div>
+                                <small class="text-danger" th:if="${#fields.hasErrors('profession')}"
+                                       th:errors="*{profession}"></small>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>Професионален опит в областта</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" min="0" th:field="*{yearsExperience}">
-                                    <small> години</small>
+                                    <input type="number" th:errorclass="border-err" min="0" th:field="*{yearsExperience}">
                                 </div>
+                                <small class="text-danger" th:if="${#fields.hasErrors('yearsExperience')}"
+                                       th:errors="*{yearsExperience}"></small>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -188,8 +198,11 @@
                                         проекти и др./:</label>
                                 </div>
                                 <div class="row-md-6">
-                                    <input type="text" th:field="*{presentation}">
+                                    <input type="text" maxlength="500" th:errorclass="border-err" th:field="*{presentation}">
                                 </div>
+
+                                <small class="text-danger" th:if="${#fields.hasErrors('presentation')}"
+                                       th:errors="*{presentation}"></small>
                             </div>
                         </div>
                     </div>
