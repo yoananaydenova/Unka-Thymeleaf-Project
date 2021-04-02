@@ -12,6 +12,7 @@ import com.yoanan.unka.repository.SectionRepository;
 import com.yoanan.unka.service.ChartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +114,7 @@ public class ChartServiceImpl implements ChartService {
 
     }
 
+    @Cacheable ("charts")
     @Override
     public List<ChartServiceModel> findAllChartsWithGroupsName() {
         return chartRepository

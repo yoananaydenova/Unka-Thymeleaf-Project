@@ -152,6 +152,8 @@ public class ProfileInformationController {
             //save change of role
             userService.changeRoleOfUser(id, newRoleId);
 
+        }
+        if(userService.currentUserIsAdmin()){
             return "redirect:/users/all";
         }
 

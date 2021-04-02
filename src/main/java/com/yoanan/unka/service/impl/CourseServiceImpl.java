@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    private static final String NAME_OF_CATEGORY_ACCOUNTING = "Счетоводство";
 
     private final CourseRepository courseRepository;
     private final CloudinaryService cloudinaryService;

@@ -22,7 +22,7 @@ public class UserRestController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/api")
+    @GetMapping("/api/all")
     public ResponseEntity<List<UserViewRestModel>> findAll() {
 
         List<UserViewRestModel> usersList = userService

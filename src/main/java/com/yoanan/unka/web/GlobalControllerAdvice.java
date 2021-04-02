@@ -36,10 +36,16 @@ public class GlobalControllerAdvice {
                 .collect(Collectors.toList());
     }
 
-    // Hide munu button become teacher
+    // Hide menu button become teacher
     @ModelAttribute("isTeacher")
-    public boolean hasProfileInformation(){
+    public boolean isTeacher(){
        return userService.currentUserIsTeacher();
+    }
+
+    // Hide menu button for admin function in session
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(){
+        return userService.currentUserIsAdmin();
     }
 
 

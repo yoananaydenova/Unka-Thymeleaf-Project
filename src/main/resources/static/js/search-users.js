@@ -60,7 +60,7 @@
 
 
 var template = jSuites.template(document.getElementById('usersList'), {
-    url: "http://localhost:8080/users/api",
+    url: "http://localhost:8080/users/api/all",
     search: true,
     searchPlaceHolder: "Търсене...",
     pagination: 3,

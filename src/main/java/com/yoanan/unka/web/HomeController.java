@@ -2,6 +2,7 @@ package com.yoanan.unka.web;
 
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.view.CourseViewModel;
+import com.yoanan.unka.service.CarouselService;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
 import org.modelmapper.ModelMapper;
@@ -23,11 +24,13 @@ public class HomeController {
     private final ModelMapper modelMapper;
     private final CourseService courseService;
     private final CategoryService categoryService;
+    private final CarouselService carouselService;
 
-    public HomeController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService) {
+    public HomeController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService, CarouselService carouselService) {
         this.modelMapper = modelMapper;
         this.courseService = courseService;
         this.categoryService = categoryService;
+        this.carouselService = carouselService;
     }
 
     @GetMapping("/")
@@ -92,7 +95,10 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Model model) {
+        model.addAttribute("firstImg", carouselService.firstImage());
+        model.addAttribute("secondImg", carouselService.secondImage());
+        model.addAttribute("thirdImg", carouselService.thirdImage());
         return "home";
     }
 
