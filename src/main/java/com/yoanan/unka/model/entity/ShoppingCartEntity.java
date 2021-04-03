@@ -10,7 +10,7 @@ import java.util.Set;
 public class ShoppingCartEntity extends BaseEntity {
 
     private UserEntity student;
-    //TODO update when buy/delete course
+    //TODO update when buy course
     private BigDecimal totalPrice;
     private Set<CourseEntity> coursesInCart = new HashSet<>();
 
@@ -28,7 +28,7 @@ public class ShoppingCartEntity extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     public UserEntity getStudent() {
         return student;
     }

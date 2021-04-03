@@ -6,6 +6,7 @@ import com.yoanan.unka.model.entity.ShoppingCartEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.ShoppingCartServiceModel;
+import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.repository.ShoppingCartRepository;
 import com.yoanan.unka.service.ShoppingCartService;
@@ -95,6 +96,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
 
+
     @Override
     public void emptyShoppingCart() {
 
@@ -104,9 +106,29 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCartEntity shoppingCartEntity = shoppingCartRepository.findByStudent_Username(username)
                 .orElseThrow(() -> new IllegalStateException("Shopping cart with user with username " + username + " not found!"));
 
+
         shoppingCartEntity.setTotalPrice(BigDecimal.ZERO);
         shoppingCartEntity.getCoursesInCart().clear();
         shoppingCartRepository.save(shoppingCartEntity);
+    }
+
+    @Override
+    public void payTeachersCourseWhenBuy() {
+
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        ShoppingCartEntity shoppingCartEntity = shoppingCartRepository.findByStudent_Username(username)
+                .orElseThrow(() -> new IllegalStateException("Shopping cart with user with username " + username + " not found!"));
+
+
+        // Pay price of course to teacher
+        Set<CourseEntity> coursesInCart = shoppingCartEntity.getCoursesInCart();
+        coursesInCart.forEach(course->{
+            UserEntity teacher = userService.findByUsername(course.getTeacher().getUsername());
+            teacher.addIncome(course.getPrice());
+
+        });
     }
 
     @Override

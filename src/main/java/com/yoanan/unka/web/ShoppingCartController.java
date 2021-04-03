@@ -53,7 +53,7 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("/{id}")
-    public String deteCourseFromCart(@PathVariable(value = "id") Long id){
+    public String deteteCourseFromCart(@PathVariable(value = "id") Long id){
 
         shoppingCartService.deleteCourseFromCart(id);
 

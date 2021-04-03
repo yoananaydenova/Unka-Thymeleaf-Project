@@ -1,13 +1,16 @@
 package com.yoanan.unka.service.impl;
 
 import com.yoanan.unka.config.IAuthenticationFacade;
+import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
+import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
 import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
+import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,8 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +36,15 @@ public class UserServiceImpl implements UserService {
     private final IAuthenticationFacade authenticationFacade;
 
 
+
     public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService, IAuthenticationFacade authenticationFacade) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.unkaUserDetailsService = unkaUserDetailsService;
-
         this.authenticationFacade = authenticationFacade;
+
     }
 
 
@@ -58,11 +63,13 @@ public class UserServiceImpl implements UserService {
                     .setUsername("student")
                     .setFullName("First Student")
                     .setPassword(passwordEncoder.encode("123456"))
+                    .setIncomeTeaching(BigDecimal.ZERO)
                     .setRoles(List.of(studentRole));
 
             UserEntity teacher = new UserEntity()
                     .setUsername("teacher")
                     .setFullName("First Teacher")
+                    .setIncomeTeaching(BigDecimal.ZERO)
                     .setPassword(passwordEncoder.encode("123456"));
             // Teacher has 2 roles
             teacher.setRoles(List.of(teacherRole, studentRole));
@@ -70,6 +77,7 @@ public class UserServiceImpl implements UserService {
             UserEntity admin = new UserEntity()
                     .setUsername("admina")
                     .setFullName("Admin Adminov")
+                    .setIncomeTeaching(BigDecimal.ZERO)
                     .setPassword(passwordEncoder.encode("123456"));
 
             // Admin has 4 roles
@@ -249,11 +257,11 @@ public class UserServiceImpl implements UserService {
             }
 
             //Remove role Admin if user has not root_admin-> user will be only teacher
-        }else {
+        } else {
 
             boolean userIsRootAdmin = userRepository.existsUserEntityByUsernameAndRoles_Role(userEntity.getUsername(), UserRole.ROOT_ADMIN);
 
-            if(isNewRoleTeacher && roles.size() == 3 && !userIsRootAdmin){
+            if (isNewRoleTeacher && roles.size() == 3 && !userIsRootAdmin) {
                 UserRoleEntity userRoleAdminToRemove = userEntity.getRoles()
                         .stream()
                         .filter(r -> r.getRole().equals(UserRole.ADMIN))

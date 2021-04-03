@@ -9,6 +9,7 @@ import com.yoanan.unka.model.service.UserServiceModel;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
@@ -35,4 +36,6 @@ public interface UserService {
     void saveChangeFullName(UserServiceModel userServiceModel);
 
     void changeRoleOfUser(Long userId, Long newRoleId);
+
+
 }

@@ -64,10 +64,10 @@ public class EnrolledCoursesServiceImpl implements EnrolledCoursesService {
                 newEnrolledCoursesEntity = enrolledCoursesOpt.get().addCoursesToEnrolled(coursesToSave);
             }
 
+
             enrolledCoursesRepository.save(newEnrolledCoursesEntity);
-
+            shoppingCartService.payTeachersCourseWhenBuy();
             shoppingCartService.emptyShoppingCart();
-
         }
 
     }

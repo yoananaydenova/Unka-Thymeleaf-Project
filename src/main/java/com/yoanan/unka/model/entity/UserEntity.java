@@ -1,6 +1,7 @@
 package com.yoanan.unka.model.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,7 @@ public class UserEntity extends BaseEntity{
     private String username;
     private String fullName;
     private String password;
+    private BigDecimal incomeTeaching;
     private List<UserRoleEntity> roles = new ArrayList<>();
     private Set<CourseEntity> teachCourses = new HashSet<>();
 
@@ -46,6 +48,22 @@ public class UserEntity extends BaseEntity{
 
     public UserEntity setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    @Column(name="income_teaching")
+    public BigDecimal getIncomeTeaching() {
+        return incomeTeaching;
+    }
+
+    public UserEntity setIncomeTeaching(BigDecimal incomeTeaching) {
+        this.incomeTeaching = incomeTeaching;
+        return this;
+    }
+
+    // Pay teacher
+    public UserEntity addIncome(BigDecimal priceOfCourse){
+        this.setIncomeTeaching(this.getIncomeTeaching().add(priceOfCourse));
         return this;
     }
 

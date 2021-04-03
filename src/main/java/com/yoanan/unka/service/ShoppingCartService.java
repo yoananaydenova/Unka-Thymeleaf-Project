@@ -10,5 +10,7 @@ public interface ShoppingCartService {
 
     void emptyShoppingCart();
 
+    void payTeachersCourseWhenBuy();
+
     void deleteCourseFromCart(Long courseId);
 }
