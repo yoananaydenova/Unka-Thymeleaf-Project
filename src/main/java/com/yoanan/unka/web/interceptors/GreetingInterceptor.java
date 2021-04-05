@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
 
 @Component
-public class HomeInterceptor implements HandlerInterceptor {
+public class GreetingInterceptor implements HandlerInterceptor {
 
 
     @Override
