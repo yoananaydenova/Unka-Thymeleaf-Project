@@ -2,7 +2,6 @@ package com.yoanan.unka.web;
 
 import com.yoanan.unka.model.binding.ExerciseSolutionAddBindingModel;
 import com.yoanan.unka.model.binding.SolutionAddBindingModel;
-import com.yoanan.unka.model.service.ChartServiceModel;
 import com.yoanan.unka.model.service.ExerciseServiceModel;
 import com.yoanan.unka.model.service.SolutionServiceModel;
 import com.yoanan.unka.model.view.CourseNameViewModel;
@@ -116,9 +115,6 @@ public class ExerciseController {
 
         // Save solution in DB
         // check if debit and credit id are real
-        ChartServiceModel debitChartByIdOf = chartService.findByIdOfChart(exerciseSolutionAddBindingModel.getDebitChartId());
-        ChartServiceModel creditChartByIdOf = chartService.findByIdOfChart(exerciseSolutionAddBindingModel.getCreditChartId());
-
         SolutionServiceModel solutionServiceModel = modelMapper.map(exerciseSolutionAddBindingModel, SolutionServiceModel.class);
         solutionServiceModel.setExercise(newExerciseServiceModel);
 
@@ -146,7 +142,7 @@ public class ExerciseController {
 
         model.addAttribute("exercisesNameList", exercisesNameList);
 
-            //  TODO find better way for get index
+        //  TODO find better way for get index
         ExerciseNameViewModel exerciseNameViewModel = exercisesNameList.stream()
                 .filter(ex -> ex.getId().equals(exerciseViewModel.getId())).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Not found index of current exercise view!"));

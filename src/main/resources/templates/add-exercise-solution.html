@@ -25,6 +25,7 @@
               th:action="@{/exercises/add}"
               method="POST"
               th:object="${exerciseSolutionAddBindingModel}"
+              onsubmit="action.disabled = true; return true;"
               enctype="multipart/form-data">
 
             <label th:text="|КУРС: ${courseName.name}|"></label>

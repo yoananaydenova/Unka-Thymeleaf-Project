@@ -25,5 +25,6 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 
     Page<CourseEntity> findAllByTeacher_UsernameAndCategories_Id(String username, Long categoryId, Pageable pageable);
 
+    List<CourseEntity> findFirst3ByOrderByPriceAsc();
 
 }

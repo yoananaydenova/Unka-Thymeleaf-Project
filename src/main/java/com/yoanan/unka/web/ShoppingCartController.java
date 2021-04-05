@@ -1,5 +1,6 @@
 package com.yoanan.unka.web;
 
+import com.yoanan.unka.model.service.ShoppingCartServiceModel;
 import com.yoanan.unka.model.view.ShoppingCartViewModel;
 import com.yoanan.unka.service.EnrolledCoursesService;
 import com.yoanan.unka.service.ShoppingCartService;
@@ -28,9 +29,11 @@ public class ShoppingCartController {
 
     @GetMapping
     public String viewShoppingCart(Model model) {
-        System.out.println();
+
+        ShoppingCartServiceModel shoppingCartServiceModel = shoppingCartService.getShoppingCart();
         ShoppingCartViewModel shoppingCart =
-                modelMapper.map(shoppingCartService.getShoppingCart(), ShoppingCartViewModel.class);
+                modelMapper.map(shoppingCartServiceModel, ShoppingCartViewModel.class);
+
         model.addAttribute("shoppingCart",shoppingCart);
 
         return "shopping-cart";

@@ -17,4 +17,6 @@ public interface ProfileInformationService {
     ProfileInformationServiceModel getProfileInformationByUserId(Long userId);
 
     void saveChangedInfo(ProfileInformationChangeServiceModel profileInformationChangeServiceModel) throws IOException;
+
+    ProfileInformationServiceModel getEditProfileInformationByUserId(Long userId);
 }

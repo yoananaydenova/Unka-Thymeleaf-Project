@@ -8,7 +8,8 @@ public class CourseServiceModel extends BaseServiceModel {
     private String name;
     private BigDecimal price;
     private String imgUrl;
-    private String teacher;
+//    private String teacher;
+    private UserServiceModel teacher;
     private String description;
 
     private boolean isInShoppingCart;
@@ -16,6 +17,15 @@ public class CourseServiceModel extends BaseServiceModel {
     private boolean isTeacherOfCourse;
 
     public CourseServiceModel() {
+    }
+
+    public UserServiceModel getTeacher() {
+        return teacher;
+    }
+
+    public CourseServiceModel setTeacher(UserServiceModel teacher) {
+        this.teacher = teacher;
+        return this;
     }
 
     public String getName() {
@@ -45,14 +55,14 @@ public class CourseServiceModel extends BaseServiceModel {
         return this;
     }
 
-    public String getTeacher() {
-        return teacher;
-    }
-
-    public CourseServiceModel setTeacher(String teacher) {
-        this.teacher = teacher;
-        return this;
-    }
+//    public String getTeacher() {
+//        return teacher;
+//    }
+//
+//    public CourseServiceModel setTeacher(String teacher) {
+//        this.teacher = teacher;
+//        return this;
+//    }
 
     public String getDescription() {
         return description;

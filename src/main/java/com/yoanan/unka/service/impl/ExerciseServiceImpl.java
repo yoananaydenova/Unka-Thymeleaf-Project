@@ -3,6 +3,7 @@ package com.yoanan.unka.service.impl;
 import com.yoanan.unka.model.entity.ExerciseEntity;
 import com.yoanan.unka.model.entity.LessonEntity;
 import com.yoanan.unka.model.service.ExerciseServiceModel;
+import com.yoanan.unka.model.service.LessonServiceModel;
 import com.yoanan.unka.repository.ExerciseRepository;
 import com.yoanan.unka.service.ExerciseService;
 import com.yoanan.unka.service.LessonService;
@@ -44,8 +45,9 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public ExerciseServiceModel addExercise(ExerciseServiceModel exerciseServiceModel) {
         ExerciseEntity exerciseEntity = modelMapper.map(exerciseServiceModel, ExerciseEntity.class);
-        LessonEntity lessonEntityById = lessonService.findLessonEntityById(exerciseServiceModel.getLesson().getId());
-        exerciseEntity.setLesson(lessonEntityById);
+
+        LessonServiceModel lessonServiceModel = lessonService.findLessonById(exerciseServiceModel.getLesson().getId());
+        exerciseEntity.setLesson(modelMapper.map(lessonServiceModel, LessonEntity.class));
         exerciseEntity.setId(null);
        return modelMapper.map(exerciseRepository.save(exerciseEntity), ExerciseServiceModel.class);
     }

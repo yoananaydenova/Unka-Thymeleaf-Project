@@ -93,11 +93,7 @@ public class EnrolledCoursesServiceImpl implements EnrolledCoursesService {
         }
         return enrolledCoursesEntityOpt.get().getMyEnrolledCourses()
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseServiceModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseServiceModel.setTeacher(course.getTeacher().getFullName());
-                    return courseServiceModel;
-                })
+                .map(course ->  modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
     }
 

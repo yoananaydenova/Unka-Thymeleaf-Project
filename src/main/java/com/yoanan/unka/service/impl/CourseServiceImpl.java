@@ -113,11 +113,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<>(coursesPage
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+                .map(course ->  modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList()), pageable, totalElements);
 
     }
@@ -142,11 +138,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+                .map(course -> modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
@@ -166,11 +158,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+                .map(course ->  modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
@@ -193,11 +181,7 @@ public class CourseServiceImpl implements CourseService {
 
         return new PageImpl<CourseServiceModel>(coursesPage
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+                .map(course -> modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList()), pageable, totalElements);
 
     }
@@ -213,8 +197,6 @@ public class CourseServiceImpl implements CourseService {
                         new IllegalStateException("Course with id " + id + " not found!"));
         CourseServiceModel courseServiceModel = modelMapper.map(courseEntity, CourseServiceModel.class);
 
-        //Set teacher name
-        courseServiceModel.setTeacher(courseEntity.getTeacher().getFullName());
 
         if (authentication.isAuthenticated()) {
             // Check is in Shopping cart ??
@@ -239,19 +221,8 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository
                 .findAllByTeacher_Username(username)
                 .stream()
-                .map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                })
+                .map(course -> modelMapper.map(course, CourseServiceModel.class))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public CourseEntity findEntityById(Long id) {
-        return courseRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalStateException("Course wit id " + id + " not found!"));
     }
 
     @Override
@@ -259,6 +230,14 @@ public class CourseServiceImpl implements CourseService {
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
         return courseRepository.existsByIdAndTeacher_Username(courseId, username);
+    }
+
+    @Override
+    public List<CourseServiceModel> findThreeCoursesWithLowerPrice() {
+        return courseRepository.findFirst3ByOrderByPriceAsc()
+                .stream()
+                .map(course ->  modelMapper.map(course, CourseServiceModel.class))
+                .collect(Collectors.toList());
     }
 
 

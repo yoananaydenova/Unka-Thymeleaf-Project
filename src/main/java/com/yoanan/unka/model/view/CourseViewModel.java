@@ -5,8 +5,9 @@ public class CourseViewModel extends BaseViewModel {
     private String name;
     private String price;
     private String imgUrl;
-    private String teacher;
     private String description;
+
+    private UserViewModel teacher;
 
     private boolean isInShoppingCart;
     private boolean isEnrolled;
@@ -14,6 +15,15 @@ public class CourseViewModel extends BaseViewModel {
 
 
     public CourseViewModel() {
+    }
+
+    public UserViewModel getTeacher() {
+        return teacher;
+    }
+
+    public CourseViewModel setTeacher(UserViewModel teacher) {
+        this.teacher = teacher;
+        return this;
     }
 
     public String getName() {
@@ -40,15 +50,6 @@ public class CourseViewModel extends BaseViewModel {
 
     public CourseViewModel setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
-        return this;
-    }
-
-    public String getTeacher() {
-        return teacher;
-    }
-
-    public CourseViewModel setTeacher(String teacher) {
-        this.teacher = teacher;
         return this;
     }
 

@@ -3,6 +3,7 @@ package com.yoanan.unka.service.impl;
 import com.yoanan.unka.config.IAuthenticationFacade;
 import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.LessonEntity;
+import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.LessonAddServiceModel;
 import com.yoanan.unka.model.service.LessonServiceModel;
 import com.yoanan.unka.repository.LessonRepository;
@@ -49,7 +50,9 @@ public class LessonServiceImpl implements LessonService {
 
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
-        CourseEntity courseEntity = courseService.findEntityById(lessonAddServiceModel.getCourseId());
+        CourseServiceModel courseServiceModel = courseService.findCourseById(lessonAddServiceModel.getCourseId());
+        CourseEntity courseEntity = modelMapper.map(courseServiceModel,CourseEntity.class );
+
 
         if (!courseEntity.getTeacher().getUsername().equals(username)) {
             throw new IllegalArgumentException("User with username " + username + " is not a teacher of this course and can not create lesson!");
@@ -106,11 +109,5 @@ public class LessonServiceImpl implements LessonService {
         return modelMapper.map(lessonEntity, LessonServiceModel.class);
     }
 
-    @Override
-    public LessonEntity findLessonEntityById(Long id) {
-        return lessonRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalStateException("Lesson with id " + id + " not found!"));
-    }
 
 }

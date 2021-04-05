@@ -16,7 +16,7 @@
         <h3 class="text-center"><span class="lable-intrance">Добавяне на курс</span></h3>
 
         <form th:action="@{/courses/add}" method="POST" th:object="${courseAddBindingModel}"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data" onsubmit="myButton.disabled = true; return true;">
             <fieldset>
                 <div class="field">
                     <label for="name" class="label">Име на курса</label>
@@ -71,8 +71,8 @@
                     <input type="file" class="form-control-file" id="add-title-image" name="img" required="required">
                 </div>
 
-                <div type="submit" class="btn btn-primary">
-                    <button>Създай</button>
+                <div >
+                    <button type="submit" value="Submit" name="myButton" class="btn btn-primary">Създай</button>
                 </div>
             </fieldset>
         </form>

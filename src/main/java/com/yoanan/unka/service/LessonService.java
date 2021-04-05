@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface LessonService {
+
     boolean existLessonByTitleAndCourseId(String title, Long courseId);
 
     LessonServiceModel addLesson(LessonAddServiceModel lessonAddServiceModel) throws IOException;
@@ -16,5 +17,4 @@ public interface LessonService {
 
     LessonServiceModel findLessonById(Long id);
 
-    LessonEntity findLessonEntityById(Long id);
 }

@@ -37,7 +37,25 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+
+        List<CourseServiceModel> threeCoursesWithLowerPrice = courseService.findThreeCoursesWithLowerPrice();
+
+        List<CourseViewModel> coursesViewModels = threeCoursesWithLowerPrice
+                .stream()
+                .map(course -> {
+                    CourseViewModel courseView = modelMapper.map(course, CourseViewModel.class);
+//                    courseView.setTeacher(course.getTeacher().getFullName());
+                    if (courseView.getPrice().equals("0.00")) {
+                        courseView.setPrice("FREE");
+                    } else {
+                        courseView.setPrice(courseView.getPrice() + " лв.");
+                    }
+                    return courseView;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("courses", coursesViewModels);
 
         return "index";
     }
@@ -66,7 +84,7 @@ public class HomeController {
         } else {
             // All courses
             paginated = courseService
-                    .findAllByTeacherPaginated( pageNo, pageSize, sortField, sortDir);
+                    .findAllByTeacherPaginated(pageNo, pageSize, sortField, sortDir);
         }
 
         List<CourseViewModel> coursesViewModels = paginated

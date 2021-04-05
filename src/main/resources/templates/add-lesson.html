@@ -18,7 +18,7 @@
         <h3 th:if="${coursesList.isEmpty()}">Няма създадени от Вас курсове. Създайте курс и добавете урок към него.</h3>
 
         <form th:unless="${coursesList.isEmpty()}" th:action="@{/lessons/add}" method="POST"
-              th:object="${lessonAddBindingModel}"
+              th:object="${lessonAddBindingModel}" onsubmit="action.disabled = true; return true;"
               enctype="multipart/form-data">
             <fieldset>
 

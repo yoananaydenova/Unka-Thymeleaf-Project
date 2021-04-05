@@ -29,7 +29,7 @@ public interface UserService {
 
     boolean currentUserIsAdmin();
 
-     UserServiceModel findUserById(Long userId);
+    UserServiceModel findUserById(Long userId);
 
     boolean findUserByIdIsLogedUser(Long id);
 

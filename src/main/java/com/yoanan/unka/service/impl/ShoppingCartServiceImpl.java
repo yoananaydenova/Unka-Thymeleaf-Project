@@ -61,7 +61,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartServiceModel getShoppingCart() {
-        System.out.println();
+
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
 
@@ -80,15 +80,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             Set<CourseServiceModel> courseServiceModels = shoppingCartOpt.get()
                     .getCoursesInCart()
-                    .stream().map(course -> {
-                        CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                        courseModel.setTeacher(course.getTeacher().getFullName());
-                        return courseModel;
-                    }).collect(Collectors.toSet());
+                    .stream().map(course -> modelMapper.map(course, CourseServiceModel.class)).collect(Collectors.toSet());
 
             shoppingCartService = modelMapper.map(shoppingCartOpt.get(), ShoppingCartServiceModel.class);
             shoppingCartService.setCoursesInCart(courseServiceModels);
         }
+
 
         return shoppingCartService;
     }

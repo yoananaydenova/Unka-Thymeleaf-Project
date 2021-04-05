@@ -279,7 +279,6 @@ public class UserServiceImpl implements UserService {
 
         return userEntity.getFullName();
 
-
     }
 
 

@@ -63,7 +63,7 @@
 
         <div>
             <h5>Информация за преподавателя:</h5>
-            <h3 th:text="*{teacher}">Име на учителя</h3>
+            <h3 th:text="*{teacher.fullName}">Име на учителя</h3>
             <h4 th:text="${profileInformation.profession}">Професия на учителя</h4>
             <img class="img-list" th:src="${profileInformation.imgUrl}"/>
             <p th:text="${profileInformation.presentation}"></p>

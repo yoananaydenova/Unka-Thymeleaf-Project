@@ -78,7 +78,7 @@ public class ProfileInformationController {
     @GetMapping("/edit/{id}")
     public String showEditProfile(@PathVariable Long id, Model model) {
         // Check is it current user or admin in service with getProfileInformationByUserId
-        ProfileInformationServiceModel profileInformationServiceModel = profileInformationService.getProfileInformationByUserId(id);
+        ProfileInformationServiceModel profileInformationServiceModel = profileInformationService.getEditProfileInformationByUserId(id);
         ProfileInformationChangeBindingModel profileInformationChangeBindingModel = modelMapper.map(profileInformationServiceModel, ProfileInformationChangeBindingModel.class);
         List<Long> rolesIdOfUser = profileInformationServiceModel.getUser()
                 .getRoles()

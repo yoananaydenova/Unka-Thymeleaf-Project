@@ -5,6 +5,7 @@ import com.yoanan.unka.model.service.ChartServiceModel;
 import java.util.List;
 
 public interface ChartService {
+
     void seedChars();
 
     ChartServiceModel findByIdOfChart(Long chartId);

@@ -88,7 +88,7 @@ public class ProfileInformationServiceImpl implements ProfileInformationService 
 
     // See edit profile page for first time
     @Override
-    public ProfileInformationServiceModel getProfileInformationByUserId(Long userId) {
+    public ProfileInformationServiceModel getEditProfileInformationByUserId(Long userId) {
         // Check is it current user or admin want to edit profile
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
@@ -99,6 +99,10 @@ public class ProfileInformationServiceImpl implements ProfileInformationService 
         if (!(idEqual || currentUserIsAdmin)) {
             throw new IllegalStateException("User with username" + username + " do not have permission to edit profile information with id " + userId + " !!!");
         }
+        return getProfileInformationByUserId(userId);
+    }
+    @Override
+    public ProfileInformationServiceModel getProfileInformationByUserId(Long userId) {
 
         // Find profile info by ID
         Optional<ProfileInformationEntity> profileInformationEntityOpt = profileInformationRepository.findByUser_Id(userId);
@@ -148,6 +152,9 @@ public class ProfileInformationServiceImpl implements ProfileInformationService 
         profileInformationRepository.save(profileInformationEntityWithChange);
 
     }
+
+
+
 
     @Override
     public void saveProfileImage(MultipartFile profileImage) throws IOException {

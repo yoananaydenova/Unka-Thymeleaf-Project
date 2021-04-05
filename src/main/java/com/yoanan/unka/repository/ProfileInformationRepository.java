@@ -13,5 +13,6 @@ public interface ProfileInformationRepository extends JpaRepository<ProfileInfor
 
     Optional<ProfileInformationEntity>findByUser_Id(Long userId);
 
+
 //    boolean existsByUser_Username(String username);
 }

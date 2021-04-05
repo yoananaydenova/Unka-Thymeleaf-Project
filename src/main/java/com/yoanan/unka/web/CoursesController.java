@@ -166,13 +166,13 @@ public class CoursesController {
     @GetMapping("/course/{id}")
     public String courseDetail(@PathVariable Long id, Model model) {
 
-        ProfileInformationServiceModel profileInformationServiceModel = profileInformationService.getProfileInformation();
-        model.addAttribute("profileInformation", modelMapper.map(profileInformationServiceModel, ProfileInformationViewModel.class));
-
-
         // Add button Adding in shopping cart
-        CourseViewModel courseViewModel = modelMapper.map(courseService.findCourseById(id), CourseViewModel.class);
+
+        CourseServiceModel courseServiceModel = courseService.findCourseById(id);
+        CourseViewModel courseViewModel = modelMapper.map(courseServiceModel, CourseViewModel.class);
+
         model.addAttribute("courseViewModel", courseViewModel);
+
 
         // Add list of lessons
         List<LessonNameViewModel> lessons = lessonService.findAllLessonsByCourseId(id)
@@ -181,6 +181,9 @@ public class CoursesController {
                 .collect(Collectors.toList());
 
         model.addAttribute("lessonsList", lessons);
+
+        ProfileInformationServiceModel profileInformationServiceModel = profileInformationService.getProfileInformationByUserId(courseServiceModel.getTeacher().getId());
+        model.addAttribute("profileInformation", modelMapper.map(profileInformationServiceModel, ProfileInformationViewModel.class));
 
         return "details-course";
     }
