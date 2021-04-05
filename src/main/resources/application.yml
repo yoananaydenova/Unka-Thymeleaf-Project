@@ -1,6 +1,8 @@
 carousel:
     images: books.jpg, check.jpg, coffee.jpg, laptop.jpg, man.jpg, pencil.jpg
     refresh-cron: "0 */2 * ? * *"
+log-info:
+    clear-cron: "0 0 0 * * ?"
 cloudinary:
     api-key: 885576798911148
     api-secret: ${CLOUDINARY_SECRET}

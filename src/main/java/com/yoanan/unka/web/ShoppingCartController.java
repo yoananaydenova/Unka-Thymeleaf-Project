@@ -28,7 +28,7 @@ public class ShoppingCartController {
 
     @GetMapping
     public String viewShoppingCart(Model model) {
-
+        System.out.println();
         ShoppingCartViewModel shoppingCart =
                 modelMapper.map(shoppingCartService.getShoppingCart(), ShoppingCartViewModel.class);
         model.addAttribute("shoppingCart",shoppingCart);
@@ -40,7 +40,7 @@ public class ShoppingCartController {
     public String addCourseToCart(@PathVariable(value = "id") Long id) {
         shoppingCartService.addCourseInCart(id);
         // return my courses
-        return "redirect:/shopping-cart";
+        return "redirect:/courses/course/" + id;
     }
 
     // Data - payment details, credit card number
@@ -49,11 +49,11 @@ public class ShoppingCartController {
 
         enrolledCoursesService.buyCourses();
         // return my courses
-        return "redirect:/home";
+        return "redirect:/courses/my-courses";
     }
 
     @DeleteMapping("/{id}")
-    public String deteteCourseFromCart(@PathVariable(value = "id") Long id){
+    public String deleteCourseFromCart(@PathVariable(value = "id") Long id){
 
         shoppingCartService.deleteCourseFromCart(id);
 

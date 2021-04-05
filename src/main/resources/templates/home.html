@@ -13,6 +13,7 @@
 <main class="content-wrap">
     <div class="container">
 
+<h1 class="text-center" th:text="|${greeting}, ${fullName}!|"></h1>
         <div class="col-sm-12 my-auto ">
             <div id="carouselExampleIndicators" class="carousel slide " data-ride="carousel">
                 <ol class="carousel-indicators">
@@ -46,7 +47,6 @@
 </main>
 
 <th:block th:include="~{fragments/footer}"></th:block>
-
 
 </body>
 

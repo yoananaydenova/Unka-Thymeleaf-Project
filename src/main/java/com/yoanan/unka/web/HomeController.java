@@ -5,6 +5,7 @@ import com.yoanan.unka.model.view.CourseViewModel;
 import com.yoanan.unka.service.CarouselService;
 import com.yoanan.unka.service.CategoryService;
 import com.yoanan.unka.service.CourseService;
+import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -25,16 +26,19 @@ public class HomeController {
     private final CourseService courseService;
     private final CategoryService categoryService;
     private final CarouselService carouselService;
+    private final UserService userService;
 
-    public HomeController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService, CarouselService carouselService) {
+    public HomeController(ModelMapper modelMapper, CourseService courseService, CategoryService categoryService, CarouselService carouselService, UserService userService) {
         this.modelMapper = modelMapper;
         this.courseService = courseService;
         this.categoryService = categoryService;
         this.carouselService = carouselService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
     public String index() {
+
         return "index";
     }
 
@@ -99,6 +103,8 @@ public class HomeController {
         model.addAttribute("firstImg", carouselService.firstImage());
         model.addAttribute("secondImg", carouselService.secondImage());
         model.addAttribute("thirdImg", carouselService.thirdImage());
+
+        model.addAttribute("fullName", userService.findFullName());
         return "home";
     }
 

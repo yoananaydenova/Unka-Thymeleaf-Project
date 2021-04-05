@@ -1,16 +1,13 @@
 package com.yoanan.unka.service.impl;
 
 import com.yoanan.unka.config.IAuthenticationFacade;
-import com.yoanan.unka.model.entity.CourseEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
-import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
 import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.UserRepository;
 import com.yoanan.unka.repository.UserRoleRepository;
-import com.yoanan.unka.service.CourseService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UnkaUserDetailsService unkaUserDetailsService;
     private final IAuthenticationFacade authenticationFacade;
-
 
 
     public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService, IAuthenticationFacade authenticationFacade) {
@@ -273,5 +268,19 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userEntity);
     }
+
+    @Override
+    public String findFullName() {
+        Authentication authentication = authenticationFacade.getAuthentication();
+        String username = authentication.getName();
+
+        UserEntity userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User with that username" + username + " not found!"));
+
+        return userEntity.getFullName();
+
+
+    }
+
 
 }

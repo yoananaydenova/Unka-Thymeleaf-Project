@@ -42,13 +42,12 @@
 
         <form th:action="@{/exercises/solution}"
               method="POST"
-              th:object="${solutionAddBindingModel}"
-              enctype="multipart/form-data">
+              th:object="${solutionAddBindingModel}">
 
             <h4 class="font-weight-bold" th:text="|КУРС: ${exerciseViewModel.getLesson().getCourse().name}|"></h4>
 
             <h4 class="font-weight-bold" th:text="|УРОК: ${exerciseViewModel.getLesson().title}|"></h4>
-            <input type="hidden" name="exerciseId" th:value="${exerciseViewModel.getLesson().id}"/>
+            <input type="hidden" name="exerciseId" th:value="${exerciseViewModel.getId()}"/>
 
             <!--            Go to lesson-->
             <a class="btn btn-primary" th:href="@{/lessons/{id}(id=${exerciseViewModel.getLesson().id})}">

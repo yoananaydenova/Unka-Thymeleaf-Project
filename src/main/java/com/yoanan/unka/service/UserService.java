@@ -37,5 +37,5 @@ public interface UserService {
 
     void changeRoleOfUser(Long userId, Long newRoleId);
 
-
+    String findFullName();
 }

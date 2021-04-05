@@ -6,7 +6,6 @@ import com.yoanan.unka.model.entity.ShoppingCartEntity;
 import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.service.CourseServiceModel;
 import com.yoanan.unka.model.service.ShoppingCartServiceModel;
-import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.CourseRepository;
 import com.yoanan.unka.repository.ShoppingCartRepository;
 import com.yoanan.unka.service.ShoppingCartService;
@@ -16,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,38 +61,37 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartServiceModel getShoppingCart() {
-
+        System.out.println();
         Authentication authentication = authenticationFacade.getAuthentication();
         String username = authentication.getName();
 
         Optional<ShoppingCartEntity> shoppingCartOpt = shoppingCartRepository.findByStudent_Username(username);
 
-        ShoppingCartEntity savedShoppingCart;
+        ShoppingCartServiceModel shoppingCartService;
         if (shoppingCartOpt.isEmpty()) {
 
             UserEntity userEntity = userService.findByUsername(username);
 
             ShoppingCartEntity newShoppingCart = new ShoppingCartEntity(userEntity, BigDecimal.ZERO);
 
-            savedShoppingCart = shoppingCartRepository.save(newShoppingCart);
+            ShoppingCartEntity savedShoppingCart = shoppingCartRepository.save(newShoppingCart);
+            shoppingCartService = modelMapper.map(savedShoppingCart, ShoppingCartServiceModel.class);
         } else {
-            savedShoppingCart = shoppingCartOpt.get();
+
+            Set<CourseServiceModel> courseServiceModels = shoppingCartOpt.get()
+                    .getCoursesInCart()
+                    .stream().map(course -> {
+                        CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
+                        courseModel.setTeacher(course.getTeacher().getFullName());
+                        return courseModel;
+                    }).collect(Collectors.toSet());
+
+            shoppingCartService = modelMapper.map(shoppingCartOpt.get(), ShoppingCartServiceModel.class);
+            shoppingCartService.setCoursesInCart(courseServiceModels);
         }
 
-        ShoppingCartServiceModel shoppingCartService = modelMapper.map(savedShoppingCart, ShoppingCartServiceModel.class);
-
-        Set<CourseServiceModel> courseServiceModels = shoppingCartOpt.get()
-                .getCoursesInCart()
-                .stream().map(course -> {
-                    CourseServiceModel courseModel = modelMapper.map(course, CourseServiceModel.class);
-                    courseModel.setTeacher(course.getTeacher().getFullName());
-                    return courseModel;
-                }).collect(Collectors.toSet());
-
-        shoppingCartService.setCoursesInCart(courseServiceModels);
         return shoppingCartService;
     }
-
 
 
     @Override
@@ -124,7 +121,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         // Pay price of course to teacher
         Set<CourseEntity> coursesInCart = shoppingCartEntity.getCoursesInCart();
-        coursesInCart.forEach(course->{
+        coursesInCart.forEach(course -> {
             UserEntity teacher = userService.findByUsername(course.getTeacher().getUsername());
             teacher.addIncome(course.getPrice());
 
@@ -139,12 +136,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCartEntity shoppingCartEntity = shoppingCartRepository.findByStudent_Username(username)
                 .orElseThrow(() -> new IllegalStateException("Shopping cart with user with username " + username + " not found!"));
 
-       CourseEntity courseEntity = shoppingCartEntity
+        CourseEntity courseEntity = shoppingCartEntity
                 .getCoursesInCart()
                 .stream()
                 .filter(c -> c.getId().equals(courseId))
                 .findFirst()
-               .orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " not found!"));
+                .orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " not found!"));
 
 
         shoppingCartEntity.getCoursesInCart().remove(courseEntity);

@@ -18,7 +18,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCourse">
                     <a class="dropdown-item" th:href="@{/courses/all}">Всички</a>
                     <ul>
-                        <li th:each="categoryView : ${categories}" >
+                        <li th:each="categoryView : ${categories}">
 
                             <a class="dropdown-item"
                                th:text="${categoryView.name}"
@@ -36,7 +36,8 @@
             </div>
 
             <!--/*@thymesVar id="isTeacher" type=""*/-->
-            <a sec:authorize="!hasRole('TEACHER')" th:unless="${isTeacher}" class="nav-link link-n" th:href="@{/become-teacher}">Преподавай</a>
+            <a sec:authorize="!hasRole('TEACHER')" th:unless="${isTeacher}" class="nav-link link-n"
+               th:href="@{/become-teacher}">Преподавай</a>
             <!--           Reload navbar after student become teacher-->
 
             <th:block sec:authorize="!isAuthenticated()">
@@ -68,29 +69,29 @@
                     <a class="dropdown-item" th:href="@{/board}">ТАБЛО</a>
                     <a class="dropdown-item" th:href="@{/courses/add}">+Курс</a>
                     <a class="dropdown-item" th:href="@{/lessons/add}">+Урок</a>
-<!--                    TODO adding exercise with AJAX-->
-<!--                    <a class="dropdown-item" th:href="@{/exercises/add}">+Упражнение</a>-->
+                    <!--                    TODO adding exercise with AJAX-->
+                    <!--                    <a class="dropdown-item" th:href="@{/exercises/add}">+Упражнение</a>-->
                 </div>
             </div>
 
             <th:block sec:authorize="hasRole('STUDENT')">
                 <a class="nav-link link-n" th:href="@{/courses/my-courses}">Моите курсове</a>
                 <a class="nav-link link-n" th:href="@{/profile}">Профил</a>
-                <th:block>
+            </th:block>
 
-                    <!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->
-                    <a sec:authorize="isAuthenticated()" th:href="@{/shopping-cart}" class="nav-link link-n"><i
-                            class="fas fa-shopping-cart"></i></a>
+            <!--                    <a sec:authorize="isAuthenticated()" class="nav-link link-n"><i class="fas fa-heart"></i></a>-->
+            <a sec:authorize="isAuthenticated()" th:href="@{/shopping-cart}" class="nav-link link-n"><i
+                    class="fas fa-shopping-cart"></i></a>
 
-                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-                        <button type="submit"
-                                class="btn btn-link nav-link link-n">
-                            Изход
-                        </button>
-                    </form>
-
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                <button type="submit"
+                        class="btn btn-link nav-link link-n">
+                    Изход
+                </button>
+            </form>
 
         </div>
 
     </nav>
+
 </th:block>

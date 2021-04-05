@@ -159,9 +159,6 @@ public class ExerciseController {
         boolean isTeacherOfCourse = courseService.isTeacherOfCourseByCourseId(exerciseViewModel.getLesson().getCourse().getId());
         model.addAttribute("isTeacherOfCourse", isTeacherOfCourse);
 
-        // TODO variable for button to next exercise if exist
-
-
         return "details-exercise-solution";
     }
 
@@ -170,7 +167,7 @@ public class ExerciseController {
     public String exerciseSolution(@Valid @ModelAttribute("solutionAddBindingModel") SolutionAddBindingModel solutionAddBindingModel,
                                    BindingResult bindingResult,
                                    RedirectAttributes redirectAttributes) {
-        System.out.println();
+
         redirectAttributes.addFlashAttribute("solutionAddBindingModel", solutionAddBindingModel);
 
         // check for error in biding model
@@ -181,7 +178,9 @@ public class ExerciseController {
         }
 
         // check if debit and credit id are real, if input charts are the same, value are the same
-        boolean isTrueSolution = solutionService.verificationSolution(modelMapper.map(solutionAddBindingModel, SolutionServiceModel.class));
+        SolutionServiceModel solutionServiceModel = modelMapper.map(solutionAddBindingModel, SolutionServiceModel.class);
+        solutionServiceModel.getExercise().setId(solutionAddBindingModel.getExerciseId());
+        boolean isTrueSolution = solutionService.verificationSolution(solutionServiceModel);
         if (!isTrueSolution) {
             // message "Wrong! Try again!"
             redirectAttributes.addFlashAttribute("isFalseSolutionMessage", true);
