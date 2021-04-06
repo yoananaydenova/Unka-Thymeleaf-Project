@@ -5,7 +5,8 @@ log-info:
     clear-cron: "0 0 0 * * ?"
 cloudinary:
     api-key: 885576798911148
-    api-secret: ${CLOUDINARY_SECRET}
+#    api-secret: ${CLOUDINARY_SECRET}
+    api-secret: XChmIS3REXBtySXugqSOYYMIsPs
     cloud-name: yoanan
 logging:
     level:
