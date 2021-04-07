@@ -8,13 +8,11 @@ import com.yoanan.unka.repository.ChartRepository;
 import com.yoanan.unka.repository.GroupRepository;
 import com.yoanan.unka.repository.SectionRepository;
 import com.yoanan.unka.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,35 +24,36 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static java.lang.StrictMath.toIntExact;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
-@ExtendWith(MockitoExtension.class)
 public class ChartRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Mock
+
+    @Autowired
     private ChartRepository chartRepository;
-    @Mock
+    @Autowired
     private GroupRepository groupRepository;
-    @Mock
+    @Autowired
     private SectionRepository sectionRepository;
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    List<ChartEntity> charts;
+
+    private Long CHART1_ID, CHART2_ID;
 
     @BeforeEach
     public void setUp() {
-        charts = new ArrayList<>();
-
+        chartRepository.deleteAll();
         groupRepository.deleteAll();
         sectionRepository.deleteAll();
-        chartRepository.deleteAll();
+        userRepository.deleteAll();
 
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername("pesho").setPassword("xyz123").setFullName("petar petrov");
@@ -65,9 +64,10 @@ public class ChartRestControllerTest {
         groupEntity1.setName("Капитал");
         groupEntity1 = groupRepository.save(groupEntity1);
 
+
         SectionEntity sectionEntity1 = new SectionEntity();
         sectionEntity1.setNumber(1);
-        sectionEntity1.setName("Сметки за капитали");
+        sectionEntity1.setName("Сметки за капитал");
         sectionEntity1 = sectionRepository.save(sectionEntity1);
 
         ChartEntity chartEntity1 = new ChartEntity();
@@ -75,7 +75,9 @@ public class ChartRestControllerTest {
         chartEntity1.setName("Основен капитал");
         chartEntity1.setGroup(groupEntity1);
         chartEntity1.setSection(sectionEntity1);
-        charts.add(chartEntity1);
+        chartEntity1 = chartRepository.save(chartEntity1);
+        CHART1_ID = chartEntity1.getId();
+
 
         GroupEntity groupEntity2 = new GroupEntity();
         groupEntity2.setNumber(20);
@@ -92,11 +94,17 @@ public class ChartRestControllerTest {
         chartEntity2.setName("Земи/терени");
         chartEntity2.setGroup(groupEntity2);
         chartEntity2.setSection(sectionEntity2);
-        chartRepository.save(chartEntity2);
-        charts.add(chartEntity2);
+        chartEntity2= chartRepository.save(chartEntity2);
+        CHART2_ID = chartEntity2.getId();
 
-        Mockito.when(chartRepository.findAll())
-                .thenReturn(charts);
+    }
+
+    @AfterEach
+    public void tearDown(){
+        chartRepository.deleteAll();
+        groupRepository.deleteAll();
+        sectionRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
@@ -106,12 +114,27 @@ public class ChartRestControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/charts/api"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0].value").value(1))
+                .andExpect(jsonPath("[0].value").value(toIntExact(CHART1_ID)))
                 .andExpect(jsonPath("[0].group").value("Капитал"))
                 .andExpect(jsonPath("[0].name").value("100 Основен капитал"))
-                .andExpect(jsonPath("[1].value").value(2))
+                .andExpect(jsonPath("[1].value").value(toIntExact(CHART2_ID)))
                 .andExpect(jsonPath("[1].group").value("Дълготрайни материални активи"))
                 .andExpect(jsonPath("[1].name").value("200 Земи/терени"));
+    }
 
+    @Test
+    @WithMockUser(value = "pesho", roles = {"STUDENT"})
+    public void testFetchChartsSize() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/charts/api"))
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void testFetchChartsWithoutRoleRedirectToLoginPage() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/charts/api"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/users/login"));
     }
 }

@@ -87,7 +87,7 @@ public class CoursesController {
 
 
     @GetMapping(value = {"/all", "/all/{category}"})
-    public String findAllPaginateConfirm(@PathVariable(value = "category") Optional<Long> category,
+    public String findAllPaginate(@PathVariable(value = "category") Optional<Long> category,
                                          @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                                          @RequestParam(value = "sortField", defaultValue = "name") String sortField,
                                          @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
