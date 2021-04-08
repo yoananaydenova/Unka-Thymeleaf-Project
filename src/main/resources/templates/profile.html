@@ -71,22 +71,28 @@
                     <h6>РОЛИ</h6>
                     <ul>
                         <li>
-                            <div class="form-check">
-                                <input type="checkbox" id="studentRole" name="studentRole" disabled
-                                       th:checked="*{user.roleId.contains(1L)}" value="1">
-                                <label for="studentRole">Студент</label><br>
-                                <!--/*@thymesVar id="isTeacher" type=""*/-->
-                                <th:block th:if="${isTeacher}">
-                                    <input type="checkbox" id="teacherRole" disabled name="teacherRole"
-                                           th:checked="*{user.roleId.contains(2L)}" value="2">
-                                    <label for="teacherRole">Учител</label><br>
-                                </th:block>
-                                <th:block sec:authorize="hasRole('ADMIN')">
-                                    <input type="checkbox" id="adminRole" disabled name="adminRole"
-                                           th:checked="*{user.roleId.contains(3L)}" value="3">
-                                    <label for="adminRole">Администратор</label><br>
-                                </th:block>
+                            <div th:each="option: ${listAllRoles}" class="form-check">
+                                <input type="checkbox" id="someRole" name="someRole" disabled
+                                       th:value="${option.id}"
+                                       th:checked="${profileInformation.user.roleId.contains(option.id)}">
+                                <label th:text="${option.role}" for="someRole">Студент</label><br>
                             </div>
+<!--                            <div class="form-check">-->
+<!--                                <input type="checkbox" id="studentRole" name="studentRole" disabled-->
+<!--                                       th:checked="*{user.roleId.contains(1L)}" value="1">-->
+<!--                                <label for="studentRole">Студент</label><br>-->
+<!--                                &lt;!&ndash;/*@thymesVar id="isTeacher" type=""*/&ndash;&gt;-->
+<!--                                <th:block th:if="${isTeacher}">-->
+<!--                                    <input type="checkbox" id="teacherRole" disabled name="teacherRole"-->
+<!--                                           th:checked="*{user.roleId.contains(2L)}" value="2">-->
+<!--                                    <label for="teacherRole">Учител</label><br>-->
+<!--                                </th:block>-->
+<!--                                <th:block sec:authorize="hasRole('ADMIN')">-->
+<!--                                    <input type="checkbox" id="adminRole" disabled name="adminRole"-->
+<!--                                           th:checked="*{user.roleId.contains(3L)}" value="3">-->
+<!--                                    <label for="adminRole">Администратор</label><br>-->
+<!--                                </th:block>-->
+<!--                            </div>-->
                         </li>
                     </ul>
                 </div>

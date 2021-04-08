@@ -5,9 +5,10 @@ import com.yoanan.unka.model.entity.UserEntity;
 import com.yoanan.unka.model.entity.UserRoleEntity;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.model.service.UserRoleServiceModel;
 import com.yoanan.unka.model.service.UserServiceModel;
 import com.yoanan.unka.repository.UserRepository;
-import com.yoanan.unka.repository.UserRoleRepository;
+import com.yoanan.unka.service.UserRoleService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,16 +25,16 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final UnkaUserDetailsService unkaUserDetailsService;
     private final IAuthenticationFacade authenticationFacade;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService, IAuthenticationFacade authenticationFacade) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, PasswordEncoder passwordEncoder, ModelMapper modelMapper, UnkaUserDetailsService unkaUserDetailsService, IAuthenticationFacade authenticationFacade) {
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.userRoleService = userRoleService;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.unkaUserDetailsService = unkaUserDetailsService;
@@ -46,54 +46,66 @@ public class UserServiceImpl implements UserService {
     @Override
     public void seedUsers() {
 
-        if (userRepository.count() == 0) {
-            UserRoleEntity studentRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.STUDENT));
-            UserRoleEntity teacherRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.TEACHER));
-            UserRoleEntity adminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ADMIN));
-            UserRoleEntity rootAdminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ROOT_ADMIN));
-
-
-            // Student
-            UserEntity student = new UserEntity()
-                    .setUsername("student")
-                    .setFullName("First Student")
-                    .setPassword(passwordEncoder.encode("123456"))
-                    .setIncomeTeaching(BigDecimal.ZERO)
-                    .setRoles(List.of(studentRole));
-
-            UserEntity teacher = new UserEntity()
-                    .setUsername("teacher")
-                    .setFullName("First Teacher")
-                    .setIncomeTeaching(BigDecimal.ZERO)
-                    .setPassword(passwordEncoder.encode("123456"));
-            // Teacher has 2 roles
-            teacher.setRoles(List.of(teacherRole, studentRole));
-
-            UserEntity admin = new UserEntity()
-                    .setUsername("admina")
-                    .setFullName("Admin Adminov")
-                    .setIncomeTeaching(BigDecimal.ZERO)
-                    .setPassword(passwordEncoder.encode("123456"));
-
-            // Admin has 4 roles
-            admin.setRoles(List.of(rootAdminRole, adminRole, teacherRole, studentRole));
-
-            userRepository.saveAll(List.of(student, teacher, admin));
-        }
+//        if (userRepository.count() == 0) {
+//            UserRoleEntity studentRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.STUDENT));
+//            UserRoleEntity teacherRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.TEACHER));
+//            UserRoleEntity adminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ADMIN));
+//            UserRoleEntity rootAdminRole = userRoleRepository.save(new UserRoleEntity().setRole(UserRole.ROOT_ADMIN));
+//
+//
+//            // Student
+//            UserEntity student = new UserEntity()
+//                    .setUsername("student")
+//                    .setFullName("First Student")
+//                    .setPassword(passwordEncoder.encode("123456"))
+//                    .setIncomeTeaching(BigDecimal.ZERO)
+//                    .setRoles(List.of(studentRole));
+//
+//            UserEntity teacher = new UserEntity()
+//                    .setUsername("teacher")
+//                    .setFullName("First Teacher")
+//                    .setIncomeTeaching(BigDecimal.ZERO)
+//                    .setPassword(passwordEncoder.encode("123456"));
+//            // Teacher has 2 roles
+//            teacher.setRoles(List.of(teacherRole, studentRole));
+//
+//            UserEntity admin = new UserEntity()
+//                    .setUsername("admina")
+//                    .setFullName("Admin Adminov")
+//                    .setIncomeTeaching(BigDecimal.ZERO)
+//                    .setPassword(passwordEncoder.encode("123456"));
+//
+//            // Admin has 4 roles
+//            admin.setRoles(List.of(rootAdminRole, adminRole, teacherRole, studentRole));
+//
+//            userRepository.saveAll(List.of(student, teacher, admin));
+//        }
     }
 
     @Override
     public void registerAndLoginUser(UserRegisterServiceModel userRegisterServiceModel) {
+
+
+
         UserEntity newUser = modelMapper.map(userRegisterServiceModel, UserEntity.class);
 
         // Save user in DB
         newUser.setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()));
 
-        UserRoleEntity userRoleEntity = userRoleRepository
-                .findByRole(UserRole.STUDENT)
-                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+        //register first user as root admin
+        if(userRepository.count()==0){
 
-        newUser.addRole(userRoleEntity);
+            List<UserRoleEntity> roles = userRoleService.findAllRoles()
+                    .stream()
+                    .map(role -> modelMapper.map(role, UserRoleEntity.class))
+                    .collect(Collectors.toList());
+            newUser.setRoles(roles);
+
+        }else{
+            UserRoleEntity userRoleEntity =
+                    modelMapper.map(userRoleService.findByRole(UserRole.STUDENT), UserRoleEntity.class);
+            newUser.addRole(userRoleEntity);
+        }
 
         newUser = userRepository.save(newUser);
 
@@ -122,10 +134,8 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalStateException("User with that username" + username + " not found!"));
 
-
-        UserRoleEntity userRoleEntity = userRoleRepository
-                .findByRole(UserRole.TEACHER)
-                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+        UserRoleEntity userRoleEntity =
+                modelMapper.map(userRoleService.findByRole(UserRole.TEACHER), UserRoleEntity.class);
 
 
         UserDetails principal = unkaUserDetailsService.loadUserByUsername(username);
@@ -212,9 +222,7 @@ public class UserServiceImpl implements UserService {
 
         List<UserRoleEntity> roles = userEntity.getRoles();
 
-        UserRoleEntity newUserRoleEntity = userRoleRepository.findById(newRoleId)
-                .orElseThrow(() -> new IllegalStateException("Role with id " + newRoleId + " does not exist!!!"));
-
+        UserRoleEntity newUserRoleEntity = modelMapper.map(userRoleService.findById(newRoleId), UserRoleEntity.class);
 
         //Check user have role
         boolean existNewRoleForUser = roles.stream()
@@ -223,15 +231,11 @@ public class UserServiceImpl implements UserService {
         boolean isNewRoleTeacher = newUserRoleEntity.getRole().equals(UserRole.TEACHER);
         boolean isNewRoleAdmin = newUserRoleEntity.getRole().equals(UserRole.ADMIN);
 
-        UserRoleEntity userRoleADMIN = userRoleRepository
-                .findByRole(UserRole.ADMIN)
-                .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+        UserRoleEntity userRoleADMIN = modelMapper.map(userRoleService.findByRole(UserRole.ADMIN),UserRoleEntity.class);
 
         //Add role to user
         if (!existNewRoleForUser) {
-            UserRoleEntity userRoleTEACHER = userRoleRepository
-                    .findByRole(UserRole.TEACHER)
-                    .orElseThrow(() -> new IllegalStateException("User role not found! Please seed the roles!"));
+            UserRoleEntity userRoleTEACHER = modelMapper.map(userRoleService.findByRole(UserRole.TEACHER),UserRoleEntity.class);
 
             if (isNewRoleTeacher) {
                 userEntity.addRole(userRoleTEACHER);

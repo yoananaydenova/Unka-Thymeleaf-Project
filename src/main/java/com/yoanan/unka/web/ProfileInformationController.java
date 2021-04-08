@@ -114,6 +114,14 @@ public class ProfileInformationController {
                 .collect(Collectors.toList());
     }
 
+    // List with all roles options
+    @ModelAttribute("listAllRoles")
+    public List<UserRoleViewModel> listAllRolesForAdminView() {
+        return userRoleService.findAllRoles().stream()
+                .map(role -> modelMapper.map(role, UserRoleViewModel.class))
+                .collect(Collectors.toList());
+    }
+
 
     @PostMapping("/edit/{id}")
     public String editConfirm(@Valid @ModelAttribute("profileInformationChangeBindingModel")

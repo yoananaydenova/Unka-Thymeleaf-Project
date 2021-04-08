@@ -1,11 +1,15 @@
 package com.yoanan.unka.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yoanan.unka.model.binding.ProfileInformationAddBindingModel;
 import com.yoanan.unka.model.binding.UserRegisterBindingModel;
 import com.yoanan.unka.model.entity.enums.UserRole;
 import com.yoanan.unka.model.service.ProfileInformationAddServiceModel;
 import com.yoanan.unka.model.service.UserRegisterServiceModel;
+import com.yoanan.unka.model.view.UserRoleViewModel;
 import com.yoanan.unka.service.ProfileInformationService;
+import com.yoanan.unka.service.UserRoleService;
 import com.yoanan.unka.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -24,11 +30,13 @@ public class UserController {
 
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final ProfileInformationService profileInformationService;
 
-    public UserController(ModelMapper modelMapper, UserService userService, ProfileInformationService profileInformationService) {
+    public UserController(ModelMapper modelMapper, UserService userService, UserRoleService userRoleService, ProfileInformationService profileInformationService) {
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.profileInformationService = profileInformationService;
     }
 
@@ -121,10 +129,14 @@ public class UserController {
 
 
     @GetMapping("/all")
-    public String listAllUsers (){
+    public String listAllUsers (Model model)  {
+        List<UserRoleViewModel> allRoles = userRoleService.findAllRoles().stream()
+                .map(role -> modelMapper.map(role, UserRoleViewModel.class))
+                .collect(Collectors.toList());
+
+        model.addAttribute("listAllRoles", allRoles);
         return "all-users";
     }
-
 
 
 }

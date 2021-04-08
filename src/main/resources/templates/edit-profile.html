@@ -29,7 +29,8 @@
                 <div class="col-md-4">
                     <div class="profile-img">
 
-                        <img th:src="*{imgUrl== null or imgUrl== '' ? '/img/profile-placeholder.png' : imgUrl}" id="myImage"/>
+                        <img th:src="*{imgUrl== null or imgUrl== '' ? '/img/profile-placeholder.png' : imgUrl}"
+                             id="myImage"/>
 
                         <div class="file btn btn-lg btn-primary">
                             Смени снимка
@@ -70,22 +71,31 @@
                         <h6>РОЛИ</h6>
                         <ul>
                             <li>
-                                <div class="form-check">
-                                    <input type="checkbox" id="studentRole" name="studentRole" disabled
-                                           th:checked="*{rolesId.contains(1L)}" value="1">
-                                    <label for="studentRole">Студент</label><br>
-                                    <!--/*@thymesVar id="isTeacher" type=""*/-->
-                                    <th:block sec:authorize="hasRole('TEACHER')">
-                                        <input type="checkbox" id="teacherRole" disabled name="teacherRole"
-                                               th:checked="*{rolesId.contains(2L)}" value="2">
-                                        <label for="teacherRole">Учител</label><br>
-                                    </th:block>
-                                    <th:block sec:authorize="hasRole('ADMIN')">
-                                        <input type="checkbox" id="adminRole" disabled name="adminRole"
-                                               th:checked="*{rolesId.contains(3L)}" value="3">
-                                        <label for="adminRole">Администратор</label><br>
-                                    </th:block>
+
+                                <div th:each="option: ${listAllRoles}" class="form-check">
+                                    <input type="checkbox" id="someRole" name="studentRole" disabled
+                                           th:value="${option.id}"
+                                           th:checked="${profileInformationChangeBindingModel.rolesId.contains(option.id)}">
+                                    <label th:text="${option.role}" for="someRole">Студент</label><br>
                                 </div>
+
+
+                                <!--                                <div  class="form-check">-->
+                                <!--                                    <input   type="checkbox" id="studentRole" name="studentRole" disabled-->
+                                <!--                                           th:checked="*{rolesId.contains(1L)}" value="1">-->
+                                <!--                                    <label for="studentRole">Студент</label><br>-->
+                                <!--                                    &lt;!&ndash;/*@thymesVar id="isTeacher" type=""*/&ndash;&gt;-->
+                                <!--                                    <th:block sec:authorize="hasRole('TEACHER')">-->
+                                <!--                                        <input type="checkbox" id="teacherRole" disabled name="teacherRole"-->
+                                <!--                                               th:checked="*{rolesId.contains(2L)}" value="2">-->
+                                <!--                                        <label for="teacherRole">Учител</label><br>-->
+                                <!--                                    </th:block>-->
+                                <!--                                    <th:block sec:authorize="hasRole('ADMIN')">-->
+                                <!--                                        <input type="checkbox" id="adminRole" disabled name="adminRole"-->
+                                <!--                                               th:checked="*{rolesId.contains(3L)}" value="3">-->
+                                <!--                                        <label for="adminRole">Администратор</label><br>-->
+                                <!--                                    </th:block>-->
+                                <!--                                </div>-->
 
 
                                 <th:block sec:authorize="hasRole('ADMIN')">
@@ -122,7 +132,8 @@
                                     <label>Име и фамилия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" minlength="6"  maxlength="30" th:errorclass="border-err" th:field="*{fullName}">
+                                    <input type="text" minlength="6" maxlength="30" th:errorclass="border-err"
+                                           th:field="*{fullName}">
                                 </div>
                                 <small class="text-danger" th:if="${#fields.hasErrors('fullName')}"
                                        th:errors="*{fullName}"></small>
@@ -143,7 +154,8 @@
                                     <label>Телефон</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="tel" maxlength="10" th:errorclass="border-err" th:field="*{phoneNumber}">
+                                    <input type="tel" maxlength="10" th:errorclass="border-err"
+                                           th:field="*{phoneNumber}">
                                 </div>
 
                                 <small class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
@@ -154,7 +166,8 @@
                                     <label>Професия</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" maxlength="30" th:errorclass="border-err" th:field="*{profession}">
+                                    <input type="text" maxlength="30" th:errorclass="border-err"
+                                           th:field="*{profession}">
                                 </div>
                                 <small class="text-danger" th:if="${#fields.hasErrors('profession')}"
                                        th:errors="*{profession}"></small>
@@ -164,7 +177,8 @@
                                     <label>Професионален опит в областта</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" th:errorclass="border-err" min="0" th:field="*{yearsExperience}">
+                                    <input type="number" th:errorclass="border-err" min="0"
+                                           th:field="*{yearsExperience}">
                                 </div>
                                 <small class="text-danger" th:if="${#fields.hasErrors('yearsExperience')}"
                                        th:errors="*{yearsExperience}"></small>
@@ -198,7 +212,8 @@
                                         проекти и др./:</label>
                                 </div>
                                 <div class="row-md-6">
-                                    <input type="text" maxlength="500" th:errorclass="border-err" th:field="*{presentation}">
+                                    <input type="text" maxlength="500" th:errorclass="border-err"
+                                           th:field="*{presentation}">
                                 </div>
 
                                 <small class="text-danger" th:if="${#fields.hasErrors('presentation')}"
