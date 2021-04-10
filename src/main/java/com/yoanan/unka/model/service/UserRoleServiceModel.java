@@ -1,16 +1,23 @@
 package com.yoanan.unka.model.service;
 
+import com.yoanan.unka.model.entity.enums.UserRole;
+
 public class UserRoleServiceModel extends BaseServiceModel{
-    private String role;
+
+    private UserRole role;
 
     public UserRoleServiceModel() {
     }
 
-    public String getRole() {
+    public UserRoleServiceModel(UserRole role) {
+        this.role = role;
+    }
+
+    public UserRole getRole() {
         return role;
     }
 
-    public UserRoleServiceModel setRole(String role) {
+    public UserRoleServiceModel setRole(UserRole role) {
         this.role = role;
         return this;
     }

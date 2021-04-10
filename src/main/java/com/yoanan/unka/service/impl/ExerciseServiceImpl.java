@@ -47,9 +47,12 @@ public class ExerciseServiceImpl implements ExerciseService {
         ExerciseEntity exerciseEntity = modelMapper.map(exerciseServiceModel, ExerciseEntity.class);
 
         LessonServiceModel lessonServiceModel = lessonService.findLessonById(exerciseServiceModel.getLesson().getId());
+
         exerciseEntity.setLesson(modelMapper.map(lessonServiceModel, LessonEntity.class));
         exerciseEntity.setId(null);
-       return modelMapper.map(exerciseRepository.save(exerciseEntity), ExerciseServiceModel.class);
+        ExerciseEntity save = exerciseRepository.save(exerciseEntity);
+        ExerciseServiceModel map = modelMapper.map(save, ExerciseServiceModel.class);
+        return map;
     }
 
     @Override

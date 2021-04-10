@@ -15,4 +15,5 @@ public abstract class BaseServiceModel {
         this.id = id;
         return this;
     }
+
 }

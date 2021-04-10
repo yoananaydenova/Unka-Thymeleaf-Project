@@ -24,23 +24,21 @@ public class SolutionServiceImpl implements SolutionService {
 
 
     @Override
-    public void addSolution(SolutionServiceModel solutionServiceModel) {
+    public SolutionServiceModel addSolution(SolutionServiceModel solutionServiceModel) {
         SolutionEntity solutionEntity = modelMapper.map(solutionServiceModel, SolutionEntity.class);
         solutionEntity.setId(null);
-        solutionRepository.save(solutionEntity);
+        return modelMapper.map(solutionRepository.save(solutionEntity), SolutionServiceModel.class);
     }
 
 
     @Override
     public boolean verificationSolution(SolutionServiceModel solutionServiceModel) {
         // Find exercise with solution from teacher
-        SolutionEntity solutionEntityFromTeacher = solutionRepository.findByExercise_Id(solutionServiceModel.getExercise().getId())
-                .orElseThrow(() ->
-                        new IllegalStateException("Solution with id " + solutionServiceModel.getExercise().getId() + " not found!"));
+        SolutionEntity solutionEntityFromTeacher = findByExerciseId(solutionServiceModel.getExercise().getId());
 
         // Input charts from user
-        ChartServiceModel debitChartByIdOfStudent = chartService.findByIdOfChart(solutionServiceModel.getDebitChartId());
-        ChartServiceModel creditChartByIdOfStudent = chartService.findByIdOfChart(solutionServiceModel.getCreditChartId());
+        ChartServiceModel debitChartByIdOfStudent = getChartById(solutionServiceModel.getDebitChartId());
+        ChartServiceModel creditChartByIdOfStudent = getChartById(solutionServiceModel.getCreditChartId());
 
         // Check if teacher values == student values
         boolean isEqualDebitChartId = debitChartByIdOfStudent.getId().equals(solutionEntityFromTeacher.getDebitChartId());
@@ -49,5 +47,18 @@ public class SolutionServiceImpl implements SolutionService {
         boolean isEqualCreditValue = solutionServiceModel.getCreditValue().equals(solutionEntityFromTeacher.getCreditValue());
 
         return isEqualDebitChartId && isEqualCreditChartId && isEqualDebitValue && isEqualCreditValue;
+    }
+
+
+    private ChartServiceModel getChartById(Long chartId){
+      return  chartService.findByIdOfChart(chartId);
+
+    }
+
+    private SolutionEntity findByExerciseId(Long exerciseId){
+        return solutionRepository.findByExercise_Id(exerciseId)
+                .orElseThrow(() ->
+                        new IllegalStateException("Solution with id " + exerciseId + " not found!"));
+
     }
 }
